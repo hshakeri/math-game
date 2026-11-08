@@ -1,0 +1,69 @@
+{
+  "rules": [
+    {
+      "name": "equals_sign_with_number",
+      "pattern": "=\\s*\\d+",
+      "description": "Equal sign followed by digits"
+    },
+    {
+      "name": "explicit_arithmetic_equation",
+      "pattern": "\\b\\d+\\s*[+\\-*/x×÷]\\s*\\d+\\s*=\\s*\\d+",
+      "description": "Arithmetic operation equation with result"
+    },
+    {
+      "name": "equals_word_construction",
+      "pattern": "\\b(?:equals?|equal\\s+to)\\s+(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\b",
+      "description": "Word 'equals' or 'equal to' followed by a number or number-word"
+    },
+    {
+      "name": "answer_is_construction",
+      "pattern": "\\b(?:the\\s+)?answer\\s+(?:is|was|would\\s+be)\\b",
+      "description": "Phrases revealing the answer directly"
+    },
+    {
+      "name": "solution_is_construction",
+      "pattern": "\\b(?:the\\s+)?solution\\s+(?:is|was)\\b",
+      "description": "Phrases revealing the solution directly"
+    },
+    {
+      "name": "started_with_construction",
+      "pattern": "\\b(?:she|he|they|traveler)\\s+(?:started|starts|began|begins)\\s+with\\b",
+      "description": "Disclosing the starting quantity"
+    },
+    {
+      "name": "you_need_quantity_construction",
+      "pattern": "\\byou\\s+need\\s+(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\s+(?:picks?|crystals?|coins?|cubits?|shields?|runes?)\\b",
+      "description": "Direct statement of required quantity"
+    },
+    {
+      "name": "so_thats_number_construction",
+      "pattern": "\\b(?:so\\s+)?(?:that['’]s|it['’]s)\\s+(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\b",
+      "description": "Concluding statement identifying a number"
+    },
+    {
+      "name": "is_it_number_or_choice",
+      "pattern": "\\bis\\s+it\\s+(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\s+or\\b",
+      "description": "Forced choice presenting the answer"
+    },
+    {
+      "name": "number_is_correct_evaluation",
+      "pattern": "\\b(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\s+is\\s+(?:right|correct|wrong|incorrect)\\b",
+      "description": "Validating a specific number"
+    },
+    {
+      "name": "sum_is_construction",
+      "pattern": "\\b(?:the\\s+)?sum\\s+(?:is|was)\\s+(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\b",
+      "description": "Direct sum disclosure"
+    },
+    {
+      "name": "product_is_construction",
+      "pattern": "\\b(?:the\\s+)?product\\s+(?:is|was)\\s+(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\b",
+      "description": "Direct product disclosure"
+    },
+    {
+      "name": "result_is_construction",
+      "pattern": "\\b(?:the\\s+)?result\\s+(?:is|was)\\s+(?:\\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|dozen|half|quarter)(?:-(?:one|two|three|four|five|six|seven|eight|nine))?\\b",
+      "description": "Direct result disclosure"
+    }
+  ]
+}
