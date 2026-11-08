@@ -32,7 +32,7 @@ export function checkStep(state, step) {
   }
 
   const gateIndex = step.gateIndex;
-  if (gateIndex !== state.currentGateIndex) {
+  if (!Number.isInteger(gateIndex) || gateIndex !== state.currentGateIndex) {
     return { valid: false, state, progress: false };
   }
 
@@ -61,8 +61,8 @@ export function checkStep(state, step) {
   }
 
   if (step.action === 'value') {
-    const val = Number(step.value);
-    if (Number.isNaN(val)) {
+    const val = step.value;
+    if (typeof val !== 'number' || !Number.isFinite(val)) {
       return { valid: false, state, progress: false };
     }
 

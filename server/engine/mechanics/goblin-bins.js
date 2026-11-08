@@ -35,7 +35,7 @@ export function checkStep(state, step) {
 
   if (step.action === 'place') {
     const binIdx = step.bin;
-    if (typeof binIdx !== 'number' || binIdx < 0 || binIdx >= state.bins.length) {
+    if (!Number.isInteger(binIdx) || binIdx < 0 || binIdx >= state.bins.length) {
       return { valid: false, state, progress: false };
     }
 
@@ -72,8 +72,8 @@ export function checkStep(state, step) {
   }
 
   if (step.action === 'submit_count') {
-    const val = Number(step.value);
-    if (Number.isNaN(val)) {
+    const val = step.value;
+    if (typeof val !== 'number' || !Number.isInteger(val)) {
       return { valid: false, state, progress: false };
     }
 

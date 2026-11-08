@@ -44,7 +44,7 @@ export function checkStep(state, step) {
 
   if (step.action === 'factor') {
     const idx = step.productIndex;
-    if (typeof idx !== 'number' || idx < 0 || idx >= state.products.length) {
+    if (typeof idx !== 'number' || !Number.isInteger(idx) || idx < 0 || idx >= state.products.length) {
       return { valid: false, state, progress: false };
     }
 
@@ -54,8 +54,8 @@ export function checkStep(state, step) {
     }
 
     for (const f of factors) {
-      if (!isPrime(f)) {
-        return { valid: false, state, progress: false }; // Factor must be prime
+      if (typeof f !== 'number' || !Number.isInteger(f) || f <= 0 || !isPrime(f)) {
+        return { valid: false, state, progress: false }; // Factors must be positive prime integers
       }
     }
 
@@ -79,9 +79,16 @@ export function checkStep(state, step) {
 
   if (step.action === 'assign_shared' || step.action === 'assign') {
     const guardian = step.guardian;
-    const val = Number(step.value);
+    if (typeof guardian !== 'string' || guardian.trim() === '') {
+      return { valid: false, state, progress: false };
+    }
 
-    if (typeof guardian !== 'string' || !isPrime(val)) {
+    if (typeof step.value !== 'number' && typeof step.value !== 'string') {
+      return { valid: false, state, progress: false };
+    }
+
+    const val = Number(step.value);
+    if (!Number.isInteger(val) || val <= 0 || !Number.isFinite(val) || !isPrime(val)) {
       return { valid: false, state, progress: false };
     }
 
@@ -94,6 +101,14 @@ export function checkStep(state, step) {
     for (const p of relevantProducts) {
       if (p.value % val !== 0) {
         return { valid: false, state, progress: false }; // Does not divide product
+      }
+
+      const otherGuardian = p.left === guardian ? p.right : p.left;
+      const otherVal = state.assignments[otherGuardian];
+      if (typeof otherVal === 'number' && Number.isFinite(otherVal)) {
+        if (val * otherVal !== p.value) {
+          return { valid: false, state, progress: false }; // Inconsistent with already assigned guardian
+        }
       }
     }
 
@@ -111,8 +126,12 @@ export function checkStep(state, step) {
   }
 
   if (step.action === 'submit_sum') {
+    if (typeof step.value !== 'number' && typeof step.value !== 'string') {
+      return { valid: false, state, progress: false };
+    }
+
     const val = Number(step.value);
-    if (Number.isNaN(val)) {
+    if (!Number.isInteger(val) || val <= 0 || !Number.isFinite(val)) {
       return { valid: false, state, progress: false };
     }
 
@@ -123,22 +142,25 @@ export function checkStep(state, step) {
       guardianSet.add(p.right);
     }
 
+    // Verify that all products in state.products are satisfied
+    for (const p of state.products) {
+      const leftVal = state.assignments[p.left];
+      const rightVal = state.assignments[p.right];
+      if (
+        typeof leftVal !== 'number' ||
+        typeof rightVal !== 'number' ||
+        !Number.isInteger(leftVal) ||
+        !Number.isInteger(rightVal) ||
+        leftVal * rightVal !== p.value
+      ) {
+        return { valid: false, state, progress: false };
+      }
+    }
+
     // Calculate sum of guardian values
     let expectedSum = 0;
     for (const g of guardianSet) {
-      const gVal = state.assignments[g];
-      if (typeof gVal !== 'number') {
-        // If not explicitly assigned, compute from product if other is known
-        const rel = state.products.find(p => (p.left === g && state.assignments[p.right]) || (p.right === g && state.assignments[p.left]));
-        if (rel) {
-          const other = rel.left === g ? state.assignments[rel.right] : state.assignments[rel.left];
-          expectedSum += (rel.value / other);
-        } else {
-          return { valid: false, state, progress: false };
-        }
-      } else {
-        expectedSum += gVal;
-      }
+      expectedSum += state.assignments[g];
     }
 
     if (val === expectedSum) {

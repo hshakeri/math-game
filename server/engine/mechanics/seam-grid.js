@@ -38,13 +38,19 @@ export function checkStep(state, step) {
   }
 
   if (step.action === 'set_units') {
-    const short = Number(step.short);
-    const long = Number(step.long);
-    if (!Number.isFinite(short) || !Number.isFinite(long) || short <= 0 || long <= 0) {
+    const { short, long } = step;
+    if (typeof short !== 'number' || typeof long !== 'number' ||
+        !Number.isFinite(short) || !Number.isFinite(long) ||
+        short <= 0 || long <= 0) {
       return { valid: false, state, progress: false };
     }
 
-    const { shortCount, longCount } = state.relation;
+    const { shortCount, longCount } = state.relation || {};
+    if (!Number.isFinite(shortCount) || !Number.isFinite(longCount) ||
+        shortCount <= 0 || longCount <= 0) {
+      return { valid: false, state, progress: false };
+    }
+
     if (Math.abs(shortCount * short - longCount * long) > 1e-6) {
       return { valid: false, state, progress: false }; // Ratio does not match seam relation
     }
@@ -64,9 +70,15 @@ export function checkStep(state, step) {
       return { valid: false, state, progress: false };
     }
 
-    const val = Number(step.value);
+    const val = step.value;
+    if (typeof val !== 'number' || !Number.isFinite(val)) {
+      return { valid: false, state, progress: false };
+    }
     const { short, long } = state.units;
-    const { shortCount } = state.relation;
+    const { shortCount } = state.relation || {};
+    if (!Number.isFinite(shortCount) || shortCount <= 0) {
+      return { valid: false, state, progress: false };
+    }
     // Top row width: shortCount * short. Total height: long + short.
     const expectedOuterUnits = 2 * (shortCount * short + long + short);
 
@@ -88,7 +100,10 @@ export function checkStep(state, step) {
       return { valid: false, state, progress: false };
     }
 
-    const val = Number(step.value);
+    const val = step.value;
+    if (typeof val !== 'number' || !Number.isFinite(val)) {
+      return { valid: false, state, progress: false };
+    }
     const expectedCubitsPerUnit = state.outerPerimeter / state.outerUnits;
 
     if (Math.abs(val - expectedCubitsPerUnit) < 1e-6) {
@@ -109,7 +124,10 @@ export function checkStep(state, step) {
       return { valid: false, state, progress: false };
     }
 
-    const val = Number(step.value);
+    const val = step.value;
+    if (typeof val !== 'number' || !Number.isFinite(val)) {
+      return { valid: false, state, progress: false };
+    }
     const { short, long } = state.units;
     const shieldUnits = 2 * (short + long);
     const expectedPerimeter = shieldUnits * state.cubitsPerUnit;
