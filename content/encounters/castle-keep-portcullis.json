@@ -1,0 +1,144 @@
+{
+  "id": "ch1-n4-castle-keep",
+  "chapter": 1,
+  "node": 4,
+  "contentVersion": 1,
+  "title": "The Castle Keep Portcullis",
+  "scene": {
+    "locked": "ch1-n4-locked",
+    "unlocked": "ch1-n4-unlocked"
+  },
+  "narrative": {
+    "arrival": "You reach the towering iron portcullis of the inner keep. Three stone guardian statues stand carved into the gate arch, their hands resting on rune dials.",
+    "sealed": "The portcullis grinds upward into the ceiling with a shower of golden sparks. The three prime runes glow in harmony, welcoming you to the Castle of Theorems."
+  },
+  "inscription": "Three Royal Guardians, Jimmy, Kimmy and Timmy, each hold a secret prime rune. Jimmy’s rune times Kimmy’s rune is 34. Kimmy’s rune times Timmy’s rune is 85. The portcullis opens for the sum of all three runes.",
+  "cards": ["find-what-is-shared", "odd-or-even"],
+  "givens": [34, 85],
+  "parts": [
+    {
+      "id": "a",
+      "prompt": "Jimmy’s rune times Kimmy’s rune is 34. Kimmy’s rune times Timmy’s rune is 85. All three runes are prime numbers. What is the sum of all three runes?",
+      "answer": { "type": "integer", "value": 24 },
+      "intermediates": [
+        { "id": "kimmy-rune", "value": 17, "label": "Kimmy (shared factor of 34 and 85)" },
+        { "id": "jimmy-rune", "value": 2, "label": "Jimmy (34 / 17)" },
+        { "id": "timmy-rune", "value": 5, "label": "Timmy (85 / 17)" }
+      ],
+      "forbidden": [2, 5, 17, 24],
+      "misconceptions": [
+        {
+          "match": 119,
+          "tag": "added-the-clues",
+          "startLevel": 0,
+          "probe": "You added the clue numbers. Are the clues about adding runes or about multiplying them?"
+        },
+        {
+          "match": [19, 22],
+          "tag": "missed-a-guardian",
+          "startLevel": 1,
+          "probe": "Which guardian appears in both clues, and does your sum include every guardian?"
+        },
+        {
+          "match": "any-wrong",
+          "tag": "default",
+          "startLevel": 0,
+          "probe": "What kind of number is a rune, and which guardian is named in both clues?"
+        }
+      ],
+      "ladder": {
+        "l0": [
+          "What is special about a prime rune: in how many ways can it be made by multiplying?",
+          "Which guardian’s rune shows up in both clues?",
+          "What are we asked for at the end, a product or a sum?"
+        ],
+        "l1": [
+          "Is there a Deck card about something the clues share?",
+          "If one rune sits inside both products, what must it be a factor of?",
+          "Could you break each clue number into prime pieces and compare the pieces?"
+        ],
+        "l2": {
+          "text": "Kimmy stands in both clues, so Kimmy’s rune divides both 34 and 85. Break each of those into prime factors and look for the factor they share. Which prime appears in both lists?",
+          "diagram": {
+            "component": "factor-tree",
+            "params": {
+              "roots": [34, 85]
+            }
+          }
+        },
+        "l4": {
+          "statement": "A pair of runes multiplies to 21, and another pair multiplies to 77. Which rune appears in both pairs?",
+          "answer": { "type": "integer", "value": 7 },
+          "l3": "Split 21 into primes and 77 into primes. The prime in both lists is the shared rune."
+        },
+        "l3": {
+          "text": "Split 34 into a pair of primes and 85 into a pair of primes. Circle the prime that appears in both pairs: that is Kimmy. The remaining primes are Jimmy and Timmy. Add all three.",
+          "diagram": {
+            "component": "factor-tree",
+            "params": {
+              "roots": [34, 85]
+            }
+          }
+        }
+      },
+      "mechanic": {
+        "kind": "factor-dials",
+        "products": [
+          { "left": "Jimmy", "right": "Kimmy", "value": 34 },
+          { "left": "Kimmy", "right": "Timmy", "value": 85 }
+        ]
+      },
+      "chips": {
+        "understand": [
+          "Find the product of all three runes",
+          "Find the sum of all three secret prime runes",
+          "Find Kimmy’s rune only",
+          "I am not sure what a prime rune is"
+        ],
+        "plan": [
+          "Break each clue into prime factors",
+          "Guess prime numbers until they work",
+          "Add 34 and 85 together"
+        ]
+      }
+    }
+  ],
+  "lookBack": [
+    {
+      "kind": "verify",
+      "prompt": "How could you know, before looking at 85, that one of the primes in 34 had to be the even prime?",
+      "check": {
+        "type": "choice",
+        "options": [
+          "because 34 is even and only one prime is even",
+          "because 34 is less than 85",
+          "because primes come in pairs"
+        ],
+        "correct": 0
+      }
+    },
+    {
+      "kind": "perturb",
+      "prompt": "Suppose Kimmy’s clue with Timmy were 51 instead of 85. What is the sum of the three runes then?",
+      "check": { "type": "integer", "value": 22 }
+    },
+    {
+      "kind": "second-method",
+      "prompt": "Without factoring 85, which guardian must hold the even prime, and why?",
+      "check": {
+        "type": "choice",
+        "options": [
+          "Jimmy, because 85 is odd so Kimmy cannot be even",
+          "Kimmy, because Kimmy is in both clues",
+          "either one"
+        ],
+        "correct": 0
+      }
+    }
+  ],
+  "codex": {
+    "theorem": "Unique prime factorisation, and 2 is the only even prime",
+    "childName": "The Rune Splitting Rule",
+    "oneLine": "Every number splits into primes in exactly one way, so a shared factor cannot hide."
+  }
+}

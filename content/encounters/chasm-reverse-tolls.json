@@ -1,0 +1,146 @@
+{
+  "id": "ch1-n1-reverse-tolls",
+  "chapter": 1,
+  "node": 1,
+  "contentVersion": 1,
+  "title": "The Chasm of Reverse Tolls",
+  "scene": {
+    "locked": "ch1-n1-locked",
+    "unlocked": "ch1-n1-unlocked"
+  },
+  "narrative": {
+    "arrival": "A sheer canyon cuts across the road. Three stone gates float above the mist, each glowing with an ancient toll balance. The bridge only appears if you know how many coins to set out with.",
+    "sealed": "The third gate swings open with a deep chime. The stone bridge locks into place, the mist clears, and the path to the alchemist’s vault lies open."
+  },
+  "inscription": "A traveler crossed three magic toll gates on the road to the castle. At the first gate her pouch of Star-Coins doubled, then she paid 5 coins. At the second gate her coins doubled again, then she paid 3. At the third gate they doubled once more, then she paid 9. She walked into the castle with exactly 13 Star-Coins. How many did she start with?",
+  "cards": ["work-backwards"],
+  "givens": [3, 5, 9, 13],
+  "parts": [
+    {
+      "id": "a",
+      "prompt": "Find how many Star-Coins the traveler had in her pouch before crossing the first gate.",
+      "answer": { "type": "integer", "value": 6 },
+      "intermediates": [
+        { "id": "after-gate-2", "value": 11, "label": "coins entering gate 3: (13 + 9) / 2" },
+        { "id": "after-gate-1", "value": 7, "label": "coins entering gate 2: (11 + 3) / 2" },
+        { "id": "start-coins", "value": 6, "label": "coins entering gate 1: (7 + 5) / 2" }
+      ],
+      "forbidden": [6, 7, 11, 12, 14, 22],
+      "misconceptions": [
+        {
+          "match": [15, 16],
+          "tag": "undo-order",
+          "startLevel": 1,
+          "probe": "At the third gate two things happened, one after the other. Walking backwards through that gate, which of the two do you meet first?"
+        },
+        {
+          "match": 30,
+          "tag": "added-all-tolls",
+          "startLevel": 0,
+          "probe": "You gave all the tolls back at once. Does a toll paid at an early gate grow larger at the gates that come after it, or not?"
+        },
+        {
+          "match": { "min": 1, "max": 4 },
+          "tag": "halved-everything",
+          "startLevel": 2,
+          "probe": "Your start is tiny. Walk it forward through the first gate only. Does the pouch grow or shrink before the toll is paid?"
+        },
+        {
+          "match": "any-wrong",
+          "tag": "default",
+          "startLevel": 0,
+          "probe": "We know the end of the road and we want the start. Which gate could we undo without guessing at all?"
+        }
+      ],
+      "ladder": {
+        "l0": [
+          "Say the goal in your own words: what number are we hunting for, and what do we know for certain?",
+          "Tell me the story of a single gate in order: what happened first, and what happened second?",
+          "Which end of the road do we know for certain, the start or the finish?"
+        ],
+        "l1": [
+          "If you walked this road backwards, which gate would you reach first, and what would you have to undo there?",
+          "Think of putting on socks and then shoes. To take them off, which comes off first?",
+          "Is there a card in the Deck that starts from the end of a story instead of its beginning?"
+        ],
+        "l2": {
+          "text": "Each gate did two things in order, first doubling, then paying. Walking backwards you meet the paying first, so you undo it first by giving the coins back, and only then undo the doubling. Which gate will you undo first, and what do you give back there?",
+          "diagram": {
+            "component": "inverse-chain",
+            "params": {
+              "gates": [
+                { "mul": 2, "sub": 5 },
+                { "mul": 2, "sub": 3 },
+                { "mul": 2, "sub": 9 }
+              ],
+              "end": 13
+            }
+          }
+        },
+        "l4": {
+          "statement": "A tiny road has one gate. Coins double, then she pays 3, and she leaves with 11. How many did she start with?",
+          "answer": { "type": "integer", "value": 7 },
+          "l3": "Give back the 3 coins she paid, then undo the doubling by splitting into equal halves. Count the start."
+        },
+        "l3": {
+          "text": "Start at the castle door with her 13 coins. Undo the third gate: give back the 9 she paid, then split the result in half to undo the doubling. Write that number on the gate, then do the same at the second gate.",
+          "diagram": {
+            "component": "inverse-chain",
+            "params": {
+              "gates": [
+                { "mul": 2, "sub": 5 },
+                { "mul": 2, "sub": 3 },
+                { "mul": 2, "sub": 9 }
+              ],
+              "end": 13
+            }
+          }
+        }
+      },
+      "mechanic": {
+        "kind": "inverse-chain",
+        "gates": [
+          { "mul": 2, "sub": 5 },
+          { "mul": 2, "sub": 3 },
+          { "mul": 2, "sub": 9 }
+        ],
+        "end": 13
+      },
+      "chips": {
+        "understand": [
+          "Find how many coins she paid in total",
+          "Find the coins she had at the start before any gates",
+          "Find what happened at the third gate",
+          "I am not sure where to begin"
+        ],
+        "plan": [
+          "Add all the tolls together",
+          "Work backwards from the castle door",
+          "Guess a starting number and test it"
+        ]
+      }
+    }
+  ],
+  "lookBack": [
+    {
+      "kind": "verify",
+      "prompt": "Run your number forward through all three gates. What does she hold at the castle door?",
+      "check": { "type": "integer", "value": 13 }
+    },
+    {
+      "kind": "perturb",
+      "prompt": "Suppose every gate doubled her coins and then took 6. Which starting number walks out with the same count it walked in with?",
+      "check": { "type": "integer", "value": 6 }
+    },
+    {
+      "kind": "second-method",
+      "prompt": "Guess a start of 10 and run it forward. What comes out at the door?",
+      "check": { "type": "integer", "value": 45 }
+    }
+  ],
+  "codex": {
+    "theorem": "Inverse operations",
+    "childName": "The Socks-and-Shoes Rule",
+    "oneLine": "To undo a chain of steps, undo the last step first."
+  }
+}

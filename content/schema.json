@@ -1,0 +1,455 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://castle-of-theorems.org/schemas/encounter.json",
+  "title": "Encounter",
+  "description": "Schema definition for Castle of Theorems encounters",
+  "type": "object",
+  "required": [
+    "id",
+    "chapter",
+    "node",
+    "title",
+    "scene",
+    "narrative",
+    "inscription",
+    "cards",
+    "givens",
+    "parts",
+    "lookBack",
+    "codex"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "chapter": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "node": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "contentVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "scene": {
+      "type": "object",
+      "required": ["locked", "unlocked"],
+      "properties": {
+        "locked": { "type": "string" },
+        "unlocked": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "narrative": {
+      "type": "object",
+      "required": ["arrival", "sealed"],
+      "properties": {
+        "arrival": { "type": "string", "minLength": 40, "maxLength": 300 },
+        "sealed": { "type": "string", "minLength": 40, "maxLength": 300 }
+      },
+      "additionalProperties": false
+    },
+    "inscription": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 600
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "work-backwards",
+          "worst-case",
+          "tiny-case",
+          "draw-it",
+          "odd-or-even",
+          "find-what-is-shared",
+          "odd-even",
+          "find-shared"
+        ]
+      },
+      "minItems": 1
+    },
+    "givens": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "parts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/Part" }
+    },
+    "lookBack": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/definitions/LookBackOption" }
+    },
+    "codex": {
+      "type": "object",
+      "required": ["theorem", "childName", "oneLine"],
+      "properties": {
+        "theorem": { "type": "string", "minLength": 3 },
+        "childName": { "type": "string", "minLength": 3 },
+        "oneLine": { "type": "string", "minLength": 10 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "Part": {
+      "type": "object",
+      "required": [
+        "id",
+        "prompt",
+        "answer",
+        "intermediates",
+        "forbidden",
+        "misconceptions",
+        "ladder",
+        "mechanic",
+        "chips"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 300
+        },
+        "answer": { "$ref": "#/definitions/Answer" },
+        "intermediates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Intermediate" }
+        },
+        "forbidden": {
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "misconceptions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/Misconception" }
+        },
+        "ladder": { "$ref": "#/definitions/HintLadder" },
+        "mechanic": { "$ref": "#/definitions/Mechanic" },
+        "chips": {
+          "type": "object",
+          "required": ["understand"],
+          "properties": {
+            "understand": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "type": "string" }
+            },
+            "plan": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "Intermediate": {
+      "type": "object",
+      "required": ["id", "value", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "value": { "type": "number" },
+        "label": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Misconception": {
+      "type": "object",
+      "required": ["match", "tag", "startLevel", "probe"],
+      "properties": {
+        "match": {
+          "oneOf": [
+            { "type": "number" },
+            {
+              "type": "object",
+              "required": ["min", "max"],
+              "properties": {
+                "min": { "type": "number" },
+                "max": { "type": "number" }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 1
+            },
+            {
+              "type": "string",
+              "enum": ["any-wrong"]
+            }
+          ]
+        },
+        "tag": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "startLevel": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3, 4]
+        },
+        "probe": {
+          "type": "string",
+          "minLength": 40,
+          "maxLength": 300
+        }
+      },
+      "additionalProperties": false
+    },
+    "HintLadder": {
+      "type": "object",
+      "required": ["l0", "l1", "l2", "l4", "l3"],
+      "properties": {
+        "l0": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 40,
+            "maxLength": 300
+          }
+        },
+        "l1": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 40,
+            "maxLength": 300
+          }
+        },
+        "l2": {
+          "type": "object",
+          "required": ["text", "diagram"],
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 40,
+              "maxLength": 300
+            },
+            "diagram": { "$ref": "#/definitions/DiagramSpec" }
+          },
+          "additionalProperties": false
+        },
+        "l4": {
+          "type": "object",
+          "required": ["statement", "answer", "l3"],
+          "properties": {
+            "statement": {
+              "type": "string",
+              "minLength": 40,
+              "maxLength": 300
+            },
+            "answer": { "$ref": "#/definitions/Answer" },
+            "l3": {
+              "type": "string",
+              "minLength": 40,
+              "maxLength": 300
+            }
+          },
+          "additionalProperties": false
+        },
+        "l3": {
+          "type": "object",
+          "required": ["text"],
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 40,
+              "maxLength": 300
+            },
+            "diagram": { "$ref": "#/definitions/DiagramSpec" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "Answer": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "value"],
+          "properties": {
+            "type": { "const": "integer" },
+            "value": { "type": "integer" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "values"],
+          "properties": {
+            "type": { "const": "set" },
+            "values": {
+              "type": "array",
+              "items": { "type": "number" }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "options", "correct"],
+          "properties": {
+            "type": { "const": "choice" },
+            "options": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 2
+            },
+            "correct": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "DiagramSpec": {
+      "type": "object",
+      "required": ["component", "params"],
+      "properties": {
+        "component": {
+          "type": "string",
+          "enum": [
+            "pigeonhole-bins",
+            "inverse-chain",
+            "seam-grid",
+            "tape-model",
+            "factor-tree",
+            "place-value"
+          ]
+        },
+        "params": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Mechanic": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "gates", "end"],
+          "properties": {
+            "kind": { "const": "inverse-chain" },
+            "gates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["mul", "sub"],
+                "properties": {
+                  "mul": { "type": "number" },
+                  "sub": { "type": "number" }
+                },
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "end": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "bins", "perBin", "target"],
+          "properties": {
+            "kind": { "const": "goblin-bins" },
+            "bins": { "type": "integer", "minimum": 1 },
+            "perBin": { "type": "integer", "minimum": 1 },
+            "target": {
+              "type": "object",
+              "properties": {
+                "same": { "type": "integer" },
+                "different": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "relation", "outerPerimeter"],
+          "properties": {
+            "kind": { "const": "seam-grid" },
+            "relation": {
+              "type": "object",
+              "required": ["shortCount", "longCount"],
+              "properties": {
+                "shortCount": { "type": "number" },
+                "longCount": { "type": "number" }
+              },
+              "additionalProperties": false
+            },
+            "outerPerimeter": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "products"],
+          "properties": {
+            "kind": { "const": "factor-dials" },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["left", "right", "value"],
+                "properties": {
+                  "left": { "type": "string" },
+                  "right": { "type": "string" },
+                  "value": { "type": "number" }
+                },
+                "additionalProperties": false
+              },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "LookBackOption": {
+      "type": "object",
+      "required": ["kind", "prompt", "check"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["verify", "second-method", "perturb"]
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 300
+        },
+        "check": { "$ref": "#/definitions/Answer" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

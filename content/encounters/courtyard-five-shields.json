@@ -1,0 +1,143 @@
+{
+  "id": "ch1-n3-five-shields",
+  "chapter": 1,
+  "node": 3,
+  "contentVersion": 1,
+  "title": "The Courtyard of Five Shields",
+  "scene": {
+    "locked": "ch1-n3-locked",
+    "unlocked": "ch1-n3-unlocked"
+  },
+  "narrative": {
+    "arrival": "You step out into a sunlit courtyard paved with massive stone shields. Three stand tall and two lie flat, locked edge to edge without a mortar gap.",
+    "sealed": "The stone shields sink slightly with a rumble, revealing golden tracks underneath. The hidden seams glow, and the path to the keep is unlocked."
+  },
+  "inscription": "The courtyard floor is five identical stone shields fitted together with no gaps: three stand upright side by side in the top row, and two lie flat end to end in the bottom row. Walking all the way around the outside of the courtyard measures 66 cubits. How far is it around one shield?",
+  "cards": ["find-what-is-shared", "draw-it"],
+  "givens": [2, 3, 5, 66],
+  "parts": [
+    {
+      "id": "a",
+      "prompt": "Walking all the way around the outside of the five fitted shields measures 66 cubits. How far is it around one shield?",
+      "answer": { "type": "integer", "value": 30 },
+      "intermediates": [
+        { "id": "units-perimeter", "value": 22, "label": "perimeter in units: 2 * (6 + 5)" },
+        { "id": "cubits-per-unit", "value": 3, "label": "cubits per unit: 66 / 22" },
+        { "id": "shield-units", "value": 10, "label": "shield perimeter in units: 2 * (2 + 3)" }
+      ],
+      "forbidden": [10, 22, 30],
+      "misconceptions": [
+        {
+          "match": [13, 14],
+          "tag": "divided-walk-by-shields",
+          "startLevel": 0,
+          "probe": "You shared the outside walk equally among the shields. Does every side of every shield lie on the outside of the courtyard?"
+        },
+        {
+          "match": 66,
+          "tag": "whole-for-part",
+          "startLevel": 0,
+          "probe": "That is the walk around the whole courtyard. What is the question asking about instead?"
+        },
+        {
+          "match": 33,
+          "tag": "divided-by-rows",
+          "startLevel": 1,
+          "probe": "Look at the seam where the standing shields meet the lying ones: what does that shared line tell you about a long side and a short side?"
+        },
+        {
+          "match": "any-wrong",
+          "tag": "default",
+          "startLevel": 0,
+          "probe": "Which lengths do we know as numbers, and which do we know only as a relationship between shapes?"
+        }
+      ],
+      "ladder": {
+        "l0": [
+          "What do we know as a number, and what do we know only as a shape fact?",
+          "Where do the standing shields touch the lying ones, and what is special about that line?",
+          "What is the question asking for, the walk around the courtyard or around one shield?"
+        ],
+        "l1": [
+          "Is there a card in the Deck about something the two rows share?",
+          "Without numbers, how many short sides cover the same length as how many long sides along the middle seam?",
+          "Could you invent a small unit that measures both a short side and a long side with no leftover?"
+        ],
+        "l2": {
+          "text": "Along the middle seam, three short sides equal two long sides. Let a short side be two units and a long side be three units so they match. Now trace the outer edge of the courtyard in these units. How many units is the whole walk around?",
+          "diagram": {
+            "component": "seam-grid",
+            "params": {
+              "shortCount": 3,
+              "longCount": 2,
+              "unitShort": 2,
+              "unitLong": 3,
+              "outerPerimeter": 66
+            }
+          }
+        },
+        "l4": {
+          "statement": "Two identical squares side by side make a rectangle whose outside walk is 36 cubits. How far is it around one square?",
+          "answer": { "type": "integer", "value": 24 },
+          "l3": "Count how many square sides lie on the outside of the rectangle, then share the 36 cubits among them. Multiply by 4."
+        },
+        "l3": {
+          "text": "Count the outside walk in units: across the top, across the bottom, and down each side, which is a long side plus a short side. Then find how many cubits one unit is worth, and multiply by the units around one shield.",
+          "diagram": {
+            "component": "seam-grid",
+            "params": {
+              "shortCount": 3,
+              "longCount": 2,
+              "unitShort": 2,
+              "unitLong": 3,
+              "outerPerimeter": 66
+            }
+          }
+        }
+      },
+      "mechanic": {
+        "kind": "seam-grid",
+        "relation": {
+          "shortCount": 3,
+          "longCount": 2
+        },
+        "outerPerimeter": 66
+      },
+      "chips": {
+        "understand": [
+          "Find the walk around the entire courtyard",
+          "Find the distance around a single stone shield",
+          "Count how many shields are in the courtyard",
+          "I am not sure what cubits mean here"
+        ],
+        "plan": [
+          "Find what the standing and lying shields share",
+          "Draw the shields and count their outer edges",
+          "Divide 66 by 5 shields directly"
+        ]
+      }
+    }
+  ],
+  "lookBack": [
+    {
+      "kind": "verify",
+      "prompt": "Five separate shields have five outside walks. Add them up and compare with the courtyard’s 66. How many cubits of shield edge are hidden inside the courtyard?",
+      "check": { "type": "integer", "value": 84 }
+    },
+    {
+      "kind": "perturb",
+      "prompt": "Suppose the courtyard walk were 44 cubits instead. How far around one shield then?",
+      "check": { "type": "integer", "value": 20 }
+    },
+    {
+      "kind": "second-method",
+      "prompt": "Measure in cubits directly. The courtyard’s left edge is one long side plus one short side, and that is half of one shield’s walk. How many cubits is the left edge?",
+      "check": { "type": "integer", "value": 15 }
+    }
+  ],
+  "codex": {
+    "theorem": "Shared edges cancel (perimeter of compound shapes)",
+    "childName": "The Hidden Seams Rule",
+    "oneLine": "When shapes share an edge, that edge disappears from the outside walk, once for each shape."
+  }
+}

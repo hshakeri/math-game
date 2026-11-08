@@ -1,0 +1,32 @@
+{
+  "name": "castle-of-theorems",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Castle of Theorems v1 (Home Edition) - Pólya-style mathematical encounters for home play",
+  "type": "module",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test",
+    "validate": "node content/validate.js",
+    "eval": "node eval/run.js",
+    "eval:ci": "node eval/run.js --ci",
+    "digest": "node server/telemetry/digest.js",
+    "assets": "python3 tools/assets/generate.py"
+  },
+  "keywords": [
+    "math",
+    "education",
+    "polya",
+    "tutor",
+    "vanilla-js"
+  ],
+  "author": "Heman Shakeri <hshakeri@users.noreply.github.com>",
+  "license": "UNLICENSED",
+  "dependencies": {},
+  "devDependencies": {}
+}

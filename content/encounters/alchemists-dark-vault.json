@@ -1,0 +1,329 @@
+{
+  "id": "ch1-n2-dark-vault",
+  "chapter": 1,
+  "node": 2,
+  "contentVersion": 1,
+  "title": "The Alchemist’s Dark Vault",
+  "scene": {
+    "locked": "ch1-n2-locked",
+    "unlocked": "ch1-n2-unlocked"
+  },
+  "narrative": {
+    "arrival": "The vault door grinds shut behind you. Somewhere ahead a chest clicks open, but you cannot see a thing. A brass claw waits for its number.",
+    "sealed": "Three torches blaze. In their light the goblin bows, beaten at its own game, and the way to the courtyard opens."
+  },
+  "inscription": "In the pitch-dark vault sits a chest with 12 ruby crystals, 12 sapphire crystals and 12 emerald crystals, all mixed together. A mechanical claw grabs crystals without looking. Set the claw’s number so that it is certain, no matter how unlucky you are, to grab what each torch needs.",
+  "cards": ["worst-case", "tiny-case"],
+  "givens": [12],
+  "parts": [
+    {
+      "id": "a",
+      "prompt": "Torch of Pairs: the claw must be certain to grab at least 2 crystals of the same colour. Set its number.",
+      "answer": { "type": "integer", "value": 4 },
+      "intermediates": [
+        { "id": "one-per-bin", "value": 3, "label": "most crystals with no pair" }
+      ],
+      "forbidden": [3, 4],
+      "misconceptions": [
+        {
+          "match": 2,
+          "tag": "possibility-vs-guarantee",
+          "startLevel": 1,
+          "probe": "Two grabs might match, or they might not. Picture a sneaky goblin inside the chest handing you the crystals: what would it hand you to spoil your pair?"
+        },
+        {
+          "match": 3,
+          "tag": "off-by-one",
+          "startLevel": 2,
+          "probe": "You stopped at the number of colours. Can the goblin still keep every grab a different colour at that point, and what happens on the grab after that?"
+        },
+        {
+          "match": { "min": 11, "max": 13 },
+          "tag": "empty-a-colour",
+          "startLevel": 1,
+          "probe": "You planned to grab until a whole colour is gone. Is that needed for one matching pair, or could a pair appear far earlier?"
+        },
+        {
+          "match": "any-wrong",
+          "tag": "default",
+          "startLevel": 0,
+          "probe": "What does certain mean here: that a pair is possible, or that a pair cannot be avoided?"
+        }
+      ],
+      "ladder": {
+        "l0": [
+          "What must be true for a grab to count as certain, no matter how unlucky we are?",
+          "What do we know about the chest, and what is the torch asking us to guarantee?",
+          "Is the question asking what could happen, or what must happen?"
+        ],
+        "l1": [
+          "Imagine a goblin inside the chest choosing which crystals you get, trying to ruin your torch. What is its best trick?",
+          "Is there a card in the Deck about the unluckiest case?",
+          "Try a chest with only two colours. How long could the goblin keep your grabs all different?"
+        ],
+        "l2": {
+          "text": "Think of one bin per colour. The goblin keeps putting crystals into empty bins to avoid a pair, but once every bin holds one crystal it has nowhere left to hide a new one. How many can it place before it runs out of empty bins, and what does the next one do?",
+          "diagram": {
+            "component": "pigeonhole-bins",
+            "params": {
+              "bins": 3,
+              "labels": ["ruby", "sapphire", "emerald"],
+              "threshold": 2
+            }
+          }
+        },
+        "l4": {
+          "statement": "A tiny chest has 5 red and 5 blue crystals. How many grabs make a matching pair certain?",
+          "answer": { "type": "integer", "value": 3 },
+          "l3": "The goblin gives you one red, then one blue. Whatever comes next matches one of them. Count the grabs."
+        },
+        "l3": {
+          "text": "Fill each bin with one crystal; that is the most the goblin can place with no pair. Count the bins, then add one for the grab that must land in a bin that is already full.",
+          "diagram": {
+            "component": "pigeonhole-bins",
+            "params": {
+              "bins": 3,
+              "labels": ["ruby", "sapphire", "emerald"],
+              "threshold": 2
+            }
+          }
+        }
+      },
+      "mechanic": {
+        "kind": "goblin-bins",
+        "bins": 3,
+        "perBin": 12,
+        "target": { "same": 2 }
+      },
+      "chips": {
+        "understand": [
+          "The claw must sometimes get a pair",
+          "The claw must always get a pair, however unlucky",
+          "We need to empty one colour",
+          "I am not sure what certain means here"
+        ],
+        "plan": [
+          "Pretend a goblin picks for me",
+          "Try it with fewer colours",
+          "Grab everything and count"
+        ]
+      }
+    },
+    {
+      "id": "b",
+      "prompt": "Torch of Four: the claw must be certain to grab at least 4 crystals of the same colour. Set its number.",
+      "answer": { "type": "integer", "value": 10 },
+      "intermediates": [
+        { "id": "three-per-bin", "value": 9, "label": "most crystals without club of four" }
+      ],
+      "forbidden": [3, 9, 10],
+      "misconceptions": [
+        {
+          "match": 4,
+          "tag": "reused-part-a",
+          "startLevel": 1,
+          "probe": "Four was the number for a pair. This torch wants a bigger club of one colour. How many of each colour could the goblin hand over while still dodging that club?"
+        },
+        {
+          "match": 9,
+          "tag": "off-by-one",
+          "startLevel": 2,
+          "probe": "You found how many the goblin can hand out while every colour stays below the club size. What must the very next grab do?"
+        },
+        {
+          "match": { "min": 11, "max": 13 },
+          "tag": "empty-a-colour",
+          "startLevel": 1,
+          "probe": "Do you need a whole colour gone, or only enough that the goblin runs out of ways to dodge?"
+        },
+        {
+          "match": "any-wrong",
+          "tag": "default",
+          "startLevel": 0,
+          "probe": "Say in your own words what the goblin is trying to avoid this time?"
+        }
+      ],
+      "ladder": {
+        "l0": [
+          "What does the Torch of Four require for a grab to count as certain?",
+          "How many crystals of one single colour does the claw need to secure?",
+          "What is the goblin trying to prevent from happening as it deals crystals?"
+        ],
+        "l1": [
+          "How many crystals could the goblin give you of each colour without completing a club of four?",
+          "Can you use the unluckiest case strategy to fill each colour just short of the goal?",
+          "What happens if the goblin hands you as many as possible without any colour reaching the target?"
+        ],
+        "l2": {
+          "text": "The goblin wants no bin to reach the club size, so it fills every bin to one below the club size. When all bins are filled that way, where does the next crystal go?",
+          "diagram": {
+            "component": "pigeonhole-bins",
+            "params": {
+              "bins": 3,
+              "labels": ["ruby", "sapphire", "emerald"],
+              "threshold": 4
+            }
+          }
+        },
+        "l4": {
+          "statement": "A tiny chest has 5 red and 5 blue crystals. How many grabs make three of one colour certain?",
+          "answer": { "type": "integer", "value": 5 },
+          "l3": "The goblin gives two of each colour. The next grab must complete three of a colour. Count them."
+        },
+        "l3": {
+          "text": "Fill each bin to one less than the club size, count all the crystals, then add one for the grab that must complete a club.",
+          "diagram": {
+            "component": "pigeonhole-bins",
+            "params": {
+              "bins": 3,
+              "labels": ["ruby", "sapphire", "emerald"],
+              "threshold": 4
+            }
+          }
+        }
+      },
+      "mechanic": {
+        "kind": "goblin-bins",
+        "bins": 3,
+        "perBin": 12,
+        "target": { "same": 4 }
+      },
+      "chips": {
+        "understand": [
+          "The claw needs four of every colour",
+          "The claw needs four crystals of any single colour",
+          "We must grab every crystal in the chest",
+          "I am not sure what a club of four means"
+        ],
+        "plan": [
+          "Fill each colour to one below four",
+          "Grab crystals at random and hope",
+          "Try a tiny chest with fewer colours"
+        ]
+      }
+    },
+    {
+      "id": "c",
+      "prompt": "Torch of Difference: the claw must be certain to grab at least 2 crystals of different colours. Set its number.",
+      "answer": { "type": "integer", "value": 13 },
+      "intermediates": [
+        { "id": "all-of-one-colour", "value": 12, "label": "all crystals of one colour" }
+      ],
+      "forbidden": [12, 13],
+      "misconceptions": [
+        {
+          "match": 4,
+          "tag": "pattern-transfer",
+          "startLevel": 1,
+          "probe": "Same number as the pair torch, but this torch wants two different colours. What is the goblin’s best trick now to keep every crystal the same?"
+        },
+        {
+          "match": 2,
+          "tag": "possibility-vs-guarantee",
+          "startLevel": 1,
+          "probe": "Two grabs might differ, or they might match. Picture the sneaky goblin inside the chest: what would it hand you?"
+        },
+        {
+          "match": 12,
+          "tag": "off-by-one",
+          "startLevel": 2,
+          "probe": "You counted a whole colour. If the goblin hands you every crystal of one colour, what colour is the grab after that?"
+        },
+        {
+          "match": "any-wrong",
+          "tag": "default",
+          "startLevel": 0,
+          "probe": "What is the opposite of what the goblin tried in the earlier torches?"
+        }
+      ],
+      "ladder": {
+        "l0": [
+          "What does the Torch of Difference ask us to guarantee?",
+          "How many different colours must be present in the grab for this torch?",
+          "What would the unluckiest possible grab look like if we want two different colours?"
+        ],
+        "l1": [
+          "What is the goblin’s trick to keep your crystals all the same colour for as long as possible?",
+          "Could the goblin keep giving you the very same colour until that whole colour runs out?",
+          "If the goblin wants to delay giving you a second colour, which crystals will it keep handing you?"
+        ],
+        "l2": {
+          "text": "The goblin’s trick is now the opposite: it hands you the same colour for as long as it can. How long can that last, and what must the next grab be?",
+          "diagram": {
+            "component": "pigeonhole-bins",
+            "params": {
+              "bins": 3,
+              "labels": ["ruby", "sapphire", "emerald"],
+              "threshold": 12
+            }
+          }
+        },
+        "l4": {
+          "statement": "A tiny chest has 5 red and 5 blue crystals. How many grabs make two different colours certain?",
+          "answer": { "type": "integer", "value": 6 },
+          "l3": "Give the goblin all 5 red crystals. The next grab must be blue. Count the grabs."
+        },
+        "l3": {
+          "text": "Give the goblin every crystal of one colour, count them, then add one for the grab that must come from another colour.",
+          "diagram": {
+            "component": "pigeonhole-bins",
+            "params": {
+              "bins": 3,
+              "labels": ["ruby", "sapphire", "emerald"],
+              "threshold": 12
+            }
+          }
+        }
+      },
+      "mechanic": {
+        "kind": "goblin-bins",
+        "bins": 3,
+        "perBin": 12,
+        "target": { "different": true }
+      },
+      "chips": {
+        "understand": [
+          "The claw needs all crystals of the same colour",
+          "The claw needs at least two different colours in the haul",
+          "We need to empty the entire chest",
+          "I am not sure how difference works"
+        ],
+        "plan": [
+          "Empty one whole colour first",
+          "Pick evenly across all colours",
+          "Try with two colours first"
+        ]
+      }
+    }
+  ],
+  "lookBack": [
+    {
+      "kind": "perturb",
+      "prompt": "Suppose the chest also held 12 amber crystals, a fourth colour. How many grabs make a matching pair certain now?",
+      "check": { "type": "integer", "value": 5 }
+    },
+    {
+      "kind": "verify",
+      "prompt": "Why did Pairs need so few grabs compared with Difference?",
+      "check": {
+        "type": "choice",
+        "options": [
+          "Pairs, because the goblin has only three ways to dodge",
+          "Difference, because the goblin can hide inside one colour for a long time",
+          "Four, because four is bigger than two"
+        ],
+        "correct": 1
+      }
+    },
+    {
+      "kind": "second-method",
+      "prompt": "Think of the Pairs torch as grabs the goblin can waste. How many can it waste before it must give you a pair?",
+      "check": { "type": "integer", "value": 3 }
+    }
+  ],
+  "codex": {
+    "theorem": "Pigeonhole principle",
+    "childName": "The Goblin Rule",
+    "oneLine": "If there are more crystals than bins, some bin holds two."
+  }
+}
