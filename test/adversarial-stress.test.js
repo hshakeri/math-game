@@ -227,18 +227,23 @@ describe('Empirical Adversarial Stress Suite — Milestone M1', () => {
         assert.equal(s2.state, 'understand');
         assert.equal(s2.conjectures, 1);
 
-        // Additional conjecture attempts while in understand MUST be ignored
-        let current = s2;
+        // Second wrong conjecture in understand increments conjectures to cap of 2
+        const { session: s3 } = transition(s2, { type: 'conjecture', value: 100 }, encounters.reverseTolls);
+        assert.equal(s3.state, 'understand');
+        assert.equal(s3.conjectures, 2);
+
+        // Additional conjecture attempts while cap of 2 is reached MUST be ignored
+        let current = s3;
         for (let i = 0; i < 5; i++) {
-          const { session } = transition(current, { type: 'conjecture', value: 100 + i }, encounters.reverseTolls);
+          const { session } = transition(current, { type: 'conjecture', value: 101 + i }, encounters.reverseTolls);
           assert.equal(session.state, 'understand');
-          assert.equal(session.conjectures, 1, 'Conjecture counter must not increment while outside conjecture phase');
+          assert.equal(session.conjectures, 2, 'Conjecture counter must not increment beyond cap of 2');
           current = session;
         }
 
         // Check client view conjecturesRemaining never goes negative
         const view = getClientSafeSessionView(current, encounters.reverseTolls);
-        assert.equal(view.conjecturesRemaining, 1);
+        assert.equal(view.conjecturesRemaining, 0);
       });
     });
 
@@ -469,10 +474,8 @@ describe('Empirical Adversarial Stress Suite — Milestone M1', () => {
         assert.ok(e1.some(e => e.waived === true));
 
         // Now suppose another encounter is played, and reaches look_back with waiver already used
-        const sOther = createSession(encounters.fiveShields);
+        const sOther = createSession(encounters.fiveShields, { chapterWaiverUsed: true });
         sOther.state = 'look_back';
-        sOther.parentWaiver = true; // inherited from chapter state
-        sOther.chapterWaiverUsed = true;
         deepFreeze(sOther);
 
         // Waiver 2: MUST be rejected

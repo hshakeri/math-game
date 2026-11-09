@@ -116,6 +116,51 @@ describe('Synchronous 8-Stage Leak Gate', () => {
       assert.equal(nums.length, 1);
       assert.equal(nums[0].value, 24);
     });
+
+    it('correctly extracts compound numbers with spacing and hyphenation variations', () => {
+      const variations = [
+        { text: 'twenty-four', expected: 24 },
+        { text: 'twenty - four', expected: 24 },
+        { text: 'twenty- four', expected: 24 },
+        { text: 'twenty -four', expected: 24 },
+        { text: 'twenty  four', expected: 24 },
+        { text: 'twenty\tfour', expected: 24 },
+        { text: 'twenty-fourth', expected: 24 },
+        { text: 'twenty - fourth', expected: 24 },
+        { text: 'thirty - two', expected: 32 },
+        { text: 'forty  three', expected: 43 },
+        { text: 'fifty   five', expected: 55 },
+        { text: 'ninety - ninth', expected: 99 }
+      ];
+
+      for (const { text, expected } of variations) {
+        const nums = extractNumbers(text);
+        assert.equal(nums.length, 1, `Expected exactly 1 extracted number for "${text}", got ${nums.length}`);
+        assert.equal(nums[0].value, expected, `Expected value ${expected} for "${text}", got ${nums[0].value}`);
+      }
+    });
+
+    it('correctly extracts cardinal "hundred" and phrases "one hundred", "a hundred"', () => {
+      const hundredVariations = [
+        { text: 'one hundred coins', expected: 100 },
+        { text: 'a hundred coins', expected: 100 },
+        { text: 'hundred coins', expected: 100 },
+        { text: 'hundreds of coins', expected: 100 },
+        { text: 'one-hundred coins', expected: 100 },
+        { text: 'one - hundred coins', expected: 100 },
+        { text: 'one  hundred coins', expected: 100 },
+        { text: 'a - hundred coins', expected: 100 },
+        { text: 'one hundredth mark', expected: 100 }
+      ];
+
+      for (const { text, expected } of hundredVariations) {
+        const nums = extractNumbers(text);
+        assert.ok(nums.some(n => n.value === expected), `Failed to extract ${expected} from "${text}"`);
+        if (text.startsWith('one hundred') || text.startsWith('one-hundred') || text.startsWith('one - hundred') || text.startsWith('one  hundred')) {
+          assert.equal(nums.some(n => n.value === 1), false, `Should not separately extract 1 from "${text}"`);
+        }
+      }
+    });
   });
 
   describe('Stage 4: Forbidden value detection & Quoted Inscription Exception', () => {
@@ -124,6 +169,43 @@ describe('Synchronous 8-Stage Leak Gate', () => {
       assert.equal(checkUtterance('Did she start with 6 coins in her pouch?', ctx, { minLen: 20 }).allowed, false);
       assert.equal(checkUtterance('Did she start with six coins in her pouch?', ctx, { minLen: 20 }).allowed, false);
       assert.equal(checkUtterance('Look at the sixth coin in her pouch?', ctx, { minLen: 20 }).allowed, false);
+    });
+
+    it('rejects compound number spacing variations when compound value is forbidden', () => {
+      // In Castle Keep, 24 is answer, forbidden: [2, 5, 17, 24]
+      // Neither 20 nor 4 is forbidden; the compound 24 must be rejected
+      const ctx = { rung: 'l0', forbidden: [2, 5, 17, 24], givens: [34, 85] };
+      const phrases = [
+        'Could the starting number of runes be twenty - four in total across the ancient stone arch?',
+        'Could the starting number of runes be twenty- four in total across the ancient stone arch?',
+        'Could the starting number of runes be twenty -four in total across the ancient stone arch?',
+        'Could the starting number of runes be twenty  four in total across the ancient stone arch?',
+        'Could the starting number of runes be twenty\tfour in total across the ancient stone arch?',
+        'Could the starting number of runes be twenty - fourth in total across the ancient stone arch?'
+      ];
+
+      for (const phrase of phrases) {
+        const res = checkUtterance(phrase, ctx);
+        assert.equal(res.allowed, false, `Expected rejection for: "${phrase}"`);
+        assert.equal(res.reason, 'forbidden', `Expected reason "forbidden" for: "${phrase}", got "${res.reason}"`);
+      }
+    });
+
+    it('rejects "hundred" variations when 100 is forbidden', () => {
+      const ctx = { rung: 'l2', forbidden: [100], givens: [] };
+      const phrases = [
+        'Could there be one hundred crystals hidden inside the chest?',
+        'Could there be a hundred crystals hidden inside the chest?',
+        'Could there be hundred crystals hidden inside the chest?',
+        'Could there be hundreds of crystals hidden inside the chest?',
+        'Could there be one - hundred crystals hidden inside the chest?'
+      ];
+
+      for (const phrase of phrases) {
+        const res = checkUtterance(phrase, ctx);
+        assert.equal(res.allowed, false, `Expected rejection when 100 forbidden: "${phrase}"`);
+        assert.equal(res.reason, 'forbidden', `Expected reason "forbidden" for: "${phrase}"`);
+      }
     });
 
     it('allows a given that is also forbidden ONLY when quoted verbatim >= 12 chars from inscription', () => {

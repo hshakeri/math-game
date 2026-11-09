@@ -50,17 +50,27 @@ export const PRAISE_PATTERNS = [
 export const BANNED_OPS_L0_L1 = /\b(?:add|subtract|multiply|divide|double|halve|plus|minus|times)\b/i;
 
 // Number dictionaries
-const ONES_WORDS = {
+export const ONES_WORDS = {
   zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9,
   ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16,
   seventeen: 17, eighteen: 18, nineteen: 19
 };
 
-const TENS_WORDS = {
+export const TENS_WORDS = {
   twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90
 };
 
-const ORDINALS = {
+export const HUNDREDS_WORDS = {
+  hundred: 100, hundreds: 100
+};
+
+export const CARDINAL_WORDS = {
+  ...ONES_WORDS,
+  ...TENS_WORDS,
+  ...HUNDREDS_WORDS
+};
+
+export const ORDINALS = {
   first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, seventh: 7, eighth: 8, ninth: 9,
   tenth: 10, eleventh: 11, twelfth: 12, thirteenth: 13, fourteenth: 14, fifteenth: 15,
   sixteenth: 16, seventeenth: 17, eighteenth: 18, nineteenth: 19,
@@ -68,7 +78,7 @@ const ORDINALS = {
   eightieth: 80, ninetieth: 90, hundredth: 100
 };
 
-const FRACTIONS = {
+export const FRACTIONS = {
   half: 0.5, halves: 0.5, quarter: 0.25, quarters: 0.25
 };
 
@@ -123,11 +133,19 @@ export function extractNumbers(text) {
     addMatch(12, match[0], match.index, match.index + match[0].length);
   }
 
+  // 4b. Cardinal "hundred", "hundreds", "one hundred", "a hundred", "one hundredth"
+  const hundredRegex = /\b(?:(?:one|a)[\s-]+)?(?:hundreds?|hundredth)\b/gi;
+  while ((match = hundredRegex.exec(lower)) !== null) {
+    addMatch(100, match[0], match.index, match.index + match[0].length);
+  }
+
   // 5. Compound word numbers (e.g. twenty-four, thirty-four, eighty-five, twenty-fourth)
-  const compoundRegex = /\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)[ -](one|two|three|four|five|six|seven|eight|nine|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)\b/g;
+  // Handles variable whitespace, hyphens, and combinations like 'twenty - four', 'twenty  four'
+  const compoundRegex = /\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[\s-]+)(one|two|three|four|five|six|seven|eight|nine|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)\b/gi;
   while ((match = compoundRegex.exec(lower)) !== null) {
-    const tens = TENS_WORDS[match[1]];
-    const unit = ONES_WORDS[match[2]] ?? ORDINALS[match[2]] ?? 0;
+    const tens = TENS_WORDS[match[1].toLowerCase()] ?? TENS_WORDS[match[1]];
+    const unitKey = match[2].toLowerCase();
+    const unit = ONES_WORDS[unitKey] ?? ORDINALS[unitKey] ?? 0;
     addMatch(tens + unit, match[0], match.index, match.index + match[0].length);
   }
 
@@ -140,6 +158,13 @@ export function extractNumbers(text) {
   }
 
   for (const [word, val] of Object.entries(TENS_WORDS)) {
+    const regex = new RegExp(`\\b${word}\\b`, 'g');
+    while ((match = regex.exec(lower)) !== null) {
+      addMatch(val, match[0], match.index, match.index + match[0].length);
+    }
+  }
+
+  for (const [word, val] of Object.entries(HUNDREDS_WORDS)) {
     const regex = new RegExp(`\\b${word}\\b`, 'g');
     while ((match = regex.exec(lower)) !== null) {
       addMatch(val, match[0], match.index, match.index + match[0].length);

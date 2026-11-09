@@ -171,14 +171,62 @@ describe('Pólya State Machine — Pure Functional Transitions', () => {
       // First wrong conjecture
       const { session: s2 } = transition(s1, { type: 'conjecture', value: 99 }, encounters.reverseTolls);
       assert.equal(s2.conjectures, 1);
+      assert.equal(s2.state, 'understand');
 
-      // Child returns to conjecture or sends second conjecture
-      s2.state = 'conjecture';
+      // Child sends second conjecture directly from understand (no test mutation)
       deepFreeze(s2);
 
-      const { session: s3 } = transition(s2, { type: 'conjecture', value: 100 }, encounters.reverseTolls);
+      const { session: s3, events } = transition(s2, { type: 'conjecture', value: 100 }, encounters.reverseTolls);
       assert.equal(s3.state, 'understand');
       assert.equal(s3.conjectures, 2);
+      assert.ok(events.some(e => e.type === 'engine.transition' && e.from === 'understand' && e.to === 'understand' && e.conjectures === 2));
+
+      // Third conjecture attempt in understand is ignored once cap of 2 is reached
+      deepFreeze(s3);
+      const { session: s4 } = transition(s3, { type: 'conjecture', value: 101 }, encounters.reverseTolls);
+      assert.equal(s4.conjectures, 2);
+      assert.equal(s4.state, 'understand');
+    });
+
+    it('T05b: Second conjecture in understand with right answer and >= 3 words shortcuts to look_back', () => {
+      const s0 = createSession(encounters.reverseTolls);
+      const { session: s1 } = transition(s0, { type: 'arrive' }, encounters.reverseTolls);
+      const { session: s2 } = transition(s1, { type: 'conjecture', value: 99 }, encounters.reverseTolls);
+      assert.equal(s2.state, 'understand');
+      assert.equal(s2.conjectures, 1);
+      deepFreeze(s2);
+
+      const action = {
+        type: 'conjecture',
+        stem: 'think',
+        value: encounters.reverseTolls.parts[0].answer.value,
+        reason: 'I reversed the toll calculations'
+      };
+      const { session: s3, events } = transition(s2, action, encounters.reverseTolls);
+      assert.equal(s3.state, 'look_back');
+      assert.equal(s3.shortcut, true);
+      assert.ok(events.some(e => e.type === 'engine.transition' && e.from === 'understand' && e.to === 'look_back' && e.shortcut === true));
+      assert.ok(events.some(e => e.type === 'shortcut' && e.shortcut === true));
+    });
+
+    it('T05c: Second conjecture in understand with right answer and < 3 words triggers skeptic probe', () => {
+      const s0 = createSession(encounters.reverseTolls);
+      const { session: s1 } = transition(s0, { type: 'arrive' }, encounters.reverseTolls);
+      const { session: s2 } = transition(s1, { type: 'conjecture', value: 99 }, encounters.reverseTolls);
+      assert.equal(s2.state, 'understand');
+      assert.equal(s2.conjectures, 1);
+      deepFreeze(s2);
+
+      const action = {
+        type: 'conjecture',
+        stem: 'think',
+        value: encounters.reverseTolls.parts[0].answer.value,
+        reason: 'just guessed'
+      };
+      const { session: s3, events } = transition(s2, action, encounters.reverseTolls);
+      assert.equal(s3.state, 'understand');
+      assert.equal(s3.conjectures, 1);
+      assert.ok(events.some(e => e.type === 'conjecture.skeptic_prompt'));
     });
 
     it('skip_conjecture action advances directly to Understand at current hint level', () => {
@@ -364,6 +412,57 @@ describe('Pólya State Machine — Pure Functional Transitions', () => {
       assert.equal(s1.state, 'simpler_problem');
       assert.ok(s1.simplerProblemState);
     });
+
+    it('T10b: Single stuck action in Carry Out immediately advances hint ladder by 1 rung', () => {
+      const s0 = createSession(encounters.reverseTolls);
+      s0.state = 'carry_out';
+      s0.hintRung = 'l1';
+      s0.hintRungIndex = 1;
+      s0.nonProgressCount = 1;
+      deepFreeze(s0);
+
+      // Single stuck click advances from l1 to l2 immediately and resets nonProgressCount
+      const { session: s1, events: e1 } = transition(s0, { type: 'stuck' }, encounters.reverseTolls);
+      assert.equal(s1.state, 'carry_out');
+      assert.equal(s1.hintRung, 'l2');
+      assert.equal(s1.hintRungIndex, 2);
+      assert.equal(s1.nonProgressCount, 0);
+      assert.ok(e1.some(e => e.type === 'ladder.escalate' && e.ladder === 'l2'));
+
+      // Advancing stuck again from l2 reaches l4 (index 3) and transitions to simpler_problem
+      deepFreeze(s1);
+      const { session: s2, events: e2 } = transition(s1, { type: 'stuck' }, encounters.reverseTolls);
+      assert.equal(s2.state, 'simpler_problem');
+      assert.equal(s2.hintRung, 'l4');
+      assert.equal(s2.hintRungIndex, 3);
+      assert.ok(s2.simplerProblemState);
+      assert.equal(s2.simplerProblemState.statement, encounters.reverseTolls.parts[0].ladder.l4.statement);
+      assert.ok(e2.some(e => e.to === 'simpler_problem'));
+    });
+
+    it('handles child dialogue (action.type === "say") in carry_out by appending history and emitting child.say event', () => {
+      const s0 = createSession(encounters.reverseTolls);
+      s0.state = 'carry_out';
+      s0.hintRung = 'l1';
+      s0.hintRungIndex = 1;
+      deepFreeze(s0);
+
+      const action = { type: 'say', text: 'Should I undo the last gate first?' };
+      const { session: s1, events } = transition(s0, action, encounters.reverseTolls);
+
+      assert.equal(s1.state, 'carry_out');
+      assert.equal(s1.hintRung, 'l1');
+      assert.equal(s1.history.length, s0.history.length + 1);
+
+      const lastTurn = s1.history[s1.history.length - 1];
+      assert.equal(lastTurn.who, 'child');
+      assert.equal(lastTurn.action, 'say');
+      assert.equal(lastTurn.payload.text, 'Should I undo the last gate first?');
+
+      const sayEvent = events.find(e => e.type === 'child.say');
+      assert.ok(sayEvent);
+      assert.equal(sayEvent.utterance, 'Should I undo the last gate first?');
+    });
   });
 
   // --------------------------------------------------------------------------
@@ -400,11 +499,13 @@ describe('Pólya State Machine — Pure Functional Transitions', () => {
         attempts: 0,
         completed: false
       };
+      deepFreeze(s0);
 
       // Attempt 1: wrong
       const { session: s1 } = transition(s0, { type: 'simpler_submit', value: 99 }, encounters.reverseTolls);
       assert.equal(s1.state, 'simpler_problem');
       assert.equal(s1.simplerProblemState.attempts, 1);
+      deepFreeze(s1);
 
       // Attempt 2: wrong -> returns to carry_out
       const { session: s2, events } = transition(s1, { type: 'simpler_submit', value: 88 }, encounters.reverseTolls);
@@ -494,6 +595,23 @@ describe('Pólya State Machine — Pure Functional Transitions', () => {
       const { session: s1, events } = transition(s0, { type: 'waive' }, encounters.reverseTolls);
       assert.equal(s1.state, 'look_back'); // Did not seal!
       assert.equal(events.length, 0);
+    });
+
+    it('T18c: Session initialized with { chapterWaiverUsed: true } disallows waiver in Look Back', () => {
+      const s0 = createSession(encounters.reverseTolls, { chapterWaiverUsed: true });
+      assert.equal(s0.chapterWaiverUsed, true);
+      assert.equal(s0.parentWaiver, true);
+      s0.state = 'look_back';
+      deepFreeze(s0);
+
+      const { session: s1, events } = transition(s0, { type: 'waive' }, encounters.reverseTolls);
+      assert.equal(s1.state, 'look_back', 'Must remain in look_back when chapter waiver was already used');
+      assert.equal(s1.lookBackCompleted, false);
+      assert.equal(s1.isSealed, false);
+      assert.equal(events.length, 0);
+
+      const view = getClientSafeView(s1, encounters.reverseTolls);
+      assert.equal(view.parentWaiverAvailable, false);
     });
   });
 

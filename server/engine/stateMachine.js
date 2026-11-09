@@ -129,8 +129,8 @@ export function createSession(encounter, options = {}) {
     simplerProblemState: null,
     simplerProblemL3Unlocked: false,
     lookBackCompleted: false,
-    parentWaiver: false,
-    chapterWaiverUsed: false,
+    parentWaiver: Boolean(options.parentWaiver || options.chapterWaiverUsed),
+    chapterWaiverUsed: Boolean(options.chapterWaiverUsed || options.parentWaiver),
     parentFlag: false,
     parentScribe: false,
     isSealed: false,
@@ -156,13 +156,17 @@ export function transition(session, action, encounter) {
   let next = {
     ...session,
     history: [...(session.history || [])],
+    simplerProblemState: session.simplerProblemState
+      ? { ...session.simplerProblemState }
+      : null,
     updatedAt: Date.now()
   };
 
   function syncAliases() {
     next.phase = next.state;
     next.conjecturesCount = next.conjectures;
-    next.chapterWaiverUsed = next.parentWaiver;
+    next.chapterWaiverUsed = Boolean(next.chapterWaiverUsed || next.parentWaiver);
+    next.parentWaiver = next.chapterWaiverUsed;
     next.isSealed = Boolean(next.completed || next.lookBackCompleted || next.state === 'sealed' || next.state === 'map');
   }
 
@@ -291,6 +295,51 @@ export function transition(session, action, encounter) {
   // STATE: UNDERSTAND
   // =========================================================================
   if (next.state === 'understand') {
+    // T05 & Second Conjecture Handling (SPEC §4 Rows 2–5)
+    if (action.type === 'conjecture' && next.conjectures < 2) {
+      const { stem, value, reason } = action;
+      appendHistory('child', 'conjecture', { stem, value, reason });
+      const isRight = checkAnswer(value, part.answer);
+      const wordCount = countWords(reason);
+
+      if (isRight) {
+        if (wordCount >= 3) {
+          // T02: Right answer with >= 3 words -> Shortcut to Look back
+          next.state = 'look_back';
+          next.shortcut = true;
+          recordEvent('engine.transition', { from: 'understand', to: 'look_back', shortcut: true });
+          recordEvent('shortcut', { shortcut: true, words: wordCount });
+          syncAliases();
+          return { session: next, events };
+        } else {
+          // T03: Right answer with < 3 words -> Skeptic prompt
+          recordEvent('conjecture.skeptic_prompt', { prompt: 'Convince me in one sentence.' });
+          syncAliases();
+          return { session: next, events };
+        }
+      } else {
+        // T05: Second wrong conjecture -> closes conjecture window, updates misconception
+        next.conjectures = 2;
+        const matched = matchMisconception(value, part.misconceptions);
+        if (matched) {
+          next.misconceptionTag = matched.tag;
+          const startLvl = typeof matched.startLevel === 'number' ? matched.startLevel : 0;
+          next.hintRungIndex = Math.min(4, Math.max(0, startLvl));
+          next.hintRung = LADDER_RUNGS[next.hintRungIndex];
+        }
+
+        recordEvent('engine.transition', {
+          from: 'understand',
+          to: 'understand',
+          conjectures: next.conjectures,
+          tag: next.misconceptionTag,
+          startRung: next.hintRung
+        });
+        syncAliases();
+        return { session: next, events };
+      }
+    }
+
     if (action.type === 'say' || action.type === 'chip') {
       appendHistory('child', action.type, { text: action.text || action.chip });
       const classification = action.classification || {};
@@ -342,6 +391,15 @@ export function transition(session, action, encounter) {
   // STATE: CARRY_OUT
   // =========================================================================
   if (next.state === 'carry_out') {
+    // Child dialogue / speech in Carry Out (SPEC §4, §6)
+    if (action.type === 'say') {
+      const text = action.text || '';
+      appendHistory('child', 'say', { text });
+      recordEvent('child.say', { utterance: text });
+      syncAliases();
+      return { session: next, events };
+    }
+
     // Interactive workspace step
     if (action.type === 'step') {
       appendHistory('child', 'step', action.payload);
@@ -431,12 +489,12 @@ export function transition(session, action, encounter) {
     }
 
     if (action.type === 'stuck') {
-      next.nonProgressCount += 1;
-      if (next.nonProgressCount >= 2) {
-        next.hintRungIndex = Math.min(4, next.hintRungIndex + 1);
-        next.hintRung = LADDER_RUNGS[next.hintRungIndex];
-        next.nonProgressCount = 0;
-      }
+      appendHistory('child', 'stuck');
+      next.nonProgressCount = 0;
+      next.hintRungIndex = Math.min(4, next.hintRungIndex + 1);
+      next.hintRung = LADDER_RUNGS[next.hintRungIndex];
+      recordEvent('ladder.escalate', { ladder: next.hintRung, reason: 'stuck' });
+
       if (next.hintRungIndex === 3) {
         next.state = 'simpler_problem';
         next.simplerProblemState = {
@@ -446,6 +504,7 @@ export function transition(session, action, encounter) {
           attempts: 0,
           completed: false
         };
+        recordEvent('engine.transition', { from: 'carry_out', to: 'simpler_problem', trigger: 'ladder_l4' });
       }
       syncAliases();
       return { session: next, events };
@@ -516,7 +575,7 @@ export function transition(session, action, encounter) {
 
     if (action.type === 'waive') {
       // T18: Look back -> Sealed (Parent waiver)
-      if (!next.parentWaiver) {
+      if (!next.parentWaiver && !next.chapterWaiverUsed) {
         next.parentWaiver = true;
         next.chapterWaiverUsed = true;
         next.lookBackCompleted = true;
