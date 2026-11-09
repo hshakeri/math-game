@@ -4,18 +4,26 @@
  * client/app.js
  *
  * Zero external dependencies.
- * Screen router (#map, #encounter, #codex), Web Audio synthesizer,
- * Typewriter speech bubble with instant tap-to-complete,
- * Heuristic deck drawer & overlay, pure SVG Golden Seal animator.
+ * Screen router (#map, #encounter), optional Seal chime,
+ * Still illustrations with silent, timed speech bubbles,
+ * Heuristic deck drawer and optional Golden Seal chime.
  */
 
-import { renderDiagram, mountDiagram } from './diagrams/index.js';
+import { mountDiagram } from './diagrams/index.js';
+import { sprite } from './pixel-art.js';
+import { escapeHTML, gateReaction } from './story.js';
+import { TimedSpeech } from './timed-speech.js';
+import { illustration, CARD_ILLUSTRATIONS } from './illustrations.js';
+import { renderWorldMap } from './world-map.js';
+import { renderEncounterMap, storyStops } from './encounter-map.js';
+import { mountCalculationTools } from './calculation-tools.js';
 
 // 1. Audio Synthesizer (Pure Web Audio API — No External Sound Files!)
 export class SoundSynth {
   constructor() {
     this.ctx = null;
-    this.soundEnabled = typeof localStorage !== 'undefined' && localStorage.getItem('cot_sound') !== 'false';
+    this.soundEnabled = true;
+    try { this.soundEnabled = localStorage.getItem('cot_sound') !== 'false'; } catch {}
   }
 
   ensureContext() {
@@ -82,52 +90,8 @@ export class SoundSynth {
 
   toggleSound() {
     this.soundEnabled = !this.soundEnabled;
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('cot_sound', this.soundEnabled ? 'true' : 'false');
-    }
+    try { localStorage.setItem('cot_sound', this.soundEnabled ? 'true' : 'false'); } catch {}
     return this.soundEnabled;
-  }
-}
-
-// 2. Typewriter Effect Controller (40 char/s with Instant Tap-to-Complete)
-export class Typewriter {
-  constructor(element, soundSynth, onComplete) {
-    this.el = element;
-    this.synth = soundSynth;
-    this.onComplete = onComplete;
-    this.isTyping = false;
-    this.targetText = '';
-    this.currentIndex = 0;
-    this.intervalId = null;
-  }
-
-  type(text) {
-    this.targetText = text || '';
-    this.currentIndex = 0;
-    this.isTyping = true;
-    if (this.el) this.el.textContent = '';
-    if (this.intervalId) clearInterval(this.intervalId);
-
-    // ~40 characters per second = 25 ms interval (Silent typing per SPEC §9 line 329)
-    this.intervalId = setInterval(() => {
-      if (this.currentIndex < this.targetText.length) {
-        const char = this.targetText[this.currentIndex];
-        if (this.el) this.el.textContent += char;
-        this.currentIndex++;
-      } else {
-        this.complete();
-      }
-    }, 25);
-  }
-
-  complete() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-    }
-    if (this.el) this.el.textContent = this.targetText;
-    this.isTyping = false;
-    if (typeof this.onComplete === 'function') this.onComplete();
   }
 }
 
@@ -135,19 +99,32 @@ export class Typewriter {
 export class CastleGame {
   constructor() {
     this.synth = new SoundSynth();
-    this.typewriter = null;
+    this.speeches = {};
+    this.speechTexts = {};
+    this.sceneSpeechKey = '';
+    this.reactionKey = '';
+    this.instantSpeech = false;
+    try { this.instantSpeech = localStorage.getItem('keybreakers_instant_speech') === 'true'; } catch {}
     this.activeSessionId = null;
     this.currentView = null;
     this.currentEncounter = null;
     this.allEncounters = [];
     this.sealShown = false;
+    this.busy = false;
+    this.requestEpoch = 0;
+    this.history = [];
+    this.lastSpoken = '';
+    this.lookBackKey = '';
+    this.hero = { name: '', variant: 1 }; // One boy Keybreaker; no setup step.
+    this.storyStop = 0;
+    this.calculationTools = null;
 
     // The 6 Heuristic Cards (SPEC §9, §10, validate.js)
     this.deckCards = [
       { id: 'work-backwards', name: 'Work Backwards', desc: 'Start from the finish and undo each step in reverse order.' },
       { id: 'worst-case', name: 'Worst Case', desc: 'Imagine the unluckiest trick or goblin dodging your goal.' },
       { id: 'tiny-case', name: 'Try a Tiny Case', desc: 'Shrink big numbers down to see the pattern clearly.' },
-      { id: 'draw-it', name: 'Draw a Diagram', desc: 'Sketch shapes, boxes, or lines to see what is hidden.' },
+      { id: 'draw-it', name: 'Draw It', desc: 'Sketch shapes, boxes, or lines to see what is hidden.' },
       { id: 'odd-or-even', name: 'Odd or Even', desc: 'Divide numbers into odds and evens to eliminate cases.' },
       { id: 'find-what-is-shared', name: 'Find What is Shared', desc: 'Spot the seam or prime factor that two clues have in common.' }
     ];
@@ -161,38 +138,38 @@ export class CastleGame {
 
   initDOM() {
     // Check dyslexia-friendly font setting
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('cot_dyslexia') === 'true') {
-      document.body.classList.add('dyslexia-font');
-    }
+    try {
+      if (localStorage.getItem('cot_dyslexia') === 'true') document.body.classList.add('dyslexia-font');
+    } catch {}
 
-    const speechEl = document.getElementById('owl-speech-text');
-    this.typewriter = new Typewriter(speechEl, this.synth);
+    this.initHero();
+    this.initModalKeys();
+    document.getElementById('tiny-case-form')?.addEventListener('submit', e => {
+      e.preventDefault();
+      const value = document.getElementById('tiny-case-answer').value;
+      if (value !== '') this.handleAction({ type: 'simpler_submit', value: Number(value) });
+    });
+    this.initSpeech();
 
-    // Tap on owl bubble completes instantly
-    const owlBubble = document.getElementById('owl-bubble');
-    if (owlBubble) {
-      owlBubble.addEventListener('click', () => {
-        if (this.typewriter && this.typewriter.isTyping) {
-          this.typewriter.complete();
-        }
-      });
-    }
-
-    // Seal Chime Audio Toggle
-    const audioBtn = document.getElementById('btn-audio-toggle');
-    if (audioBtn) {
-      const updateAudioBtn = (enabled) => {
-        audioBtn.textContent = enabled ? '🔔' : '🔕';
-        audioBtn.setAttribute('aria-label', enabled ? 'Golden Seal chime enabled' : 'Golden Seal chime muted');
-        audioBtn.setAttribute('title', enabled ? 'Seal chime enabled (tap to mute)' : 'Seal chime muted (tap to enable)');
-      };
-      updateAudioBtn(this.synth.soundEnabled);
-
-      audioBtn.addEventListener('click', () => {
-        const enabled = this.synth.toggleSound();
-        updateAudioBtn(enabled);
-      });
-    }
+    this.calculationTools = mountCalculationTools(document.getElementById('calculation-mount'));
+    document.getElementById('encounter-map-mount')?.addEventListener('click', event => {
+      const stop = event.target.closest?.('[data-story-stop]');
+      const next = event.target.closest?.('[data-story-next]');
+      if (!this.currentView || (!stop && !next)) return;
+      this.storyStop = stop ? Number(stop.dataset.storyStop)
+        : (this.storyStop + 1) % Math.max(1, storyStops(this.currentView).length);
+      this.renderStoryMap();
+      // Restore the activating map control after replacing its scene markup.
+      const selector = next ? '[data-story-next]' : `[data-story-stop="${this.storyStop}"]`;
+      document.querySelector(`#encounter-map-mount ${selector}`)?.focus({ preventScroll: true });
+    });
+    const tools = document.getElementById('tools-drawer');
+    document.getElementById('btn-my-tools')?.addEventListener('click', () => {
+      tools.open = !tools.open;
+    });
+    tools?.addEventListener('toggle', () => {
+      document.getElementById('btn-my-tools')?.setAttribute('aria-expanded', String(tools.open));
+    });
 
     // User Gesture Audio Unlock
     window.addEventListener('pointerdown', () => this.synth.ensureContext(), { once: true });
@@ -254,11 +231,7 @@ export class CastleGame {
     // Golden Seal Modal Continue
     const sealContinue = document.getElementById('btn-seal-continue');
     if (sealContinue) {
-      sealContinue.addEventListener('click', () => {
-        const sealOverlay = document.getElementById('golden-seal-overlay');
-        if (sealOverlay) sealOverlay.classList.add('hidden');
-        window.location.hash = '#map';
-      });
+      sealContinue.addEventListener('click', () => this.finishEncounter());
     }
   }
 
@@ -269,15 +242,11 @@ export class CastleGame {
         this.showScreen('screen-encounter');
         const urlParams = new URLSearchParams(hash.includes('?') ? hash.split('?')[1] : '');
         const encId = urlParams.get('id') || 'ch1-n1-reverse-tolls';
-        if (encId && (!this.currentView || this.currentView.encounterId !== encId)) {
-          this.startEncounter(encId);
-        }
-      } else if (hash.startsWith('#codex')) {
-        this.showScreen('screen-codex');
-        this.renderCodex();
+        if (encId) this.startEncounter(encId);
+
       } else {
         this.showScreen('screen-map');
-        this.renderMap();
+        this.loadCatalog();
       }
     };
 
@@ -286,6 +255,13 @@ export class CastleGame {
   }
 
   showScreen(screenId) {
+    if (screenId !== 'screen-encounter') {
+      this.requestEpoch++;
+      this.setBusy(false);
+      this.cancelSpeech({ clear: true });
+      this.currentView = null;
+      this.dismissModals();
+    }
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById(screenId);
     if (target) target.classList.remove('hidden');
@@ -304,94 +280,261 @@ export class CastleGame {
   }
 
   async startEncounter(encounterId) {
+    const epoch = ++this.requestEpoch;
+    this.setBusy(false);
+    this.cancelSpeech({ clear: true });
+    this.dismissModals();
+    this.sceneSpeechKey = '';
+    this.reactionKey = '';
     this.sealShown = false;
+    this.lastSpoken = '';
+    this.lookBackKey = '';
+    this.history = [];
+    this.currentView = null;
+    this.activeSessionId = null;
+    this.setBusy(true);
+    this.notice('');
     try {
-      const res = await fetch('/api/session/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ encounterId })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        this.activeSessionId = data.sessionId;
-        this.updateView(data.view || data);
+      let data = null;
+      let savedId = null;
+      try { savedId = sessionStorage.getItem(`keybreakers_session_${encounterId}`); } catch {}
+      if (savedId) {
+        const restored = await fetch(`/api/session/${encodeURIComponent(savedId)}/state`);
+        if (restored.ok) {
+          const candidate = await restored.json();
+          if (candidate.view?.encounterId === encounterId && !candidate.view.completed) data = { ...candidate, sessionId: savedId };
+        }
       }
+      if (!data) {
+        const res = await fetch('/api/session/start', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ encounterId })
+        });
+        if (!res.ok) throw new Error('The road could not be loaded. Try opening this gate again.');
+        data = await res.json();
+      }
+      if (epoch !== this.requestEpoch) return;
+      this.activeSessionId = data.sessionId;
+      try { sessionStorage.setItem(`keybreakers_session_${encounterId}`, data.sessionId); } catch {}
+      this.updateView(data.view || data);
+      this.renderReaction(data.view || data, []);
     } catch (err) {
-      console.error('Failed to start session', err);
+      if (epoch === this.requestEpoch) this.notice(err.message || 'The road could not be loaded. Try again.');
+    } finally {
+      if (epoch === this.requestEpoch) this.setBusy(false);
     }
   }
 
   async handleAction(action) {
-    if (!this.activeSessionId) return;
+    if (!this.activeSessionId || this.busy) return false;
+    const epoch = this.requestEpoch;
+    const sessionId = this.activeSessionId;
+    this.setBusy(true);
+    this.notice('');
     try {
-      const res = await fetch(`/api/session/${this.activeSessionId}/action`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
+      const res = await fetch(`/api/session/${sessionId}/action`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action })
       });
-      if (res.ok) {
-        const data = await res.json();
-        this.updateView(data.view || data);
-        if (data.speech && this.typewriter) {
-          this.typewriter.type(data.speech);
-        }
+      if (!res.ok) throw new Error('That message did not reach Rivet. Your work is here; try again.');
+      const data = await res.json();
+      if (epoch !== this.requestEpoch || sessionId !== this.activeSessionId) return false;
+      const words = action.text || (action.type === 'conjecture' ? `I think ${action.value}, because ${action.reason}` : '');
+      if (words) this.appendHistory(this.hero.name || 'You', words);
+      this.updateView(data.view || data, { speak: false });
+      this.renderReaction(data.view || data, data.events || []);
+      // One response carries the same utterance in both places. A new child turn
+      // may legitimately receive the same scripted sentence as the previous turn.
+      if (data.speech) this.speak(data.speech, { repeat: true });
+      else if (data.view?.lastTutorUtterance) this.speak(data.view.lastTutorUtterance);
+      if (action.type === 'lookback' && (data.view?.sealed || data.view?.completed)) {
+        try { localStorage.setItem(`keybreakers_note_${this.currentView.encounterId}`, String(action.value)); } catch {}
       }
+      return true;
     } catch (err) {
-      console.error('Action failed', err);
+      if (epoch === this.requestEpoch) this.notice(err.message || 'Rivet could not hear that. Try again.');
+      return false;
+    } finally {
+      if (epoch === this.requestEpoch) this.setBusy(false);
     }
   }
 
-  updateView(view) {
-    if (!view) return;
-    this.currentView = view;
-    const phase = view.state || view.phase;
-
-    // 0. Set Scene Backdrop
-    const backdropEl = document.getElementById('encounter-backdrop');
-    const assetId = view.sceneAsset || view.scene?.assetId;
-    if (backdropEl && assetId) {
-      backdropEl.style.backgroundImage = `url('/assets/scenes/${assetId}.svg')`;
+  async finishEncounter() {
+    const epoch = this.requestEpoch;
+    const session = this.activeSessionId;
+    if (await this.handleAction({ type: 'complete' })) {
+      this.hideModal('golden-seal-overlay');
+      await this.loadCatalog();
+      if (epoch === this.requestEpoch && session === this.activeSessionId) window.location.hash = '#map';
     }
+  }
 
-    // 1. Update Title and Inscription
-    const titleEl = document.getElementById('encounter-title');
-    if (titleEl) titleEl.textContent = view.title || 'Encounter';
+  setBusy(value) {
+    this.busy = value;
+    const screen = document.getElementById('screen-encounter');
+    screen?.classList.toggle('is-busy', value);
+    screen?.setAttribute('aria-busy', String(value));
+    document.getElementById('rivet-thinking')?.classList.toggle('hidden', !value);
+    const input = document.getElementById('child-text-input');
+    if (input) input.disabled = value || Boolean(this.currentView?.parentScribe);
+  }
 
-    const inscEl = document.getElementById('inscription-text');
-    if (inscEl) inscEl.textContent = view.inscription || '';
+  notice(message) {
+    const el = document.getElementById('game-notice');
+    if (!el) return;
+    el.textContent = message;
+    el.classList.toggle('hidden', !message);
+  }
 
-    const bannerEl = document.getElementById('part-prompt-banner');
-    if (bannerEl) {
-      if (view.partPrompt) {
-        bannerEl.textContent = view.partPrompt;
-        bannerEl.classList.remove('hidden');
-      } else {
-        bannerEl.classList.add('hidden');
+  initSpeech() {
+    const textIds = { rivet: 'owl-speech-text', lemma: 'lemma-speech-text' };
+    for (const [name, id] of Object.entries(textIds)) {
+      const button = document.querySelector(`[data-speech="${name}"]`);
+      const accessible = document.getElementById(`${name}-speech-accessible`);
+      this.speeches[name] = new TimedSpeech(document.getElementById(id), {
+        reducedMotion: () => this.instantSpeech || document.hidden || this.speechObscured(name)
+          || (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches),
+        onStart: text => {
+          // Announce the complete line once; visual character updates are aria-hidden.
+          if (accessible) {
+            accessible.setAttribute('aria-live', this.speechObscured(name) ? 'off' : 'polite');
+            accessible.textContent = text;
+          }
+          if (button) button.textContent = 'Read now';
+        },
+        onComplete: () => { if (button) button.textContent = 'Read again'; }
+      });
+      button?.addEventListener('click', () => {
+        const speech = this.speeches[name];
+        if (!this.speechTexts[name]) return;
+        if (speech.pending || speech.isTyping) speech.complete();
+        else speech.replay();
+      });
+      document.getElementById(id)?.addEventListener('click', () => this.speeches[name].complete());
+    }
+    const mode = document.getElementById('btn-speech-mode');
+    const renderMode = () => {
+      if (!mode) return;
+      mode.textContent = this.instantSpeech ? 'Speech: instant' : 'Speech: paced';
+      mode.setAttribute('aria-pressed', String(this.instantSpeech));
+    };
+    renderMode();
+    mode?.addEventListener('click', () => {
+      this.instantSpeech = !this.instantSpeech;
+      try { localStorage.setItem('keybreakers_instant_speech', String(this.instantSpeech)); } catch {}
+      if (this.instantSpeech) this.completeSpeech();
+      renderMode();
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.completeSpeech();
+    });
+    if (typeof matchMedia === 'function') {
+      matchMedia('(prefers-reduced-motion: reduce)').addEventListener?.('change', event => {
+        if (event.matches) this.completeSpeech();
+      });
+    }
+  }
+
+  speechObscured(name) {
+    if (typeof document === 'undefined') return false;
+    const modal = document.querySelector('.modal-overlay:not(.hidden)');
+    return name === 'lemma' ? modal?.id !== 'deck-overlay' : Boolean(modal);
+  }
+
+  playSpeech(name, text, { delay = 450, repeat = false } = {}) {
+    if (!text || (!repeat && this.speechTexts[name] === text)) return;
+    this.speechTexts[name] = text;
+    this.speeches[name]?.speak(text, { delay, instant: this.speechObscured(name) });
+  }
+
+  completeSpeech() {
+    Object.values(this.speeches).forEach(speech => speech.complete());
+  }
+
+  cancelSpeech({ clear = false } = {}) {
+    Object.values(this.speeches).forEach(speech => speech.cancel({ clear }));
+    if (clear) {
+      this.speechTexts = {};
+      if (typeof document !== 'undefined') {
+        for (const name of ['keeper', 'rivet', 'grubb', 'lemma']) {
+          const text = document.getElementById(`${name}-speech-accessible`);
+          if (text) text.textContent = '';
+        }
       }
     }
+  }
+
+  speak(text, { repeat = false, delay = 450 } = {}) {
+    if (!text || (!repeat && text === this.lastSpoken)) return;
+    this.lastSpoken = text;
+    this.appendHistory('Rivet', text);
+    this.playSpeech('rivet', text, { delay, repeat: true });
+  }
+
+  appendHistory(who, words) {
+    this.history.push({ who, words });
+    const log = document.getElementById('dialogue-history-log');
+    if (log) log.innerHTML = this.history.map(h => `<p><strong>${escapeHTML(h.who)}</strong>${escapeHTML(h.words)}</p>`).join('');
+  }
+
+  renderReaction(view, events) {
+    const reaction = gateReaction(view, events);
+    const key = `${reaction.pose}:${reaction.word}`;
+    const el = document.getElementById('scene-grubb');
+    if (el && key !== this.reactionKey) el.innerHTML = sprite('grubb', { pose: reaction.pose });
+    document.getElementById('gate-word').textContent = reaction.word;
+    document.getElementById('gate-reaction').textContent = reaction.word ? reaction.text : '';
+    document.getElementById('gate-event')?.classList.toggle('hidden', !reaction.word);
+    this.reactionKey = key;
+  }
+
+  renderStoryMap() {
+    const mount = document.getElementById('encounter-map-mount');
+    if (mount && this.currentView) mount.innerHTML = renderEncounterMap(this.currentView, this.storyStop);
+  }
+
+  updateView(view, { speak = true } = {}) {
+    if (!view) return;
+    const previousView = this.currentView;
+    const sceneKey = `${view.encounterId}:${view.currentPartId || view.partId || ''}`;
+    const newScene = this.sceneSpeechKey !== sceneKey;
+    if (newScene) {
+      this.cancelSpeech({ clear: true });
+      this.sceneSpeechKey = sceneKey;
+      this.reactionKey = '';
+      this.lastSpoken = '';
+      this.storyStop = 0;
+      this.calculationTools?.setStorageKey(`keybreakers_work_${sceneKey}`);
+    }
+    this.currentView = view;
+    const phase = view.state || view.phase;
+    if (newScene) this.renderStoryMap();
+    const titleEl = document.getElementById('encounter-title');
+    if (titleEl) titleEl.textContent = view.story?.kind === 'toll-road' ? 'The three toll gates' : view.title || 'The gate';
+    const goal = document.getElementById('challenge-goal');
+    if (goal) goal.textContent = view.story?.kind === 'toll-road'
+      ? 'How many Star-Coins were in his pouch at the beginning?' : view.partPrompt || view.prompt || '';
 
     // 2. Deck Button lock status (Unlocked only in 'plan' and forward)
     const deckBtn = document.getElementById('btn-toggle-deck');
     const lockBadge = document.getElementById('deck-lock-badge');
     const isPlanOrLater = ['plan', 'carry_out', 'simpler_problem', 'submit', 'look_back'].includes(phase);
     if (deckBtn) {
+      deckBtn.classList.toggle('hidden', !isPlanOrLater);
       if (isPlanOrLater) {
         deckBtn.classList.remove('locked');
         deckBtn.setAttribute('aria-label', 'Open Heuristic Deck');
-        if (lockBadge) lockBadge.textContent = '✨';
+        if (lockBadge) lockBadge.textContent = '↗';
       } else {
         deckBtn.classList.add('locked');
         deckBtn.setAttribute('aria-label', 'Heuristic Deck (Locked during Understand)');
-        if (lockBadge) lockBadge.textContent = '🔒';
+        if (lockBadge) lockBadge.textContent = '◇';
       }
     }
 
     // 3. Owl Utterance
-    if (view.lastTutorUtterance && this.typewriter) {
-      this.typewriter.type(view.lastTutorUtterance);
-    } else if (phase === 'arrive' && this.typewriter) {
-      const arrivalText = view.narrative?.arrival || 'Greetings, young architect. Read the inscription carefully.';
-      this.typewriter.type(arrivalText);
+    if (speak && view.lastTutorUtterance) {
+      this.speak(view.lastTutorUtterance);
+    } else if (speak && phase === 'arrive') {
+      this.speak('Let’s explore the story. Tap the places on the map, then tell me what we are trying to find.', { delay: 450 });
     }
 
     // 4. Arrival Panel visibility
@@ -426,11 +569,34 @@ export class CastleGame {
         const c = this.deckCards.find(cd => cd.id === view.activeCard);
         activeCardName.textContent = c ? c.name : view.activeCard;
       }
-      this.mountDiagramComponent(view.diagram);
+      if (phase !== 'simpler_problem') this.mountDiagramComponent(view.diagram);
     } else {
       if (placeholder) placeholder.classList.remove('hidden');
       if (activeCardPill) activeCardPill.classList.add('hidden');
+      const mount = document.getElementById('diagram-mount');
+      if (view.diagram?.mode === 'hint') this.mountDiagramComponent(view.diagram);
+      else if (mount) mount.innerHTML = `<p class="workspace-placeholder">${phase === 'plan' ? 'Lemma has the deck ready. Choose a creature to bring your tools to the table.' : 'Lemma is sorting the cards. Explore the story and talk it through with Rivet.'}</p>`;
     }
+    document.getElementById('diagram-mount')?.classList.toggle('hidden', phase === 'simpler_problem');
+    document.getElementById('tiny-case-form')?.classList.toggle('hidden', phase !== 'simpler_problem');
+    const hints = document.getElementById('hint-notes');
+    if (hints) hints.innerHTML = (view.revealedHints || []).filter(h => phase === 'simpler_problem' ? h.rung === 'l4' : (h.rung !== 'l4' || Boolean(h.l3))).map(h => `<p class="hint-note">${escapeHTML(h.statement || h.text || '')}${h.l3 ? '<br>' + escapeHTML(h.l3) : ''}</p>`).join('');
+
+    // Show a newly requested learning tool; otherwise respect the child's drawer choice.
+    const newTinyCase = phase === 'simpler_problem' && (newScene || previousView?.state !== 'simpler_problem');
+    const newCard = Boolean(view.activeCard) && (newScene || view.activeCard !== previousView?.activeCard);
+    const newHint = (view.revealedHints || []).some(h => !(newScene ? [] : previousView?.revealedHints || [])
+      .some(old => JSON.stringify(old) === JSON.stringify(h)));
+    if (newTinyCase || newCard || newHint) {
+      const tools = document.getElementById('tools-drawer');
+      const workspace = document.getElementById('workspace-details');
+      if (tools) tools.open = true;
+      if (workspace) workspace.open = true;
+      document.getElementById('btn-my-tools')?.setAttribute('aria-expanded', 'true');
+    }
+
+    // One place to act: show dialogue controls only when the phase uses them.
+    document.querySelector('.reply-strip')?.classList.toggle('hidden', ['arrive', 'conjecture', 'look_back', 'sealed', 'map'].includes(phase));
 
     // 6. Chips
     this.renderChips(view.availableChips || []);
@@ -443,7 +609,7 @@ export class CastleGame {
         textInput.placeholder = 'Parent is typing on the parent tablet...';
       } else {
         textInput.disabled = false;
-        textInput.placeholder = 'Your thought or question (up to 140 chars)...';
+        textInput.placeholder = 'I’m thinking…';
       }
     }
 
@@ -474,7 +640,7 @@ export class CastleGame {
       if (view.partSealed && view.hasMoreParts) {
         partPanel.classList.remove('hidden');
         const title = document.getElementById('part-complete-title');
-        if (title) title.textContent = `Torch ${String(view.currentPartId || '').toUpperCase()} Solved!`;
+        if (title) title.textContent = 'A chamber opens.';
       } else {
         partPanel.classList.add('hidden');
       }
@@ -495,23 +661,29 @@ export class CastleGame {
       btn.className = 'chip btn-touch';
       btn.textContent = chipText;
       btn.addEventListener('click', () => {
-        this.handleAction({ type: 'chip', chip: chipText, text: chipText });
+        this.handleChip(chipText);
       });
       container.appendChild(btn);
     });
+  }
+
+  async handleChip(text) {
+    const planning = this.currentView?.state === 'plan';
+    const sent = await this.handleAction(planning ? { type: 'say', text } : { type: 'chip', chip: text, text });
+    if (sent && planning && this.currentView?.state === 'plan') this.openDeck();
+    return sent;
   }
 
   handleSendReply() {
     const input = document.getElementById('child-text-input');
     if (!input) return;
     const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
+    if (!text || this.busy) return;
     if (this.currentView && (this.currentView.state === 'arrive' || this.currentView.phase === 'arrive')) {
       this.handleAction({ type: 'arrive', text });
       return;
     }
-    this.handleAction({ type: 'say', text });
+    this.handleAction({ type: 'say', text }).then(sent => { if (sent && input.value.trim() === text) input.value = ''; });
   }
 
   handleConjecture() {
@@ -523,7 +695,7 @@ export class CastleGame {
     const stem = stemEl.value;
     const value = valEl.value.trim();
     const reason = reasonEl.value.trim();
-    if (!value || !reason) return;
+    if (!value || !reason) { this.notice('Give Grubb your idea and a few words about why you think it.'); return; }
     this.handleAction({ type: 'conjecture', stem, value, justification: reason, reason });
   }
 
@@ -537,7 +709,7 @@ export class CastleGame {
 
   openDeck() {
     if (!this.currentView || !['plan', 'carry_out', 'simpler_problem', 'submit', 'look_back'].includes(this.currentView.state)) {
-      alert('Archimedes advises: Understand what we are hunting before choosing a tool!');
+      this.notice('Lemma keeps the cards ready. First, read the inscription and talk it through with Rivet.');
       return;
     }
     const grid = document.getElementById('deck-card-grid');
@@ -546,12 +718,14 @@ export class CastleGame {
     const recommended = this.currentView.availableCards || [];
 
     this.deckCards.forEach(card => {
-      const el = document.createElement('div');
+      const el = document.createElement('button');
+      el.type = 'button';
       el.className = `deck-card btn-touch ${recommended.includes(card.id) ? 'recommended' : ''}`;
       el.innerHTML = `
+        ${illustration(CARD_ILLUSTRATIONS[card.id])}
         <strong>${card.name}</strong>
-        <p style="font-size:0.85rem;margin-top:4px;">${card.desc}</p>
-        ${recommended.includes(card.id) ? '<span style="font-size:0.75rem;color:#8c6014;margin-top:6px;">Compass recommended</span>' : ''}
+        <p>${card.desc}</p>
+        ${recommended.includes(card.id) ? '<small>A TOOL FOR THIS GATE</small>' : ''}
       `;
       el.addEventListener('click', () => {
         this.closeDeck();
@@ -560,13 +734,15 @@ export class CastleGame {
       grid.appendChild(el);
     });
 
-    const overlay = document.getElementById('deck-overlay');
-    if (overlay) overlay.classList.remove('hidden');
+    document.getElementById('lemma-portrait').innerHTML = illustration('lemma');
+    this.showModal('deck-overlay');
+    const line = 'Choose a creature. Borrow its way of thinking. The next move is yours.';
+    this.playSpeech('lemma', line, { repeat: true });
   }
 
   closeDeck() {
-    const overlay = document.getElementById('deck-overlay');
-    if (overlay) overlay.classList.add('hidden');
+    this.speeches.lemma?.cancel();
+    this.hideModal('deck-overlay');
   }
 
   showGoldenSeal(codex) {
@@ -575,36 +751,54 @@ export class CastleGame {
     if (codex) {
       const nameEl = document.getElementById('seal-theorem-name');
       const ruleEl = document.getElementById('seal-theorem-rule');
-      if (nameEl) nameEl.textContent = codex.childName || codex.theorem || 'Theorem Proven';
+      if (nameEl) nameEl.textContent = codex.childName || codex.theorem || 'A way to remember';
       if (ruleEl) ruleEl.textContent = codex.oneLine || '';
     }
-    const overlay = document.getElementById('golden-seal-overlay');
-    if (overlay) overlay.classList.remove('hidden');
+    document.getElementById('seal-hero').innerHTML = sprite('hero', { variant: this.hero.variant, pose: 'celebrate' });
+    this.showModal('golden-seal-overlay');
   }
 
   mountDiagramComponent(diagramSpec) {
     const mount = document.getElementById('diagram-mount');
     if (!mount || !diagramSpec) return;
 
-    mountDiagram(mount, diagramSpec, diagramSpec.mode || 'workspace', this.currentView.mechanicState, (step) => {
+    // Each renderer attaches listeners to its mount; use a fresh node to dispose them.
+    const freshMount = mount.cloneNode(false);
+    mount.replaceWith(freshMount);
+    freshMount.addEventListener('keydown', e => {
+      const button = e.target.closest?.('[role="button"]');
+      if (button && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }
+    });
+    mountDiagram(freshMount, diagramSpec, diagramSpec.mode || 'workspace', this.currentView.mechanicState, (step) => {
       this.handleAction({ type: 'step', payload: step, step });
+    });
+    freshMount.querySelectorAll('[data-action]').forEach(control => {
+      control.setAttribute('role', 'button');
+      control.setAttribute('tabindex', '0');
+      if (!control.hasAttribute('aria-label')) control.setAttribute('aria-label', control.textContent.trim() || 'Adjust blueprint');
     });
   }
 
   renderLookBack(options) {
     const container = document.getElementById('look-back-options');
     if (!container) return;
+    const key = JSON.stringify(options);
+    if (key === this.lookBackKey) return;
+    this.lookBackKey = key;
     container.innerHTML = '';
     options.forEach((opt, idx) => {
       const card = document.createElement('div');
-      card.className = 'btn-touch chip lookback-card';
+      card.className = 'lookback-card';
       card.style.display = 'block';
       card.style.textAlign = 'left';
       card.style.padding = '12px';
       card.style.marginBottom = '12px';
 
       const title = document.createElement('strong');
-      title.textContent = `Option ${idx + 1} (${opt.kind}): `;
+      title.textContent = ['Explain your way through', 'Try another way', 'Change the story'][idx] || 'Leave your note';
       const promptP = document.createElement('p');
       promptP.style.margin = '6px 0 10px 0';
       promptP.textContent = opt.prompt;
@@ -616,13 +810,15 @@ export class CastleGame {
       const input = document.createElement('input');
       input.type = 'text';
       input.className = 'input-touch';
-      input.placeholder = 'Your reflection answer...';
+      input.placeholder = 'Here is how I see it…';
+      input.setAttribute('aria-label', opt.prompt);
+      input.maxLength = 140;
       input.style.flex = '1';
 
       const submitBtn = document.createElement('button');
       submitBtn.type = 'submit';
       submitBtn.className = 'btn-touch btn-primary';
-      submitBtn.textContent = 'Submit';
+      submitBtn.textContent = 'Leave my note';
 
       form.appendChild(input);
       form.appendChild(submitBtn);
@@ -643,50 +839,67 @@ export class CastleGame {
   }
 
   renderMap() {
-    const nodes = document.querySelectorAll('.map-node');
-    nodes.forEach(nodeEl => {
-      const nodeId = nodeEl.dataset.node;
-      nodeEl.addEventListener('click', () => {
-        window.location.hash = `#encounter?id=${nodeId}`;
-      });
+    const container = document.getElementById('world-map-mount');
+    if (container) container.innerHTML = renderWorldMap(this.allEncounters);
+  }
+
+  initHero() {
+    this.hero = { name: '', variant: 1 };
+    const hero = document.getElementById('reply-hero');
+    if (hero) hero.innerHTML = sprite('hero', { variant: 1 });
+    const label = document.getElementById('hero-speaker-name');
+    if (label) label.textContent = 'YOU';
+    const rivet = document.getElementById('rivet-avatar');
+    if (rivet) rivet.innerHTML = sprite('rivet');
+  }
+
+  showModal(id) {
+    const overlay = document.getElementById(id);
+    if (!overlay) return;
+    this.completeSpeech();
+    if (!document.querySelector('.modal-overlay:not(.hidden)')) this.modalReturnFocus = document.activeElement;
+    document.querySelectorAll('.modal-overlay').forEach(other => {
+      if (other !== overlay) other.classList.add('hidden');
+    });
+    if (id !== 'deck-overlay') this.speeches.lemma?.cancel();
+    overlay.classList.remove('hidden');
+    document.getElementById('app-root').inert = true;
+    overlay.querySelector('button')?.focus();
+  }
+
+  hideModal(id) {
+    document.getElementById(id)?.classList.add('hidden');
+    const remaining = document.querySelector('.modal-overlay:not(.hidden)');
+    document.getElementById('app-root').inert = Boolean(remaining);
+    if (remaining) remaining.querySelector('button')?.focus();
+    else if (this.modalReturnFocus?.isConnected !== false) this.modalReturnFocus?.focus();
+    for (const name of ['keeper', 'rivet', 'grubb']) {
+      document.getElementById(`${name}-speech-accessible`)?.setAttribute('aria-live', 'polite');
+    }
+  }
+
+  dismissModals() {
+    if (typeof document === 'undefined') return;
+    document.querySelectorAll('.modal-overlay').forEach(el => el.classList.add('hidden'));
+    const root = document.getElementById('app-root');
+    if (root) root.inert = false;
+    this.modalReturnFocus = null;
+  }
+
+  initModalKeys() {
+    document.addEventListener('keydown', e => {
+      const modal = document.querySelector('.modal-overlay:not(.hidden)');
+      if (!modal) return;
+      if (e.key === 'Escape' && modal.id === 'deck-overlay') { e.preventDefault(); this.closeDeck(); }
+      if (e.key !== 'Tab') return;
+      const focusable = [...modal.querySelectorAll('button:not(:disabled), input, a[href], select, [tabindex="0"]')];
+      const first = focusable[0], last = focusable.at(-1);
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
     });
   }
 
-  async renderCodex() {
-    const grid = document.getElementById('codex-grid');
-    if (!grid) return;
 
-    const THEOREMS = [
-      { id: 'ch1-n1-reverse-tolls', name: 'The Socks-and-Shoes Rule', desc: 'To undo a chain of steps, undo the last step first.' },
-      { id: 'ch1-n2-dark-vault', name: 'The Goblin Rule', desc: 'To guarantee a match, prepare for the worst luck first.' },
-      { id: 'ch1-n3-five-shields', name: 'The Hidden Seams Rule', desc: 'When boundaries touch, internal seams reveal unit ratios.' },
-      { id: 'ch1-n4-castle-keep', name: 'The Rune Splitting Rule', desc: 'Break numbers into prime runes to spot what is shared.' }
-    ];
-
-    let completedIds = new Set();
-    try {
-      const res = await fetch('/api/encounters');
-      if (res.ok) {
-        const data = await res.json();
-        const catalog = data.encounters || (Array.isArray(data) ? data : []);
-        for (const enc of catalog) {
-          if (enc.completed) completedIds.add(enc.id);
-        }
-      }
-    } catch {
-      // offline / fallback
-    }
-
-    grid.innerHTML = THEOREMS.map(t => {
-      const unlocked = completedIds.has(t.id);
-      return `
-        <article class="codex-card ${unlocked ? 'unlocked' : 'locked'}" style="${unlocked ? '' : 'opacity: 0.6; filter: grayscale(1);'}">
-          <h3>${unlocked ? t.name : '??? Locked Theorem'}</h3>
-          <p>${unlocked ? t.desc : 'Seal this encounter on the map to inscribe its theorem into your Codex.'}</p>
-        </article>
-      `;
-    }).join('');
-  }
 }
 
 // Bootstrap

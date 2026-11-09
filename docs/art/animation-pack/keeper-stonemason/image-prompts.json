@@ -1,0 +1,37 @@
+{
+  "created": "2026-11-09",
+  "tool": "built-in image_gen.imagegen",
+  "requested_aspect_ratio": "16:9",
+  "native_dimensions": {
+    "width": 1672,
+    "height": 941,
+    "source_files": [
+      "first.png",
+      "last.png"
+    ],
+    "verified_with": "sips -g pixelWidth -g pixelHeight"
+  },
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: illustration-story. Asset type: FIRST endpoint of a three-second one-off neutral gatekeeper arrival introduction. The attached cast sheet is identity and rendering-style reference only. Full body, all props and comfortable safe margins in a landscape 16:9 image. Fixed front-threequarter orthographic-style camera at character height. Quiet simple mossy blue-gray stone courtyard, with a FULLY CLOSED gate centered behind the character. Detailed illustrated 16-bit pixel art matching the reference, crisp visible pixel clusters and refined dark outlines, muted parchment/brass/navy/sage palette, friendly age-nine design. No movement, no hero, no other cast, no text, letters, digits, equations, diagrams, puzzle clues, rewards, particles, motion lines, captions, audio notation, border or watermark. This introduction occurs before player interaction and has no correctness or outcome meaning. Opaque background. Isolate the exact Stonemason from the center of the lower row: friendly bulky boulder golem built from irregular warm gray stone, small rectangular amber eyes in a blocklike stone face, green moss in crevices, brown leather shoulder straps and brass buckles, pale work apron and small belt pouch, broad stone hands and feet. Match the reference identity and costume closely. The golem stands neutrally with both feet on the ground. One hand holds the SAME short broad metal chisel safely DOWN AT ITS SIDE, tip downward, its other hand relaxed. The chisel is the only handheld implement; no hammer, block, workpiece or carving. Preserve quiet neutral expression. Leave empty space above that shoulder for a later small chisel-lifting gesture. No new surface markings or symbols on stone or clothes.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-1e241d18-e213-425a-bd3a-c4186dc10f33.png"
+  },
+  "last": {
+    "file": "last.png",
+    "prompt": "Use case: precise-object-edit. Asset type: LAST endpoint of a three-second one-off neutral gatekeeper arrival introduction. EDIT this exact first frame. Preserve the original canvas size, landscape 16:9 framing, fixed camera and perspective, composition, entire courtyard, masonry, moss, FULLY CLOSED gate, lighting, pixel grid, palette and detailed 16-bit illustrated pixel style. Preserve identity, clothing, body location, feet, stance, facial expression, and all objects except the specified small pose change. No gate movement, no new characters, words, digits, equations, diagrams, puzzle clues, rewards, particles, motion lines, salutes, celebration, captions, audio notation, border or watermark. This gesture introduces the keeper before player interaction and has no success/failure meaning. Single still final pose, no motion blur or ghosting. Change ONLY the arm that currently holds the broad chisel downward: bend that elbow and gently raise the SAME metal chisel so its broad blade rests safely against the golem's shoulder, with the hand holding its narrow grip at chest height. Keep the chisel the same size, silhouette, material and identity; it is merely rotated and lifted. The other arm remains relaxed at the side. Keep the head, amber eyes, irregular boulders, moss, straps, buckles, apron and pouch unchanged. Do not carve or strike anything. Add no stone marks, lettering, sparks or chips. Leave the gate and ground exactly untouched.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/keeper-stonemason/first.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-cd2f1010-ad99-4a75-a467-32c5782ee71d.png"
+  },
+  "review": {
+    "visually_inspected": true,
+    "notes": "Selected endpoints preserve the detailed concept identity, full-body framing and quiet closed-gate courtyard. Only the intended neutral introduction pose changes. No audio, rendered text, digits, equations or new puzzle markings.",
+    "runtime_approved": false
+  }
+}

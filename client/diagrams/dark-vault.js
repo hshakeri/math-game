@@ -105,7 +105,7 @@ export function render(spec, mode = 'hint', state = null) {
   <g class="dodge-summary" transform="translate(400, 340)">
     <rect x="-370" y="-25" width="740" height="50" rx="8" fill="#233140" stroke="${isMaximal ? '#27ae60' : '#3d5166'}" stroke-width="2" />
     <text x="-350" y="6" fill="#cbd5e1" font-size="14" font-weight="600">
-      Goblin Crystals Wasted: <tspan fill="#c8963e" font-weight="bold">${totalPlaced} / ${maxWaste}</tspan>
+      Goblin Crystals Wasted: <tspan fill="#c8963e" font-weight="bold">${totalPlaced}</tspan>
     </text>
 
     ${isMaximal && !completed ? `
@@ -116,7 +116,7 @@ export function render(spec, mode = 'hint', state = null) {
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">−</text>
       </g>
       <rect x="48" y="0" width="48" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
-      <text x="72" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="vault-input-grab">${totalPlaced + 1}</text>
+      <text x="72" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="vault-input-grab">?</text>
       <g class="btn-grab-plus" data-action="grab-delta" data-delta="1" cursor="pointer">
         <rect x="100" y="0" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
         <text x="122" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">+</text>
@@ -129,7 +129,7 @@ export function render(spec, mode = 'hint', state = null) {
 
     ${completed ? `
     <text x="200" y="6" fill="#2ecc71" font-size="14" font-weight="bold">
-      Torch Satisfied! Guaranteed at ${state?.submittedCount ?? (totalPlaced + 1)}
+      Torch lit. Grab chosen: ${state?.submittedCount ?? '?'}
     </text>` : ''}
   </g>`;
   }
@@ -146,9 +146,7 @@ export function mount(container, spec, mode, state, onStep) {
 
   if (mode !== 'workspace' || !onStep) return;
 
-  const placedCounts = state?.bins || [0, 0, 0];
-  const totalPlaced = state?.totalPlaced || placedCounts.reduce((a, b) => a + b, 0);
-  let currentGrabVal = totalPlaced + 1;
+  let currentGrabVal = null;
 
   const updateGrabDisplay = () => {
     const el = container.querySelector('#vault-input-grab');
@@ -166,13 +164,14 @@ export function mount(container, spec, mode, state, onStep) {
     const grabDeltaBtn = e.target.closest('[data-action="grab-delta"]');
     if (grabDeltaBtn) {
       const delta = Number(grabDeltaBtn.dataset.delta);
-      currentGrabVal = Math.max(1, currentGrabVal + delta);
+      currentGrabVal = Math.max(1, (currentGrabVal ?? 0) + delta);
       updateGrabDisplay();
       return;
     }
 
     const submitBtn = e.target.closest('[data-action="submit-count"]');
     if (submitBtn) {
+      if (currentGrabVal === null) return;
       onStep({ action: 'submit_count', value: currentGrabVal });
       return;
     }

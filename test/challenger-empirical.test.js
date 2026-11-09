@@ -125,7 +125,7 @@ describe('Empirical Challenger — Milestone M1 Iteration 2 Verification', () =>
       }
     });
 
-    it('T05b: Second RIGHT conjecture in understand with >= 3 words shortcuts directly to look_back across all encounters', () => {
+    it('T05b: Second RIGHT conjecture opens the current part and reserves look_back for the final part', () => {
       for (const [name, enc] of Object.entries(encounters)) {
         const s0 = createSession(enc);
         const { session: s1 } = transition(s0, { type: 'arrive' }, enc);
@@ -143,10 +143,16 @@ describe('Empirical Challenger — Milestone M1 Iteration 2 Verification', () =>
           reason: 'I deduced the mathematical pattern directly'
         }, enc);
 
-        assert.equal(s3.state, 'look_back', `${name}: should shortcut directly to look_back`);
+        const intermediate = hasMoreParts(s3, enc);
+        const expectedState = intermediate ? 'sealed' : 'look_back';
+        assert.equal(s3.state, expectedState, `${name}: shortcut must respect part boundaries`);
         assert.equal(s3.shortcut, true, `${name}: shortcut flag must be true`);
-        assert.ok(e3.some(e => e.type === 'engine.transition' && e.from === 'understand' && e.to === 'look_back' && e.shortcut === true));
+        assert.ok(e3.some(e => e.type === 'engine.transition' && e.from === 'understand' && e.to === expectedState && e.shortcut === true));
         assert.ok(e3.some(e => e.type === 'shortcut' && e.shortcut === true));
+        const view = getClientSafeView(s3, enc);
+        assert.equal(view.sealed, false, `${name}: a conjecture must not award the node Seal`);
+        assert.equal(view.partSealed, intermediate);
+        assert.equal(view.codex, null);
       }
     });
 

@@ -4,7 +4,7 @@
  * server/tutor/scripted.js
  */
 
-import { getScriptedProbe } from '../engine/scripted.js';
+import { selectScriptedProbe } from '../engine/scripted.js';
 
 /**
  * Adapter call wrapper compatible with the router's callAdapter interface.
@@ -14,11 +14,11 @@ import { getScriptedProbe } from '../engine/scripted.js';
  */
 export async function callAdapter(turnRequest) {
   const { encounterId, partId = 'a', state = 'understand', rung = 'l0' } = turnRequest;
-  const probe = getScriptedProbe(encounterId, partId, state, rung);
+  const { speech: probe, usedPoolIndex } = selectScriptedProbe(encounterId, partId, state, rung, turnRequest);
   const parsed = {
     speech: probe,
     utterance: probe,
-    usedPoolIndex: 0,
+    usedPoolIndex,
     studentSignal: 'engaged',
     suggestCard: null
   };
@@ -35,22 +35,15 @@ export async function callAdapter(turnRequest) {
  * @returns {Promise<{ utterance: string, speech: string, adapter: string, latencyMs: number, retries: number, fallback: boolean, parsed: object }>}
  */
 export async function generateTurn(ctx) {
-  const { encounterId, partId = 'a', state = 'understand', rung = 'l0' } = ctx;
-  const probe = getScriptedProbe(encounterId, partId, state, rung);
+  const { parsed } = await callAdapter(ctx);
   return {
-    utterance: probe,
-    speech: probe,
+    utterance: parsed.utterance,
+    speech: parsed.speech,
     adapter: 'scripted',
     latencyMs: 0,
     retries: 0,
     fallback: false,
-    parsed: {
-      speech: probe,
-      utterance: probe,
-      usedPoolIndex: 0,
-      studentSignal: 'engaged',
-      suggestCard: null
-    }
+    parsed
   };
 }
 

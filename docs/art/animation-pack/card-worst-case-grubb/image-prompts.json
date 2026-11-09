@@ -1,0 +1,50 @@
+{
+  "id": "card-worst-case-grubb",
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "date": "2026-11-09",
+  "style_status": "User-selected detailed pixel cast concept",
+  "runtime_status": "Offline animation endpoints only; not integrated or approved for runtime serving",
+  "endpoints": {
+    "first": {
+      "file": "first.png",
+      "intent": "Edit the common card layout to create a new creature illustration",
+      "prompt": "Use case: precise-object-edit. Create the first endpoint of a collectible creature-card animation, landscape 16:9 PNG. Image 1 is the edit target and exact composition template. Change ONLY the creature illustration within its cream cardface; remove the crab completely. Preserve exactly the upright card's position, size, thin gold ornamental edge, corners, cream texture, cast shadow, blue-gray empty workbench, dim mossy stone wall, lighting and fixed camera. Image 2 is the authoritative detailed pixel-art character style, not a background source. Image 3 supplies creature motifs only, not its chunky low-detail style. Keep richly detailed visible pixels and muted colors. The new illustration must be entirely contained INSIDE the cardface, never protruding or becoming three-dimensional. No additional background props, hands or other cast. No words, letters, digits, runes, mathematical notation, diagrams, praise, sparkle, logos or watermark. Replace the crab with Grubb exactly as in image 2: small green goblin, large ears, patched brown cap, dark vest and patched trousers, closed harmless burlap sack with no bomb or weapon. Full figure, both hands resting at the sack strap. His expression is a quiet sly smile, eyes open and relaxed, not an exaggerated toothy grin. Keep his feet inside the card and enough room above the cap for a later slight cap-tip gesture. The cap and sack are already present.",
+      "referenced_image_paths": [
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-backwards-crab/first.png",
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png",
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/runtime-cast-preview.png"
+      ],
+      "transparent_background": false,
+      "original_output": "/Users/hs9hd/.codex/generated_images/01a1bfd6-554f-7c41-a95a-5c3db7e65b52/exec-2ef9b2dd-3ae9-4e4c-9118-5b34ffa42ce7.png"
+    },
+    "last": {
+      "file": "last.png",
+      "intent": "Edit only the creature pose from the first endpoint",
+      "prompt": "Use case: precise-object-edit. Image 1 is the first endpoint and sole edit target. Create the final endpoint for a short silent card animation. Preserve the full landscape canvas exactly: fixed camera, upright parchment card position and size, border, cream texture, workbench, wall, light, shadows and pixel style. Change ONLY Grubb's near hand and same patched cap: raise his hand from the sack strap so the fingers gently touch and tip the existing cap brim a little. Keep his quiet sly smile, eyes, head size, body, legs, feet, other hand and harmless closed sack unchanged. Keep every part of the illustration inside the cream cardface. This is a friendly card-inspection gesture, not a response evaluating any outcome. No extra hand or fingers, new prop, bomb, extra character, text, digits, rune, math, diagram, praise, sparkle, logo or watermark. Original PNG, landscape 16:9.",
+      "referenced_image_paths": [
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-worst-case-grubb/first.png"
+      ],
+      "transparent_background": false,
+      "original_output": "/Users/hs9hd/.codex/generated_images/01a1bfd6-554f-7c41-a95a-5c3db7e65b52/exec-596e344c-97de-465d-9bd8-f6a3e1be429d.png"
+    }
+  },
+  "inspection": {
+    "visually_reviewed": true,
+    "notes": "Grubb retains his patched cap, costume, quiet smile and harmless closed sack; one hand raises to the cap brim."
+  },
+  "frames": {
+    "first": {
+      "file": "first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "ddcfea9df32837bef4f48e6871a8b74b4782cb4ef3484de5d92cdc1fde3d1277"
+    },
+    "last": {
+      "file": "last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "9cd4e619a2f57e092bdb081dbd92966bb78c4b1c5000377e30e8506eeb2fe98c"
+    }
+  }
+}

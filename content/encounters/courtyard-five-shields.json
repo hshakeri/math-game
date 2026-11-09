@@ -54,17 +54,17 @@
       ],
       "ladder": {
         "l0": [
-          "What do we know as a number, and what do we know only as a shape fact?",
-          "Where do the standing shields touch the lying ones, and what is special about that line?",
-          "What is the question asking for, the walk around the courtyard or around one shield?"
+          "Boots ready, notebook open. Before we trace any edges, are we looking for the walk around the whole courtyard or the walk around a single stone shield?",
+          "My blueprint has room for measurements and for things we know from the arrangement. What does the inscription tell us as a number, and what does the shape tell us?",
+          "The Stonemason set these shields edge to edge. Where do the standing shields touch the lying ones, and what can we say about that line?"
         ],
         "l1": [
-          "Is there a card in the Deck about something the two rows share?",
-          "Without numbers, how many short sides cover the same length as how many long sides along the middle seam?",
-          "Could you invent a small unit that measures both a short side and a long side with no leftover?"
+          "I'll hold the blueprint still. At the place where the standing shields meet the flat shields, what does the shared seam tell us about their sides?",
+          "Lemma is sorting the Deck beside the blueprint. Is there a card that could help us look at something the rows of shields share?",
+          "The Stonemason's ruler is missing, so we can choose our own unit. Could a small unit measure both a short side and a long side with no leftover?"
         ],
         "l2": {
-          "text": "Along the middle seam, three short sides equal two long sides. Let a short side be two units and a long side be three units so they match. Now trace the outer edge of the courtyard in these units. How many units is the whole walk around?",
+          "text": "The middle seam joins three short sides to two long sides. Mark a short side as 2 units and a long side as 3 units on the blueprint. How do the sides on the outer border fit together?",
           "diagram": {
             "component": "seam-grid",
             "params": {
@@ -82,7 +82,7 @@
           "l3": "Count how many square sides lie on the outside of the rectangle, then share the 36 cubits among them. Multiply by 4."
         },
         "l3": {
-          "text": "Count the outside walk in units: across the top, across the bottom, and down each side, which is a long side plus a short side. Then find how many cubits one unit is worth, and multiply by the units around one shield.",
+          "text": "Trace the outer border in units across the top, bottom and sides. Use its length to find the cubits in a unit. What distance does that give for the walk around a single shield?",
           "diagram": {
             "component": "seam-grid",
             "params": {

@@ -1,0 +1,534 @@
+{
+  "status": "Detailed concept cast selected by user; endpoint stills and motion prompts prepared for video generation.",
+  "reference_image": "docs/art/keybreakers-cast-concept.png",
+  "duration_note": "All durations below are proposed creative specifications, not measured clip lengths.",
+  "shared_constraints": {
+    "camera": "Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake.",
+    "identity": "Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift.",
+    "content": "No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero\u2019s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol.",
+    "audio": "Silent video: no sound effects, music, speech or lip sync.",
+    "endpoints": "Use first.png and last.png as the exact opening and closing poses within each clip's own folder.",
+    "integration": "These are app-neutral production prompts, not runtime assets or authorization to change game behavior. Never derive a reaction from model wording or an unverified answer. Respect reduced-motion preferences if integrated later."
+  },
+  "clips": [
+    {
+      "id": "rivet-thinking-loop",
+      "proposed_duration_seconds": 3,
+      "loop": true,
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      },
+      "motion_prompt": "Animate Rivet from first.png through a quiet waiting loop. Rotate the brass monocle rim through one full turn around its fixed mount; Rivet blinks once while his body and tools stay still. Finish precisely at the opening pose, with the same open eyes and monocle orientation, matching last.png exactly. Make the loop seam invisible. Keep the camera fixed and pixels crisp. Preserve his design without morphing or new props. No text, digits, math, praise, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "Only while a tutor request is actually pending. The loop indicates waiting, never evaluation.",
+        "stop": "Stop when the request resolves, fails, is cancelled, or the encounter is left; restore idle.",
+        "forbid": "Never trigger or change speed because an idea is judged right or wrong. Do not add an artificial delay to scripted replies."
+      },
+      "title": "Rivet \u00b7 thinking loop"
+    },
+    {
+      "id": "hero-thinking",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      },
+      "motion_prompt": "Animate the apprentice from the relaxed idle pose in first.png to the hand-on-chin pose in last.png. Lift the existing hand gently to the chin and make a slight thoughtful head tilt; the feet stay planted, goggles stay pushed up, and the scarf and card satchel retain their shape. Settle without a flourish. Fixed camera, crisp visible pixels, unchanged identity and background. No morphing, new props, text, digits, math, praise, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "When the child enters a thinking or dialogue workspace, independent of the content or correctness of their idea.",
+        "stop": "Hold the final thinking pose until the scene changes; do not repeatedly restart on every turn.",
+        "forbid": "Never use as hesitation, failure or correctness feedback; never play as a reward."
+      },
+      "title": "Hero \u00b7 a moment to think"
+    },
+    {
+      "id": "lemma-card",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      },
+      "motion_prompt": "Animate Lemma offering the single blank card already held in first.png. Extend the card-bearing arm in a short smooth slide toward the empty workspace, then settle into last.png with the same card still held and clearly offered. Keep the card's size and blank face unchanged; do not create a fan, duplicate card or new object. Fixed camera, crisp visible pixels, stable salamander design and background. No morphing, text, digits, math, praise, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "When the Deck becomes available or a child's explicit card choice is acknowledged; play once for that event.",
+        "stop": "Hold the offered-card pose, then return to idle when the Deck or workspace context changes.",
+        "forbid": "Never pick a strategy for the child or imply a chosen card is correct. No animation for a rejected or stale action."
+      },
+      "title": "Lemma \u00b7 a card for the table"
+    },
+    {
+      "id": "grubb-gate-shut",
+      "proposed_duration_seconds": 2,
+      "loop": false,
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      },
+      "motion_prompt": "Animate Grubb from the neutral watchful pose in first.png to the restrained sideways smirk in last.png. Raise one brow slightly and settle his shoulders without pointing, laughing or gesturing at the viewer. The gate remains fully shut and motionless throughout; the sabotage sack stays in place. Fixed camera, crisp visible pixels and stable identity. No morphing, new props, text, digits, math, praise, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "Only after the deterministic engine emits a rejected final gate submission: engine.transition from submit to carry_out with correct:false.",
+        "stop": "Play once for that confirmed engine event, then hold or restore neutral without replaying on rerender.",
+        "forbid": "Never use for tentative conjectures, ordinary speech, incorrect intermediate steps, hint requests, look-back retries, network failures or model output."
+      },
+      "title": "Grubb \u00b7 the gate stays shut"
+    },
+    {
+      "id": "grubb-gate-open",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      },
+      "motion_prompt": "Begin with the closed gate and watchful Grubb in first.png. Move the existing gate hardware along its visible hinge or slide into the open position specified by last.png. As it opens, Grubb lowers his brows and folds his arms into a quiet fume, keeping the same sack and silhouette. End with the open gate and settled frown. No celebration, steam, sparks or added objects. Fixed camera and crisp pixels; no morphing, text, digits, math, praise, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "Only when the engine confirms the whole encounter is sealed and its scene state becomes unlocked.",
+        "stop": "Play once for the locked-to-unlocked transition; keep the gate open afterward.",
+        "forbid": "Never open on a conjecture alone, a successful intermediate step, an intermediate Vault chamber, a model claim, or an unconfirmed submission. Do not replay merely because the sealed view reloads."
+      },
+      "title": "Grubb \u00b7 the gate opens"
+    },
+    {
+      "id": "hero-seal",
+      "proposed_duration_seconds": 4,
+      "loop": false,
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      },
+      "motion_prompt": "Animate the apprentice making one small hop and landing in the same spot, then raising the blank Golden Seal already held low in first.png. Settle into the final raised-Seal pose in last.png. Keep the Seal entirely blank, with unchanged size and shape, and preserve the goggles, scarf and satchel. No extra hops, confetti, sparkles or new objects. Fixed camera and crisp visible pixels; no morphing, text, digits, math, praise, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "Only for the engine-confirmed Golden Seal award after the final required Look Back or authorized parent waiver, once per award.",
+        "stop": "Hold the final pose until the child leaves the Seal presentation; do not loop.",
+        "forbid": "Never play for conjectures, individual steps, correct submissions before Look Back, intermediate chambers, card selection or repeated renders. Keep the clip silent; the separately controlled optional Golden Seal chime remains the game's only permitted audio."
+      },
+      "title": "Hero \u00b7 the Golden Seal"
+    },
+    {
+      "id": "keeper-troll",
+      "title": "The Toll Troll \u00b7 a closer look",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Over three seconds, the Toll Troll inclines his head slightly and tilts the same abacus a little toward the viewer while holding it at belly height. Every bead stays in its original packed group on the same side of its rod; do not slide, add, remove or separate beads. Keep his expression neutral, feet planted, body position and costume fixed, and the gate fully closed. Ease gently into the ending pose, without a bow, approving nod or reward signal. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.",
+      "trigger_restrictions": {
+        "allow": "Once when the ch1-n1-reverse-tolls arrival panel first appears, before the child responds or the encounter begins.",
+        "stop": "Stop at the final pose after the one-off introduction. Stop immediately when the child leaves the arrival panel, navigates away, pauses, or the page becomes hidden. With reduced motion enabled, show the first still frame and skip playback.",
+        "forbid": "Never trigger from tentative ideas, conjectures, draft typing, chip choices, hint requests, tutor generation, correctness checks or answer results. Never play as a response to a gate opening or staying shut, a Seal, completion or reward. Never replay automatically, loop, delay input, change the closed gate, emit audio or display a timer."
+      },
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "keeper-alchemist",
+      "title": "The Alchemist \u00b7 lift the lantern",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Over three seconds, the Alchemist bends the lantern-holding elbow and gently lifts the same upright lit lantern from hip to chest height. Keep the flame intensity and global scene brightness constant, without a flash, growing glow, particle effect or revealing light. Keep the face neutral and body, feet, other arm, costume and closed gate stationary. Hold the final pose without a nod or reaction. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.",
+      "trigger_restrictions": {
+        "allow": "Once when the ch1-n2-dark-vault arrival panel first appears, before the child responds or the encounter begins.",
+        "stop": "Stop at the final pose after the one-off introduction. Stop immediately when the child leaves the arrival panel, navigates away, pauses, or the page becomes hidden. With reduced motion enabled, show the first still frame and skip playback.",
+        "forbid": "Never trigger from tentative ideas, conjectures, draft typing, chip choices, hint requests, tutor generation, correctness checks or answer results. Never play as a response to a gate opening or staying shut, a Seal, completion or reward. Never replay automatically, loop, delay input, change the closed gate, emit audio or display a timer."
+      },
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "keeper-stonemason",
+      "title": "The Stonemason \u00b7 tools at rest",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Over three seconds, the Stonemason bends the chisel-holding arm and gently lifts and rotates the same chisel from the side to rest safely against the shoulder. The other arm hangs still. Keep the golem's face, amber eyes, body, feet, moss, apron and background fixed. No carving, striking, new markings, dust or stone chips. The gate remains fully closed. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.",
+      "trigger_restrictions": {
+        "allow": "Once when the ch1-n3-five-shields arrival panel first appears, before the child responds or the encounter begins.",
+        "stop": "Stop at the final pose after the one-off introduction. Stop immediately when the child leaves the arrival panel, navigates away, pauses, or the page becomes hidden. With reduced motion enabled, show the first still frame and skip playback.",
+        "forbid": "Never trigger from tentative ideas, conjectures, draft typing, chip choices, hint requests, tutor generation, correctness checks or answer results. Never play as a response to a gate opening or staying shut, a Seal, completion or reward. Never replay automatically, loop, delay input, change the closed gate, emit audio or display a timer."
+      },
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "keeper-guardians",
+      "title": "The Three Guardians \u00b7 keep watch",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Over three seconds, the three closed-helmet Guardians turn only their heads and attached plumes modestly toward the viewer together. Keep their torsos, resting arms, hands, feet, sentinel stance and spacing fixed; maintain the rust, navy and moss-green color order. No exposed blades, salute, bow or celebration. All three remain full body and the gate stays completely closed. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.",
+      "trigger_restrictions": {
+        "allow": "Once when the ch1-n4-castle-keep arrival panel first appears, before the child responds or the encounter begins.",
+        "stop": "Stop at the final pose after the one-off introduction. Stop immediately when the child leaves the arrival panel, navigates away, pauses, or the page becomes hidden. With reduced motion enabled, show the first still frame and skip playback.",
+        "forbid": "Never trigger from tentative ideas, conjectures, draft typing, chip choices, hint requests, tutor generation, correctness checks or answer results. Never play as a response to a gate opening or staying shut, a Seal, completion or reward. Never replay automatically, loop, delay input, change the closed gate, emit audio or display a timer."
+      },
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "card-backwards-crab",
+      "title": "Work Backwards \u00b7 the crab",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Over three seconds, the same terra-cotta crab quietly scuttles a short distance backward to the left inside its card and settles. Maintain its orientation, two claws, six walking legs and scale. Fix the camera, card, gold border, lighting, backdrop and workbench. No trails, arrows, symbols, sounds, effects or celebration. Interpolate from first.png to last.png and hold briefly; do not loop.",
+      "trigger_restrictions": {
+        "allow": "Play once when the child intentionally inspects this card. Play once when the child intentionally selects this card.",
+        "stop": "Stop on navigation away or when the card closes. Use the static first frame when reduced motion is requested.",
+        "forbid": "Never trigger from answer correctness, a conjecture result, a gate result, a hint rung, or a tutor evaluation. Never animate a card to recommend, automatically select, or imply that its strategy is appropriate. No autoplay on encounter arrival, timers, points, counts, sound effects, or celebration."
+      },
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "card-worst-case-grubb",
+      "title": "Worst Case \u00b7 Grubb\u2019s card",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Use first.png and last.png as exact endpoints. Keep the camera, card border, cream face, blue-gray workbench, mossy stone backdrop, lighting, scale and visible pixel texture fixed. Animate only the Grubb illustration within the card: lift one hand from the sack strap to tip the same patched cap slightly, retaining the quiet sly smile, then settle into last.png. His other hand, harmless closed sack, feet and costume remain in place. No gesture evaluates an outcome. No new props, text, digits, runes, math, diagram, praise, sparkle, morphing, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "Only explicit inspection or selection of the Worst Case card, independent of answer correctness.",
+        "stop": "Play once per explicit card inspection or selection, hold the last frame, and stop when the card closes or another card is chosen.",
+        "forbid": "Never automatically choose a strategy, react to an answer, advertise a correct card, or play as a reward."
+      },
+      "duration_note": "Proposed creative specification; not a measured clip length.",
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "card-tiny-mouse",
+      "title": "Try a Tiny Case \u00b7 the mouse",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Over three seconds, the warm-gray mouse gently rises from its crouch onto its rear feet and sniffs toward the same tiny unmarked pebble. Preserve its face, ears, tail, colors and location; keep the pebble fixed. Calm curiosity, no startle or celebration. Fix the card, gold border, camera, lighting, workbench and backdrop. No added marks, sounds or effects. Interpolate from first.png to last.png and hold briefly; do not loop.",
+      "trigger_restrictions": {
+        "allow": "Play once when the child intentionally inspects this card. Play once when the child intentionally selects this card.",
+        "stop": "Stop on navigation away or when the card closes. Use the static first frame when reduced motion is requested.",
+        "forbid": "Never trigger from answer correctness, a conjecture result, a gate result, a hint rung, or a tutor evaluation. Never animate a card to recommend, automatically select, or imply that its strategy is appropriate. No autoplay on encounter arrival, timers, points, counts, sound effects, or celebration."
+      },
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "card-draw-chameleon",
+      "title": "Draw It \u00b7 the chameleon",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Over three seconds, the same sage chameleon lowers its single brush into the blank card area and gently paints one short, loose, shallow ochre curve. The final bristles rest at the end of that one mark. Preserve the body, face, curled tail and other feet. The mark must remain abstract, never a letter, numeral, equation or diagram. Keep all artwork inside the border; fix the card, camera, lighting, workbench and backdrop. No extra brushes, paintpots, sounds, sparkles or celebration. Interpolate from first.png to last.png and hold briefly; do not loop.",
+      "trigger_restrictions": {
+        "allow": "Play once when the child intentionally inspects this card. Play once when the child intentionally selects this card.",
+        "stop": "Stop on navigation away or when the card closes. Use the static first frame when reduced motion is requested.",
+        "forbid": "Never trigger from answer correctness, a conjecture result, a gate result, a hint rung, or a tutor evaluation. Never animate a card to recommend, automatically select, or imply that its strategy is appropriate. No autoplay on encounter arrival, timers, points, counts, sound effects, or celebration."
+      },
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "card-odd-even-magpies",
+      "title": "Odd or Even \u00b7 the magpies",
+      "proposed_duration_seconds": 3,
+      "loop": false,
+      "motion_prompt": "Use first.png and last.png as exact endpoints. Lock the camera, card, workbench, backdrop, lighting, scale and crisp visible pixel texture. Within the cream cardface, exactly two black-and-white magpies with teal-iridescent feathers gently tilt their heads in opposite directions, inward toward each other, settling into last.png. Keep their separate identities, bodies, tails, feet and shared blank branch fixed. Do not swap birds, add birds, suggest a count or form a pattern. No new props, text, digits, runes, math, diagrams, praise, sparkle, morphing, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "Only explicit inspection or selection of the Odd or Even card, independent of answer correctness.",
+        "stop": "Play once for that explicit card interaction and hold the last frame; stop when the card closes or another card is chosen.",
+        "forbid": "Never automatically choose a strategy, react to an answer, add counting or pattern cues, or play as a reward."
+      },
+      "duration_note": "Proposed creative specification; not a measured clip length.",
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    },
+    {
+      "id": "card-shared-cats",
+      "title": "Find What Is Shared \u00b7 the twin cats",
+      "proposed_duration_seconds": 4,
+      "loop": false,
+      "motion_prompt": "Use first.png and last.png as exact endpoints. Fix the camera, card, workbench, mossy backdrop, lighting, scale and crisp pixel texture. Animate only the twin-cat illustration inside the cream cardface: each sibling turns its head a little toward the other while only the tip of their one shared S-shaped tail curls toward the middle. Preserve exactly two separate bodies and one continuous tail, with the tail base, bodies, paws and seated positions fixed. Settle at last.png. No extra tail, duplicate body or limbs, new props, text, digits, runes, math, diagrams, praise, sparkle, morphing, sound, music or lip sync.",
+      "trigger_restrictions": {
+        "allow": "Only explicit inspection or selection of the Find What Is Shared card, independent of answer correctness.",
+        "stop": "Play once per explicit card interaction, hold the last frame, and stop when the card closes or another card is chosen.",
+        "forbid": "Never automatically choose a strategy, imply an answer is correct, create comparison or counting cues, or play as a reward."
+      },
+      "duration_note": "Proposed creative specification; not a measured clip length.",
+      "frames": {
+        "first": "first.png",
+        "last": "last.png"
+      }
+    }
+  ],
+  "image_tool": "built-in imagegen",
+  "assets": [
+    {
+      "clip": "rivet-thinking-loop",
+      "endpoint": "first",
+      "file": "rivet-thinking-loop/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "d9bfb57ff171069535710e73ecdfb9b98fc32628dfe56357a1346f6f9fa82018"
+    },
+    {
+      "clip": "rivet-thinking-loop",
+      "endpoint": "last",
+      "file": "rivet-thinking-loop/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "d9bfb57ff171069535710e73ecdfb9b98fc32628dfe56357a1346f6f9fa82018"
+    },
+    {
+      "clip": "hero-thinking",
+      "endpoint": "first",
+      "file": "hero-thinking/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "bdfb47d277fc068bcfe5556409d17c883823aa2ddac27a883b92d67937bd4578"
+    },
+    {
+      "clip": "hero-thinking",
+      "endpoint": "last",
+      "file": "hero-thinking/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "f413fe36ccd8338affc6e9661f1431eb7233a1b48aac3b8036fb7f0c24ac4ab2"
+    },
+    {
+      "clip": "lemma-card",
+      "endpoint": "first",
+      "file": "lemma-card/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "0068582fa86e2f0f32afa9d88cd6e2f247999b53472ad8fd823aa94382db6c75"
+    },
+    {
+      "clip": "lemma-card",
+      "endpoint": "last",
+      "file": "lemma-card/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "676a8f503926191d4eb497b5f20e6724174aab24c8782fc9ceb826ff43de40c5"
+    },
+    {
+      "clip": "grubb-gate-shut",
+      "endpoint": "first",
+      "file": "grubb-gate-shut/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "95f2b1ff2c98c60658411b06a08173e02af3565179926931e50e38f9d1f10072"
+    },
+    {
+      "clip": "grubb-gate-shut",
+      "endpoint": "last",
+      "file": "grubb-gate-shut/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "b77c5036978ec34cea01f39dd31fa0bfcae1efed35663b1470dc292a6d440f55"
+    },
+    {
+      "clip": "grubb-gate-open",
+      "endpoint": "first",
+      "file": "grubb-gate-open/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "95f2b1ff2c98c60658411b06a08173e02af3565179926931e50e38f9d1f10072"
+    },
+    {
+      "clip": "grubb-gate-open",
+      "endpoint": "last",
+      "file": "grubb-gate-open/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "7c1fd33ed2e9d08349be5bc5da90002cbf7a0075a1eb595778bc47bcd9d194cd"
+    },
+    {
+      "clip": "hero-seal",
+      "endpoint": "first",
+      "file": "hero-seal/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "2008eaccc88afc4fc97a1d149360b0fcac75fec80a221a810c4d13b10eb489de"
+    },
+    {
+      "clip": "hero-seal",
+      "endpoint": "last",
+      "file": "hero-seal/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "1274ce74f14d8ebb484394809f7e029b44c2e7bcca55d334d988bd2f838fea77"
+    },
+    {
+      "clip": "keeper-troll",
+      "endpoint": "first",
+      "file": "keeper-troll/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "7a1dd842d027bb0b9f9b2fc63ca16c1e3869040def2a067a08860240fdb431c9"
+    },
+    {
+      "clip": "keeper-troll",
+      "endpoint": "last",
+      "file": "keeper-troll/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "fdcfe7d2504d8419fea26250a33c4522d93ab8caeebb8a92737605ced6513b70"
+    },
+    {
+      "clip": "keeper-alchemist",
+      "endpoint": "first",
+      "file": "keeper-alchemist/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "613bb60b65f87a10f1c8463ff35162559218f4ee40035348b079d34c8f45f6e3"
+    },
+    {
+      "clip": "keeper-alchemist",
+      "endpoint": "last",
+      "file": "keeper-alchemist/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "7154372180195ab5b042321e59f46a91fe1875b70b3cc6d1d922660fffadcccb"
+    },
+    {
+      "clip": "keeper-stonemason",
+      "endpoint": "first",
+      "file": "keeper-stonemason/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "dbe5ebd55b779409dfb201c117ba7f47d3b7effc0965aedede6a6826000dc0dd"
+    },
+    {
+      "clip": "keeper-stonemason",
+      "endpoint": "last",
+      "file": "keeper-stonemason/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "904b08faba2ce9683b90f56d9628e7ac873ff46c52a35d5022a736b3d9935e39"
+    },
+    {
+      "clip": "keeper-guardians",
+      "endpoint": "first",
+      "file": "keeper-guardians/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "c537fce43e2c7ccfac57a36fdae02c613e4d132d60ae41aabacfe4b5fcbba053"
+    },
+    {
+      "clip": "keeper-guardians",
+      "endpoint": "last",
+      "file": "keeper-guardians/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "fdb8ac8a9fe2a395260bdb63cd368339bd204a59866b8ba035a115632233482d"
+    },
+    {
+      "clip": "card-backwards-crab",
+      "endpoint": "first",
+      "file": "card-backwards-crab/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "ffab265eae3c5a13c4eea869d4ad6f10f40f584de3b340181c26c116a8dfa747"
+    },
+    {
+      "clip": "card-backwards-crab",
+      "endpoint": "last",
+      "file": "card-backwards-crab/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "c631a7c1e3b9a0fa1f149673c60bbb2e453166454f21196c24d381ec980e5e5b"
+    },
+    {
+      "clip": "card-worst-case-grubb",
+      "endpoint": "first",
+      "file": "card-worst-case-grubb/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "ddcfea9df32837bef4f48e6871a8b74b4782cb4ef3484de5d92cdc1fde3d1277"
+    },
+    {
+      "clip": "card-worst-case-grubb",
+      "endpoint": "last",
+      "file": "card-worst-case-grubb/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "9cd4e619a2f57e092bdb081dbd92966bb78c4b1c5000377e30e8506eeb2fe98c"
+    },
+    {
+      "clip": "card-tiny-mouse",
+      "endpoint": "first",
+      "file": "card-tiny-mouse/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "bfc19e3d09dd8a88d8b60a4c150eb821f708e0a5b29ca2f1f6c0263b917a8cd2"
+    },
+    {
+      "clip": "card-tiny-mouse",
+      "endpoint": "last",
+      "file": "card-tiny-mouse/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "fbde92305e4b843e0c92b0039edfcfc3ed9a8f23b388c4f44e8b4d31ab0dae14"
+    },
+    {
+      "clip": "card-draw-chameleon",
+      "endpoint": "first",
+      "file": "card-draw-chameleon/first.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "2d2583066a8c01e76f15e998e77091c579323e2cf62cf172d06a39cedacf61d2"
+    },
+    {
+      "clip": "card-draw-chameleon",
+      "endpoint": "last",
+      "file": "card-draw-chameleon/last.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "95c597614e10ab492d13b8d8edab6198b2c4c174b9d2ce933ce801365ea88697"
+    },
+    {
+      "clip": "card-odd-even-magpies",
+      "endpoint": "first",
+      "file": "card-odd-even-magpies/first.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "b067388fc883b17098b1fc2fff2be58859a6969c6de4149c8271fb17d9dc90c8"
+    },
+    {
+      "clip": "card-odd-even-magpies",
+      "endpoint": "last",
+      "file": "card-odd-even-magpies/last.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "40a7d29b7bc698880c895b2cbad77e6255c278355f4784da0eb47a5c201047e3"
+    },
+    {
+      "clip": "card-shared-cats",
+      "endpoint": "first",
+      "file": "card-shared-cats/first.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "0d4e87cfde2152c85a8274069c1271b8771cf9ffa93fbeedecd77675ccebc6f3"
+    },
+    {
+      "clip": "card-shared-cats",
+      "endpoint": "last",
+      "file": "card-shared-cats/last.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "5f2701358d7a786e76b008f8ff35157d0d29efdf55530bdb349993e63e21fec6"
+    }
+  ],
+  "version": 2
+}

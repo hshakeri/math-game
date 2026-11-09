@@ -1,4 +1,5 @@
-# Prompt: Courtyard of Five Shields (Node 3)
+# ch1-n3 — pixel art direction
 
-## Direction
-Sunlit inner castle courtyard paved with rectangular stone slabs. In the center pavement, three upright shield emblems over two flat shield emblems with subtle hidden seam lines. Architectural precision, iron gall ink and sandstone textures, no text in image.
+Courtyard of Five Shields: weathered flagstones, ivy, timber scaffold and a stone gate. The mathematical shield arrangement belongs only in the engine diagram.
+
+Canonical implementation: `tools/assets/generate.py`; art direction: `tools/assets/style.md`. Locked/open scenes reuse the same integer-grid environment and swap only door tiles. Runtime art contains no text, numbers, puzzle hints or generated-at-play images. Regenerate with `npm run assets`. Parent visual review is required before commit.

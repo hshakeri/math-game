@@ -618,8 +618,13 @@ describe('Empirical Adversarial Stress Suite — Milestone M1', () => {
                 assert.equal(view.revealedHints.some(h => h.rung === 'l2'), false);
               }
               if (rungIdx < 3) {
-                // Must not contain l4 statement
-                assert.equal(view.revealedHints.some(h => h.rung === 'l4'), false);
+                // An explicit Tiny Case card earns its statement independently of hint rung.
+                const tinyHint = view.revealedHints.find(h => h.rung === 'l4');
+                if (phase === 'simpler_problem') {
+                  assert.deepEqual(tinyHint, { rung: 'l4', statement: part.ladder.l4.statement });
+                } else {
+                  assert.equal(tinyHint, undefined);
+                }
               }
               if (rungIdx < 4) {
                 // Must not contain l3 hint text

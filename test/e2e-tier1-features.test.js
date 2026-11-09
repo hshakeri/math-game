@@ -319,11 +319,11 @@ describe('E2E Tier 1: 46 Isolated Feature Coverage Tests', () => {
       assert.equal(turn.fallback, false);
     });
 
-    it('Feature 23: Archimedes System Prompt — prompt file exists and enforces diet', () => {
+    it('Feature 23: Rivet System Prompt — prompt file exists and enforces diet', () => {
       const pPath = path.join(rootDir, 'server', 'tutor', 'prompt.md');
       assert.ok(fs.existsSync(pPath));
       const content = fs.readFileSync(pPath, 'utf8');
-      assert.ok(content.includes('Archimedes the Owl'));
+      assert.ok(content.includes('Rivet the clockwork owl'));
       assert.ok(content.includes('allowedContent'));
     });
 
@@ -455,10 +455,17 @@ describe('E2E Tier 1: 46 Isolated Feature Coverage Tests', () => {
       assert.ok(clientSrc.includes('find-what-is-shared'));
     });
 
-    it('Feature 30: Owl Speech Bubble — Typewriter implementation exists', () => {
+    it('Feature 30: Rivet timed speech is wired to the client and can be read instantly', async () => {
       const clientSrc = fs.readFileSync(path.join(rootDir, 'client', 'app.js'), 'utf8');
-      assert.ok(clientSrc.includes('class Typewriter'));
-      assert.ok(clientSrc.includes('complete()'));
+      assert.ok(/import\s+\{\s*TimedSpeech\s*\}\s+from\s+['"]\.\/timed-speech\.js['"]/.test(clientSrc), 'Client must import the tested speech controller');
+      assert.ok(/new TimedSpeech\(/.test(clientSrc), 'Client must instantiate the tested speech controller');
+      const { TimedSpeech } = await import('../client/timed-speech.js');
+      const element = { textContent: '' };
+      const speech = new TimedSpeech(element, { reducedMotion: true });
+      speech.speak('Read the inscription when you are ready.');
+      assert.equal(element.textContent, speech.targetText);
+      assert.equal(speech.pending, false);
+      assert.equal(speech.isTyping, false);
     });
 
     it('Features 31–34: Pure SVG Diagram Modules exist', () => {

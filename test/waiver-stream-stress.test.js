@@ -73,24 +73,38 @@ describe('Adversarial Stress: Look Back Waiver & Parent SSE Discovery', () => {
     }
 
     if (targetPhase === 'look_back') {
-      // Justified correct conjecture shortcuts directly to look_back (3+ words)
-      const conjVal = encounterId.includes('reverse-tolls') ? 6 :
-                      encounterId.includes('dark-vault') ? 4 :
-                      encounterId.includes('five-shields') ? 30 : 24;
-      const res = await fetch(`${testUrl}/api/session/${sessionId}/action`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: {
-            type: 'conjecture',
-            stem: 'think',
-            value: conjVal,
-            reason: 'I am completely certain of this answer'
+      // Every chamber must open before the final part's Look Back can be waived.
+      const conjectures = encounterId.includes('reverse-tolls') ? [6] :
+                          encounterId.includes('dark-vault') ? [4, 10, 13] :
+                          encounterId.includes('five-shields') ? [30] : [24];
+      for (const [index, value] of conjectures.entries()) {
+        const res = await fetch(`${testUrl}/api/session/${sessionId}/action`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: {
+              type: 'conjecture', stem: 'think', value,
+              reason: 'I am completely certain of this answer'
+            }
+          })
+        });
+        const data = await res.json();
+        if (index < conjectures.length - 1) {
+          assert.equal(data.state, 'sealed');
+          assert.equal(data.view.partSealed, true);
+          assert.equal(data.view.sealed, false);
+          for (const type of ['next_part', 'arrive']) {
+            const nextRes = await fetch(`${testUrl}/api/session/${sessionId}/action`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: { type } })
+            });
+            assert.equal(nextRes.status, 200);
           }
-        })
-      });
-      const data = await res.json();
-      assert.equal(data.state, 'look_back', `Expected state look_back, got ${data.state}`);
+        } else {
+          assert.equal(data.state, 'look_back', `Expected state look_back, got ${data.state}`);
+        }
+      }
       return sessionId;
     }
 

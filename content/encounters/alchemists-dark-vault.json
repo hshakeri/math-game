@@ -29,13 +29,13 @@
           "match": 2,
           "tag": "possibility-vs-guarantee",
           "startLevel": 1,
-          "probe": "Two grabs might match, or they might not. Picture a sneaky goblin inside the chest handing you the crystals: what would it hand you to spoil your pair?"
+          "probe": "Two grabs might match, or they might not. Picture Grubb inside the chest handing you the crystals: what would it hand you to spoil your pair?"
         },
         {
           "match": 3,
           "tag": "off-by-one",
           "startLevel": 2,
-          "probe": "You stopped at the number of colours. Can the goblin still keep every grab a different colour at that point, and what happens on the grab after that?"
+          "probe": "You stopped at the number of colours. Can Grubb still keep every grab a different colour at that point, and what happens on the grab after that?"
         },
         {
           "match": { "min": 11, "max": 13 },
@@ -52,17 +52,17 @@
       ],
       "ladder": {
         "l0": [
-          "What must be true for a grab to count as certain, no matter how unlucky we are?",
-          "What do we know about the chest, and what is the torch asking us to guarantee?",
-          "Is the question asking what could happen, or what must happen?"
+          "My lantern runs on oil, not luck. For this torch, are we hunting for a pair that might appear on a lucky grab, or a pair that cannot be avoided?",
+          "Let's read the torch's demand before opening the chest. What must be true for a grab to count as certain, no matter how unlucky we are?",
+          "Grubb would like us to rely on luck. Look at the inscription: is it asking what could happen, or what must happen every single time?"
         ],
         "l1": [
-          "Imagine a goblin inside the chest choosing which crystals you get, trying to ruin your torch. What is its best trick?",
-          "Is there a card in the Deck about the unluckiest case?",
-          "Try a chest with only two colours. How long could the goblin keep your grabs all different?"
+          "Picture Grubb inside the chest, choosing each crystal to delay our torch. What would he hand you on each grab to keep a pair from appearing?",
+          "Lemma has a card for a day when luck refuses to help. Which card in the Deck could help us think about the unluckiest case?",
+          "Let's try a chest small enough for my workbench, with only two colours. How long could Grubb keep every crystal you grab a different colour?"
         ],
         "l2": {
-          "text": "Think of one bin per colour. The goblin keeps putting crystals into empty bins to avoid a pair, but once every bin holds one crystal it has nowhere left to hide a new one. How many can it place before it runs out of empty bins, and what does the next one do?",
+          "text": "A bin for each colour gives us a place to keep watch. Grubb uses empty bins to avoid a pair. Once every bin holds one crystal, what must the next crystal do?",
           "diagram": {
             "component": "pigeonhole-bins",
             "params": {
@@ -78,7 +78,7 @@
           "l3": "The goblin gives you one red, then one blue. Whatever comes next matches one of them. Count the grabs."
         },
         "l3": {
-          "text": "Fill each bin with one crystal; that is the most the goblin can place with no pair. Count the bins, then add one for the grab that must land in a bin that is already full.",
+          "text": "Put one crystal in each bin on the blueprint, leaving Grubb no empty bin to choose. What happens when the next crystal has to join an occupied bin?",
           "diagram": {
             "component": "pigeonhole-bins",
             "params": {
@@ -122,40 +122,40 @@
           "match": 4,
           "tag": "reused-part-a",
           "startLevel": 1,
-          "probe": "Four was the number for a pair. This torch wants a bigger club of one colour. How many of each colour could the goblin hand over while still dodging that club?"
+          "probe": "Four was the number for a pair. This torch wants a bigger club of one colour. How many of each colour could Grubb hand over while still dodging that club?"
         },
         {
           "match": 9,
           "tag": "off-by-one",
           "startLevel": 2,
-          "probe": "You found how many the goblin can hand out while every colour stays below the club size. What must the very next grab do?"
+          "probe": "You found how many Grubb can hand out while every colour stays below the club size. What must the very next grab do?"
         },
         {
           "match": { "min": 11, "max": 13 },
           "tag": "empty-a-colour",
           "startLevel": 1,
-          "probe": "Do you need a whole colour gone, or only enough that the goblin runs out of ways to dodge?"
+          "probe": "Do you need a whole colour gone, or only enough that Grubb runs out of ways to dodge?"
         },
         {
           "match": "any-wrong",
           "tag": "default",
           "startLevel": 0,
-          "probe": "Say in your own words what the goblin is trying to avoid this time?"
+          "probe": "Say in your own words what Grubb is trying to avoid this time?"
         }
       ],
       "ladder": {
         "l0": [
-          "What does the Torch of Four require for a grab to count as certain?",
-          "How many crystals of one single colour does the claw need to secure?",
-          "What is the goblin trying to prevent from happening as it deals crystals?"
+          "New torch, new demand. Let's put it in our own words: does it want four crystals of every colour, or four crystals of any single colour?",
+          "My notebook has room for the torch's demand. How many crystals of a single colour must the claw secure, however Grubb chooses them?",
+          "Grubb has taken his place beside the chest again. Looking at this torch's demand, what is he trying to prevent as he hands over crystals?"
         ],
         "l1": [
-          "How many crystals could the goblin give you of each colour without completing a club of four?",
-          "Can you use the unluckiest case strategy to fill each colour just short of the goal?",
-          "What happens if the goblin hands you as many as possible without any colour reaching the target?"
+          "Lemma has kept the unluckiest-case card handy. Can we use it to fill each colour short of the goal before any colour reaches the club size?",
+          "Let Grubb make the choices on our blueprint. How many crystals could he give you of each colour without completing a club of four?",
+          "A goblin needs somewhere to hide the next crystal. What happens if he has handed out as many as possible without any colour reaching the target?"
         ],
         "l2": {
-          "text": "The goblin wants no bin to reach the club size, so it fills every bin to one below the club size. When all bins are filled that way, where does the next crystal go?",
+          "text": "Grubb fills each bin one below the club size so no bin reaches the goal. Once every bin is filled that way, where can the next crystal go?",
           "diagram": {
             "component": "pigeonhole-bins",
             "params": {
@@ -171,7 +171,7 @@
           "l3": "The goblin gives two of each colour. The next grab must complete three of a colour. Count them."
         },
         "l3": {
-          "text": "Fill each bin to one less than the club size, count all the crystals, then add one for the grab that must complete a club.",
+          "text": "On the blueprint, fill each bin until it is one crystal short of four. Then let Grubb choose a bin for a final grab. What does that grab force to happen?",
           "diagram": {
             "component": "pigeonhole-bins",
             "params": {
@@ -215,40 +215,40 @@
           "match": 4,
           "tag": "pattern-transfer",
           "startLevel": 1,
-          "probe": "Same number as the pair torch, but this torch wants two different colours. What is the goblin’s best trick now to keep every crystal the same?"
+          "probe": "Same number as the pair torch, but this torch wants two different colours. What is Grubb's best trick now to keep every crystal the same?"
         },
         {
           "match": 2,
           "tag": "possibility-vs-guarantee",
           "startLevel": 1,
-          "probe": "Two grabs might differ, or they might match. Picture the sneaky goblin inside the chest: what would it hand you?"
+          "probe": "Two grabs might differ, or they might match. Picture Grubb inside the chest: what would it hand you?"
         },
         {
           "match": 12,
           "tag": "off-by-one",
           "startLevel": 2,
-          "probe": "You counted a whole colour. If the goblin hands you every crystal of one colour, what colour is the grab after that?"
+          "probe": "You counted a whole colour. If Grubb hands you every crystal of one colour, what colour is the grab after that?"
         },
         {
           "match": "any-wrong",
           "tag": "default",
           "startLevel": 0,
-          "probe": "What is the opposite of what the goblin tried in the earlier torches?"
+          "probe": "What is the opposite of what Grubb tried in the earlier torches?"
         }
       ],
       "ladder": {
         "l0": [
-          "What does the Torch of Difference ask us to guarantee?",
-          "How many different colours must be present in the grab for this torch?",
-          "What would the unluckiest possible grab look like if we want two different colours?"
+          "The Torch of Difference has its own demand. Before we open the chest, how many different colours must we be certain to hold in our hand?",
+          "Let's give this torch a fresh line in the notebook. In your own words, what does the Torch of Difference ask us to guarantee?",
+          "Grubb is choosing again, so luck gets no say. What would the unluckiest hand look like when we want crystals of two different colours?"
         ],
         "l1": [
-          "What is the goblin’s trick to keep your crystals all the same colour for as long as possible?",
-          "Could the goblin keep giving you the very same colour until that whole colour runs out?",
-          "If the goblin wants to delay giving you a second colour, which crystals will it keep handing you?"
+          "Grubb wants to keep a second colour out of your hand. If he controls each grab from the chest, which crystals will he keep handing you?",
+          "Let's check the limits of Grubb's plan. Could he keep giving you the very same colour until that whole colour runs completely out?",
+          "Lemma has opened the unluckiest-case card again. What trick would keep every crystal in your hand the same colour for as long as possible?"
         ],
         "l2": {
-          "text": "The goblin’s trick is now the opposite: it hands you the same colour for as long as it can. How long can that last, and what must the next grab be?",
+          "text": "This time Grubb hands over the same colour for as long as the chest allows. How long can he keep that up, and what must happen on the next grab?",
           "diagram": {
             "component": "pigeonhole-bins",
             "params": {
@@ -264,7 +264,7 @@
           "l3": "Give the goblin all 5 red crystals. The next grab must be blue. Count the grabs."
         },
         "l3": {
-          "text": "Give the goblin every crystal of one colour, count them, then add one for the grab that must come from another colour.",
+          "text": "Give Grubb every crystal of one colour on the blueprint, then let him hand them over until none remain. What colour must his next crystal be?",
           "diagram": {
             "component": "pigeonhole-bins",
             "params": {

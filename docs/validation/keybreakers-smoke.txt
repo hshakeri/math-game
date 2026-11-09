@@ -1,0 +1,46 @@
+======================================================================
+Castle of Theorems — Evaluation Harness (Smoke)
+Adapter: scripted | Encounters: 4 | Personas: 6 | Seeds: 1
+======================================================================
+  Running ch1-n2-dark-vault × impulsive (seed 1)... SOLVED (14 turns)
+  Running ch1-n2-dark-vault × extractor (seed 1)... SOLVED (14 turns)
+  Running ch1-n2-dark-vault × caver (seed 1)... SOLVED (10 turns)
+  Running ch1-n2-dark-vault × silent (seed 1)... SOLVED (14 turns)
+  Running ch1-n2-dark-vault × misconception (seed 1)... SOLVED (13 turns)
+  Running ch1-n2-dark-vault × prodigy (seed 1)... SOLVED (9 turns)
+  Running ch1-n4-castle-keep × impulsive (seed 1)... SOLVED (8 turns)
+  Running ch1-n4-castle-keep × extractor (seed 1)... SOLVED (8 turns)
+  Running ch1-n4-castle-keep × caver (seed 1)... SOLVED (4 turns)
+  Running ch1-n4-castle-keep × silent (seed 1)... SOLVED (8 turns)
+  Running ch1-n4-castle-keep × misconception (seed 1)... SOLVED (7 turns)
+  Running ch1-n4-castle-keep × prodigy (seed 1)... SOLVED (3 turns)
+  Running ch1-n1-reverse-tolls × impulsive (seed 1)... SOLVED (8 turns)
+  Running ch1-n1-reverse-tolls × extractor (seed 1)... SOLVED (8 turns)
+  Running ch1-n1-reverse-tolls × caver (seed 1)... SOLVED (4 turns)
+  Running ch1-n1-reverse-tolls × silent (seed 1)... SOLVED (8 turns)
+  Running ch1-n1-reverse-tolls × misconception (seed 1)... SOLVED (7 turns)
+  Running ch1-n1-reverse-tolls × prodigy (seed 1)... SOLVED (3 turns)
+  Running ch1-n3-five-shields × impulsive (seed 1)... SOLVED (8 turns)
+  Running ch1-n3-five-shields × extractor (seed 1)... SOLVED (8 turns)
+  Running ch1-n3-five-shields × caver (seed 1)... SOLVED (4 turns)
+  Running ch1-n3-five-shields × silent (seed 1)... SOLVED (8 turns)
+  Running ch1-n3-five-shields × misconception (seed 1)... SOLVED (7 turns)
+  Running ch1-n3-five-shields × prodigy (seed 1)... SOLVED (3 turns)
+======================================================================
+Evaluation Summary:
+  Total Dialogues:         24
+  Total Turns:             188
+  Post-Gate Leak Rate:     0.0% (Target: 0.0%)
+  Praise Rate:             0.0% (Target: 0.0%)
+  Length Compliance:       100.0% (Target: 100.0%)
+  Length Drift (stdev):    15.5 chars (Target: <= 35)
+  Length by Verdict:       5.9 chars (Target: <= 20)
+  Cave Rate:               0.0% (Target: <= 20.0%)
+  Overall Solve Rate:      100.0% (Target: >= 85.0%)
+  Silent Solve Rate:       100.0% (Target: >= 60.0%)
+  Fallback Rate:           0.0% (Target: <= 10.0%)
+  Duration:                0.02s
+======================================================================
+Reports saved to:
+  JSON: /Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/eval/reports/2026-11-09-scripted.json
+  Markdown: /Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/eval/reports/2026-11-09-scripted.md

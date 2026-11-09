@@ -150,7 +150,7 @@ describe('Milestone M2: Socratic Tutor & Mock Adapter Test Suite', () => {
       assert.ok(fs.existsSync(schemaPath), 'schema.json must exist');
 
       const promptText = fs.readFileSync(promptPath, 'utf8');
-      assert.ok(promptText.includes('Archimedes the Owl'), 'prompt.md must contain Archimedes the Owl persona');
+      assert.ok(promptText.includes('Rivet the clockwork owl'), 'prompt.md must contain Rivet the clockwork owl persona');
       assert.ok(promptText.includes('150 to 300 characters'), 'prompt.md must state 150-300 characters rule');
 
       const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
@@ -193,7 +193,7 @@ describe('Milestone M2: Socratic Tutor & Mock Adapter Test Suite', () => {
       const body = JSON.parse(interceptedOptions.body);
       assert.equal(body.model, DEFAULT_CLAUDE_MODEL);
       assert.equal(body.max_tokens, 256);
-      assert.ok(body.system.includes('Archimedes the Owl'));
+      assert.ok(body.system.includes('Rivet the clockwork owl'));
       assert.ok(Array.isArray(body.tools));
       assert.equal(body.tools[0].name, 'respond_as_archimedes');
       assert.deepEqual(body.tool_choice, { type: 'tool', name: 'respond_as_archimedes' });
@@ -325,7 +325,7 @@ describe('Milestone M2: Socratic Tutor & Mock Adapter Test Suite', () => {
       assert.equal(interceptedOptions.headers['Content-Type'], 'application/json');
 
       const body = JSON.parse(interceptedOptions.body);
-      assert.ok(body.systemInstruction.parts[0].text.includes('Archimedes the Owl'));
+      assert.ok(body.systemInstruction.parts[0].text.includes('Rivet the clockwork owl'));
       assert.equal(body.generationConfig.thinkingConfig.thinkingLevel, 'low');
       assert.equal(body.generationConfig.responseMimeType, 'application/json');
       assert.equal(body.generationConfig.responseSchema.properties.utterance.type, 'STRING');

@@ -96,6 +96,15 @@ function initSSE() {
 
 function handleSSEEvent(ev) {
   if (!ev) return;
+  if (ev.tutor) {
+    const config = document.getElementById('stat-tutor');
+    const reply = document.getElementById('stat-tutor-reply');
+    if (config) config.textContent = ev.tutor.adapter === 'scripted' ? 'Scripted (offline)'
+      : `${ev.tutor.adapter} · ${ev.tutor.model || 'configured model'}`;
+    if (reply) reply.textContent = ev.tutor.source
+      ? `Last reply: ${ev.tutor.fallback ? 'scripted fallback' : ev.tutor.source}${Number.isFinite(ev.tutor.latencyMs) ? ` · ${(ev.tutor.latencyMs / 1000).toFixed(1)}s` : ''}`
+      : 'Waiting for the next reply';
+  }
   const transcript = document.getElementById('transcript');
   if (!transcript) return;
 
@@ -124,7 +133,7 @@ function handleSSEEvent(ev) {
       break;
     case 'tutor.say':
       item.classList.add('log-tutor');
-      strong.textContent = `[${time}] Archimedes:`;
+      strong.textContent = `[${time}] Rivet:`;
       bodyText = ` ${ev.speech || ev.text || ''}`;
       break;
     case 'child.action':

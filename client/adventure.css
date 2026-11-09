@@ -1,0 +1,120 @@
+/* One world, one scene, one next move. */
+#screen-map { max-width:1240px; padding:24px 28px 36px }
+.simple-map-header { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:12px }
+.simple-map-header .wordmark { font:13px var(--font-family-mono); letter-spacing:3px; color:var(--gold-dark) }
+.simple-map-header h1 { font:normal clamp(26px,4vw,42px)/1.15 Georgia; margin:5px 0 }
+.quiet-links { display:flex; gap:20px; align-items:center; color:var(--ink-secondary); font-size:12px }
+.quiet-links a { display:inline-flex; min-height:44px; align-items:center; text-underline-offset:4px }
+#screen-encounter { max-width:1120px; padding:24px 24px 64px }
+.simple-encounter-header { display:flex; gap:22px; align-items:center; padding:0 0 20px }
+.simple-encounter-header h1 { flex:1; font:normal clamp(24px,3vw,36px)/1.2 Georgia }
+.back-to-map { display:inline-flex; align-items:center; min-height:56px; white-space:nowrap; font-size:15px; text-decoration:none }
+.simple-encounter-header .speech-mode { font-size:12px; min-width:110px; min-height:56px; border:0; background:transparent; color:var(--ink-secondary) }
+.adventure-stage { overflow:hidden; border:2px solid #536b59; border-radius:12px; box-shadow:0 10px 35px #14291d16; background:var(--parchment-card) }
+.comic-map { position:relative; background:#aab9a0; color:#213b30 }
+.story-map-art { height:380px; position:relative; overflow:hidden }
+.story-landscape { width:100%; height:100%; display:block }
+.story-road-narrow { display:none }
+.story-map-art>.story-illustration { width:100%; height:100%; object-fit:cover; object-position:center 47% }
+.story-stops { position:absolute; inset:0 0 auto; height:380px }
+.story-stop { position:absolute; left:var(--story-x); top:var(--story-y); transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; min-width:88px; min-height:56px; padding:7px 10px; gap:4px; color:#213b30; border:2px solid transparent; border-radius:12px; background:transparent; font-size:15px; text-shadow:0 1px #eef0d9; cursor:pointer }
+.story-stop strong,.story-rule { display:block; white-space:nowrap; background:#f3ecd5eb; border-radius:4px; padding:3px 7px; line-height:1.35; box-shadow:0 2px 4px #263d3226 }
+.story-stop.is-current { border-color:#8b632e; background:#efe0b930; outline:3px solid #f6efcf80; outline-offset:3px }
+.story-stop:focus-visible { outline:3px solid #263e32; outline-offset:5px }
+.story-landmark { display:block; width:76px; height:76px }
+.story-landmark>svg { width:100%; height:100% }
+.story-landmark .pixel-sprite { width:76px; height:76px }
+.story-rule { font:14px var(--font-family-mono) }
+.map-keeper { position:absolute; left:33%; top:48% }
+.map-keeper .pixel-sprite { width:70px; height:70px }
+.story-caption { position:relative; padding:22px 28px 14px; background:#f4edd8; border-top:2px solid #667a62; min-height:123px }
+.story-caption:before { content:''; position:absolute; left:48%; top:-12px; width:20px; height:20px; background:#f4edd8; border-top:2px solid #667a62; border-left:2px solid #667a62; transform:rotate(45deg) }
+.story-caption .eyebrow { color:#7c5b2b; font-size:11px; letter-spacing:1.5px }
+.story-caption p { margin-top:8px; font:20px/1.6 Georgia; max-width:850px }
+.story-reading-controls { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 24px 16px; background:#f4edd8 }
+.story-reading-controls>span { color:#66715b; font-size:12px }
+.story-next { min-height:56px; border:1px solid #a99973; background:#e7dbc0; color:#334935; padding:10px 16px; border-radius:6px; font-size:15px }
+.comic-map-keeper .story-stop { background:#f4edd8e8; top:82%; min-width:56px }
+.comic-map-keeper .story-stop strong { box-shadow:none; background:transparent }
+.comic-map-keeper .story-stop .story-dot { font-size:12px; color:#806335 }
+.adventure-dock { padding:24px 28px 28px }
+.map-conversation { display:flex; gap:18px; align-items:flex-start; max-width:880px; margin:0 auto 18px }
+#rivet-avatar .pixel-sprite { width:72px; height:72px; margin-top:12px }
+.map-conversation .speech-bubble { flex:1; border:0; border-left:3px solid #b39a61; border-radius:0; box-shadow:none; padding:4px 0 0 20px; background:transparent }
+.map-conversation .speech-bubble:before { display:none }
+.map-conversation .speech-name { font-size:11px; margin:0 0 5px }
+.map-conversation .speech-words { min-height:64px; font-size:18px; line-height:1.65 }
+.map-conversation .speech-control { min-height:56px; font-size:12px; padding:4px; margin:0 0 0 auto }
+.challenge-goal { font:normal 21px/1.5 Georgia; text-align:center; padding:16px 0 22px }
+.map-gate-event { display:flex; align-items:center; justify-content:center; gap:14px; padding:8px 24px; background:#e4d8b8; color:#334432 }
+.map-gate-event .pixel-sprite { width:64px; height:64px }
+.map-gate-event strong { font:bold italic 24px Georgia; color:#795824 }
+.map-gate-event span { font-size:15px }
+.adventure-dock .conjecture-slate,.adventure-dock .look-back-panel,.adventure-dock .part-complete-panel { max-width:800px; margin:0 auto 20px; border:0; background:transparent; padding:0 }
+.adventure-dock .conjecture-slate h3,.adventure-dock .look-back-panel h3 { font:normal 21px Georgia; margin-bottom:10px }
+.adventure-dock .reply-strip { border:0; padding:0; margin:0 auto; max-width:880px; background:transparent }
+.adventure-dock .hero-speaker { display:none }
+.adventure-dock .chip-container { margin-top:8px }
+.adventure-dock .input-row { margin-top:14px }
+.adventure-dock .arrival-panel { max-width:560px; margin:0 auto 20px }
+.adventure-dock .arrival-panel>.btn-touch { justify-content:center }
+.adventure-actions { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:24px 0 0 }
+.adventure-actions .btn-touch { min-height:56px; padding:10px 18px; font-size:15px; background:transparent; border:1px solid var(--parchment-border); color:var(--ink-primary) }
+.adventure-actions .btn-stuck { margin:0; width:auto; text-decoration:none }
+.tools-drawer { margin:24px 0 0; padding-top:16px; border-top:1px solid var(--parchment-border) }
+.tools-drawer>summary,.workspace-details>summary { cursor:pointer; min-height:56px; padding:12px 0; font-size:16px }
+.workspace-details { margin:0 0 22px }
+.workspace-scroll { border:0; box-shadow:none; padding:20px; border-radius:8px; margin:0 }
+.submit-dial-container { max-width:650px; margin:20px auto 0; background:transparent; padding:0; border:0 }
+.submit-dial-container .answer-input { max-width:180px }
+#calculation-mount { width:100%; min-width:0 }
+.adventure-stage .story-illustration { animation:none }
+@media(max-width:700px) {
+  #screen-map { padding:18px 12px 28px }
+  .simple-map-header { align-items:flex-start; gap:12px }
+  .simple-map-header h1 { font-size:27px }
+  .quiet-links { flex-direction:column; gap:0; align-items:flex-end; font-size:11px }
+  .quiet-links a { min-height:44px }
+  #screen-encounter { padding:12px 8px 40px }
+  .simple-encounter-header { gap:10px; padding:0 4px 12px; flex-wrap:wrap }
+  .simple-encounter-header h1 { font-size:23px }
+  .simple-encounter-header .speech-mode { margin-left:auto }
+  .adventure-dock { padding:20px 14px }
+  .map-conversation { gap:10px }
+  #rivet-avatar .pixel-sprite { width:48px; height:48px }
+  .map-conversation .speech-bubble { padding-left:12px }
+  .map-conversation .speech-words { font-size:17px }
+  .story-map-art,.story-stops { height:440px }
+  .story-road-wide { display:none }
+  .story-road-narrow { display:block }
+  .comic-map-tolls .story-stop:nth-child(1) { left:24%; top:78% }
+  .comic-map-tolls .story-stop:nth-child(2) { left:24%; top:44% }
+  .comic-map-tolls .story-stop:nth-child(3) { left:24%; top:13% }
+  .comic-map-tolls .story-stop:nth-child(4) { left:76%; top:30% }
+  .comic-map-tolls .story-stop:nth-child(5) { left:76%; top:65% }
+  .story-stop { min-width:60px; padding:4px; font-size:12px }
+  .story-landmark,.story-landmark .pixel-sprite { width:58px; height:58px }
+  .story-rule { font-size:12px; padding:3px 4px }
+  .map-keeper { display:none }
+  .story-caption { padding:18px; min-height:135px }
+  .story-caption p { font-size:19px }
+  .story-reading-controls { padding:0 16px 16px; flex-direction:column; align-items:stretch }
+  .story-reading-controls>span { text-align:center }
+  .comic-map-keeper .story-stops { display:flex; align-items:flex-end; justify-content:center; gap:8px; padding:18px 10px }
+  .comic-map-keeper .story-stop { position:static; transform:none; flex:1; min-width:0; min-height:60px }
+  .comic-map-keeper .story-stop strong { white-space:normal; font-size:12px }
+  .workspace-scroll { padding:8px }
+}
+@media(max-width:370px) {
+  .adventure-dock { padding-inline:10px }
+  .calculation-tools { padding-inline:7px }
+}
+@media(prefers-color-scheme:dark) {
+  .story-caption,.story-reading-controls { background:#eadfc4; color:#253c30 }
+  .story-caption:before { background:#eadfc4 }
+  .adventure-stage { border-color:#65765a }
+  .adventure-dock .speech-bubble { color:var(--ink-primary) }
+  .adventure-dock .speech-name { color:var(--gold-accent) }
+}
+
+.rivet-thinking { color:var(--ink-secondary); font-size:16px; text-align:center; margin:0 0 12px }

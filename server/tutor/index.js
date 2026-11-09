@@ -8,13 +8,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkUtterance } from '../engine/leakGate.js';
-import { getScriptedProbe } from '../engine/scripted.js';
+import { getScriptedProbe, getScriptedFollowUp } from '../engine/scripted.js';
 import { logEventSync } from '../engine/telemetry.js';
 
 // Adapters
 import * as scriptedAdapter from './scripted.js';
 import * as geminiAdapter from './gemini.js';
 import * as claudeAdapter from './claude.js';
+import * as agyAdapter from './agy.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -169,6 +170,7 @@ export function formatCorrectivePrompt(gateResult, candidate) {
  * @param {string} [ctx.rung='l0']
  * @param {Array<{ who: string, text: string }>} [ctx.publicHistory=[]]
  * @param {string} [ctx.childMessage]
+ * @param {string} [ctx.previousSpeech] Local selection only; never sent to a model.
  * @param {string} [ctx.chosenCard]
  * @param {string} [ctx.sessionId]
  * @param {object} [options={}]
@@ -224,7 +226,7 @@ export async function generateTurn(ctx, options = {}) {
     style: {
       minChars: 150,
       maxChars: 300,
-      persona: 'Archimedes the Owl, Royal Architect',
+      persona: 'Rivet the clockwork owl, engineer',
       correction: null
     }
   };
@@ -260,12 +262,25 @@ export async function generateTurn(ctx, options = {}) {
   };
 
   const adapterType = options.adapter || ctx.adapter || process.env.TUTOR_ADAPTER || 'scripted';
-  const timeoutMs = options.timeoutMs ?? 4000;
+  const timeoutMs = options.timeoutMs ?? (adapterType === 'agy' ? agyAdapter.configuredTimeoutMs() : 4000);
   const activeSessionId = sessionId || options.sessionId;
+
+  // Prior tutor speech is only a local cursor, never new model context: it may
+  // contain a hint from a rung that has since faded. The ordinary public request
+  // remains whitelisted above and unchanged for model adapters.
+  const scriptedRequest = { ...adapterRequest, previousSpeech: ctx.previousSpeech || '' };
+  const screenScripted = speech => {
+    // Authored text uses the validator's 40–300 bounds; every other gate stage is
+    // identical to model screening. Never return a rejected authored candidate.
+    if (checkUtterance(speech, leakGateContext).allowed) return speech;
+    const followUp = getScriptedFollowUp(state, scriptedRequest);
+    if (checkUtterance(followUp, leakGateContext).allowed) return followUp;
+    throw new Error('No safe scripted tutor probe is available');
+  };
 
   // Helper for scripted fallback
   const deliverScriptedFallback = (retries, reason) => {
-    const fallbackProbe = getScriptedProbe(encounterId, partId, state, rung);
+    const fallbackProbe = screenScripted(getScriptedProbe(encounterId, partId, state, rung, scriptedRequest));
     const latencyMs = Date.now() - t0;
     if (activeSessionId) {
       logEventSync(activeSessionId, 'tutor.call', {
@@ -297,7 +312,10 @@ export async function generateTurn(ctx, options = {}) {
 
   // Scripted adapter direct path
   if (adapterType === 'scripted') {
-    const res = await scriptedAdapter.generateTurn({ encounterId, partId, state, rung });
+    const res = await scriptedAdapter.generateTurn(scriptedRequest);
+    const speech = screenScripted(res.utterance);
+    res.utterance = res.speech = speech;
+    res.parsed.utterance = res.parsed.speech = speech;
     const latencyMs = Date.now() - t0;
     if (activeSessionId) {
       logEventSync(activeSessionId, 'tutor.call', {
@@ -326,6 +344,8 @@ export async function generateTurn(ctx, options = {}) {
     adapterImpl = geminiAdapter;
   } else if (adapterType === 'claude') {
     adapterImpl = claudeAdapter;
+  } else if (adapterType === 'agy') {
+    adapterImpl = agyAdapter;
   } else {
     adapterImpl = scriptedAdapter;
   }

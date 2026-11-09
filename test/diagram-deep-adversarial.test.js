@@ -258,7 +258,7 @@ describe('M3 Deep Adversarial Challenger — Empirical Stress Tests', () => {
 
       const mockListeners = {};
       const mockElements = {
-        '#vault-input-grab': { textContent: '4' }
+        '#vault-input-grab': { textContent: '?' }
       };
       const mockContainer = {
         innerHTML: '',
@@ -293,12 +293,12 @@ describe('M3 Deep Adversarial Challenger — Empirical Stress Tests', () => {
         };
         mountDiagram(mockContainer, spec, 'workspace', maximalState, onStep);
 
-        // Grab stepper starts at totalPlaced + 1 = 4. Decrement to 2 (wrong conjecture).
+        // The unanswered grab stepper accepts the child's choice of 2 (wrong conjecture).
         mockListeners['click']({
           target: {
             closest: (sel) => {
               if (sel === '[data-action="grab-delta"]') {
-                return { dataset: { delta: '-1' } };
+                return { dataset: { delta: '1' } };
               }
               return null;
             }
@@ -308,7 +308,7 @@ describe('M3 Deep Adversarial Challenger — Empirical Stress Tests', () => {
           target: {
             closest: (sel) => {
               if (sel === '[data-action="grab-delta"]') {
-                return { dataset: { delta: '-1' } };
+                return { dataset: { delta: '1' } };
               }
               return null;
             }
@@ -421,12 +421,12 @@ describe('M3 Deep Adversarial Challenger — Empirical Stress Tests', () => {
 
       const mockListeners = {};
       const mockElements = {
-        '#keep-val-f0-1': { textContent: '2' },
-        '#keep-val-f0-2': { textContent: '2' },
-        '#keep-val-f1-1': { textContent: '2' },
-        '#keep-val-f1-2': { textContent: '2' },
-        '#keep-val-assign': { textContent: '2' },
-        '#keep-val-sum': { textContent: '20' },
+        '#keep-val-f0-1': { textContent: '?' },
+        '#keep-val-f0-2': { textContent: '?' },
+        '#keep-val-f1-1': { textContent: '?' },
+        '#keep-val-f1-2': { textContent: '?' },
+        '#keep-val-assign': { textContent: '?' },
+        '#keep-val-sum': { textContent: '?' },
         '#chip-kimmy': { setAttribute: () => {}, removeAttribute: () => {} },
         '#chip-jimmy': { setAttribute: () => {}, removeAttribute: () => {} },
         '#chip-timmy': { setAttribute: () => {}, removeAttribute: () => {} }
@@ -443,7 +443,12 @@ describe('M3 Deep Adversarial Challenger — Empirical Stress Tests', () => {
       try {
         mountDiagram(mockContainer, spec, 'workspace', null, onStep);
 
-        // Submit wrong factors [2, 2] for product 0 (34)
+        // Choose and submit wrong factors [2, 2] for product 0 (34).
+        for (const action of ['delta-f0-1', 'delta-f0-2']) {
+          mockListeners['click']({
+            target: { closest: (sel) => sel === `[data-action="${action}"]` ? { dataset: { delta: '1' } } : null }
+          });
+        }
         mockListeners['click']({
           target: { closest: (sel) => sel === '[data-action="confirm-factor"]' ? { dataset: { idx: '0' } } : null }
         });
@@ -465,7 +470,7 @@ describe('M3 Deep Adversarial Challenger — Empirical Stress Tests', () => {
         mockListeners['click']({
           target: { closest: (sel) => sel === '[data-action="pick-guardian"]' ? { dataset: { name: 'Jimmy' } } : null }
         });
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 8; i++) {
           mockListeners['click']({
             target: { closest: (sel) => sel === '[data-action="delta-assign-val"]' ? { dataset: { delta: '1' } } : null }
           });

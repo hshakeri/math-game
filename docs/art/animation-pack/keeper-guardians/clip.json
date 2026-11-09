@@ -1,0 +1,22 @@
+{
+  "id": "keeper-guardians",
+  "title": "The Three Guardians arrive",
+  "proposed_duration_seconds": 3,
+  "loop": false,
+  "motion_prompt": "Over three seconds, the three closed-helmet Guardians turn only their heads and attached plumes modestly toward the viewer together. Keep their torsos, resting arms, hands, feet, sentinel stance and spacing fixed; maintain the rust, navy and moss-green color order. No exposed blades, salute, bow or celebration. All three remain full body and the gate stays completely closed. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.",
+  "trigger_restrictions": {
+    "allow": [
+      "Once when the ch1-n4-castle-keep arrival panel first appears, before the child responds or the encounter begins."
+    ],
+    "stop": [
+      "Stop at the final pose after the one-off introduction.",
+      "Stop immediately when the child leaves the arrival panel, navigates away, pauses, or the page becomes hidden.",
+      "With reduced motion enabled, show the first still frame and skip playback."
+    ],
+    "forbid": [
+      "Never trigger from tentative ideas, conjectures, draft typing, chip choices, hint requests, tutor generation, correctness checks or answer results.",
+      "Never play as a response to a gate opening or staying shut, a Seal, completion or reward.",
+      "Never replay automatically, loop, delay input, change the closed gate, emit audio or display a timer."
+    ]
+  }
+}

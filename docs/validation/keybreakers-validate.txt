@@ -1,0 +1,29 @@
+
+> keybreakers@1.0.0 validate
+> node content/validate.js
+
+======================================================================
+Castle of Theorems — Content Validation Pipeline
+======================================================================
+
+Checking content/encounters/alchemists-dark-vault.json...
+  [WARNING] parts[c].forbidden: Documented collision: value 12 is in both givens and forbidden for Dark Vault part c (verified text avoids '12'/'twelve').
+  [OK] Passed validation (1 warning(s))
+
+Checking content/encounters/castle-keep-portcullis.json...
+  [OK] Passed validation (0 warning(s))
+
+Checking content/encounters/chasm-reverse-tolls.json...
+  [OK] Passed validation (0 warning(s))
+
+Checking content/encounters/courtyard-five-shields.json...
+  [OK] Passed validation (0 warning(s))
+
+======================================================================
+Validation Summary:
+  Files checked: 4
+  Total errors:  0
+  Total warnings: 1
+======================================================================
+
+PASS: All content validated successfully.

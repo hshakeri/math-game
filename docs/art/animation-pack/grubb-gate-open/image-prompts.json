@@ -1,0 +1,52 @@
+{
+  "clip": "grubb-gate-open",
+  "duration_seconds": 3,
+  "created_date": "2026-11-09",
+  "generation_tool": "built-in image_gen.imagegen",
+  "model": "Not exposed by built-in tool",
+  "transparent_background": false,
+  "dimensions": {
+    "width": 1672,
+    "height": 941
+  },
+  "shared_first_frame": "The first.png files in grubb-gate-shut and grubb-gate-open are byte-identical copies of the same generated image.",
+  "first": {
+    "prompt": "Use case: illustration-story.\nAsset type: first endpoint frame shared by two short game reaction clips.\nInput image 1 is a character identity and style reference only, not the composition to preserve. Use ONLY its Grubb character (top row, third character): small green goblin, large long ears, broad face capable of an enormous grin, brown patched cap, patched purple-brown trousers, brown vest and belt, bare green feet, and a large worn cloth sabotage sack. Omit the black bomb/explosive visible in the reference; the sack must contain only harmless wooden scraps, rope and cloth, with no weapons or hazardous objects.\nCreate a single landscape 16:9 frame, preferably 1536 x 864. Detailed crisp pixel illustration matching the reference's refined 16-bit inspired proportions, fine stepped pixel edges, richly shaded yet muted moss green, plum, warm stone, weathered brown and antique gold palette. Avoid chunky 8-bit abstraction, smooth vector art, and photorealism.\nScene: an empty stone courtyard beside a clearly CLOSED heavy arched wooden gate reinforced by dark iron. The stone gate arch occupies the right half of the frame, gate face fully visible and shut. Quiet stone wall, muted daylight, stone paving, no story clues or mathematical props.\nCamera and anchors: fixed eye-level camera, front three-quarter view; Grubb stands fully visible at the left third, feet anchored near 82 percent frame height, face around 42 percent height, his sack visible just behind his left shoulder. Gate centered around 70 percent frame width. Keep generous safe margins around ears, cap, sack and feet. Grubb's body height about half the image height. The gate is clearly larger than Grubb. Clean readable silhouette.\nExpression and pose: neutral, slightly wary closed mouth, alert eyes looking toward the closed gate; arms relaxed, one hand lightly holds his sack strap. Neither smirking nor angry. This is a reusable neutral starting pose.\nKeep all remaining space calm and consistent for later endpoint edits. No hero, owl, salamander, gatekeepers, or other cast. No lettering, text, digits, equations, symbols, captions, border, watermark, UI, puzzle diagrams, readable inscriptions, effects, smoke, sparks, explosions, or celebration. Safe, gently mischievous adventure tone for a nine-year-old.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png"
+    ],
+    "output": "first.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-cd677f0d-32fe-4db2-b999-bbc66392a817.png"
+  },
+  "last": {
+    "prompt": "Use case: precise-object-edit.\nAsset type: final endpoint frame for a three-second gate-opens reaction.\nInput image 1 is the EXACT shared neutral first frame, not a previous reaction. Change only these parts:\n1. Swing the same wooden and iron double gate inward to open it, revealing a plain empty stone road through the opening. No people, no objects, no markers, no numbers, no puzzle details beyond the gate. Keep the stone arch, hinge anchors, surrounding stone wall, perspective and camera exactly fixed. The doors must remain recognizably the same boards and iron bands, now viewed at an angle within the arch.\n2. Grubb keeps the same grounded stance and full-body position, now folds his arms over his vest, lowers his eyebrows a little and wears a small mildly huffy frown. Not angry, threatening, sad or distressed; no rage. Keep his cap, face shape, eye size, ears, green skin, patched trousers, vest, belt and large sabotage sack identical. The harmless wooden scraps, rope and cloth remain in the sack; no explosive or weapon. Sack stays in the same location behind his shoulder, supported by its strap.\nAll other pixels/scene anchors should remain as close to the input as possible: same character scale, feet at identical coordinates, same framing, same paving cracks, same stones, same moss and foliage, same daylight and palette. No body translation, no camera movement, no zoom. Retain the input's detailed crisp pixel illustration style and exactly matching landscape dimensions and 16:9 composition. No other cast, no celebration, no smoke or flames, no effects, text, digits, arithmetic, symbols, captions, UI, border, watermark or puzzle diagrams.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/grubb-gate-open/first.png"
+    ],
+    "output": "open-draft-v1.png"
+  },
+  "correction": {
+    "prompt": "Use case: identity-preserve.\nEdit target: this open-gate endpoint frame. Change ONLY Grubb's mouth and eyebrows, with a tiny eyelid adjustment if necessary. His current expression looks pleased; replace it with a clearly downturned, small CLOSED-MOUTH FROWN: both mouth corners lower than the center, no upward corner, no smile, no visible teeth. Lower his eyebrows very slightly toward the center to make him mildly put out. He is calmly huffy because the gate opened, never angry, threatening, distraught or scary. The folded arms already fit and MUST remain unchanged.\nPreserve every other feature and scene detail: identical broad face shape, nose, ear shape, eye size and gaze, body pose, folded arms, hat and patches, vest and belt, trousers, feet, sack and its harmless contents. Keep the fully OPEN gate, the empty road, stone arch, paving, foliage, wall, lighting, pixel illustration style, color palette, camera, character position and exact framing unchanged. No new objects, text, symbols, digits, effects, smoke, tears or celebration. Match the input dimensions exactly.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/grubb-gate-open/open-draft-v1.png"
+    ],
+    "output": "last.png",
+    "reason": "First open-gate result retained a pleased mouth; corrected to a small downturned frown without changing arms or gate."
+  },
+  "qa": {
+    "inspected": true,
+    "shared_start": true,
+    "no_text_or_digits": true,
+    "no_puzzle_diagrams": true,
+    "no_explosive_in_sack": true,
+    "no_other_characters": true,
+    "gate_final_state": "open onto an empty road",
+    "reaction": "mild huffy frown with folded arms",
+    "notes": [
+      "Native output is 1672×941, approximately 16:9, rather than the requested preferred 1536×864.",
+      "No cropping, resampling, compositing, or external image editing was used.",
+      "Generated edits preserve the camera, feet, sack, and gate arch anchors visually; small texture variations remain."
+    ]
+  },
+  "runtime_status": "Design-only endpoint frames; not added to runtime assets, manifest, or videos."
+}

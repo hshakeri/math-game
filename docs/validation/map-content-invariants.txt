@@ -1,0 +1,7 @@
+Protected content compared with baseline 096064c5f9ee8c7039c29e3d9045f33fa2a5f1c6
+User-authorized wording exception: Reverse Tolls uses he/his instead of she/her. No numerical givens or puzzle answers were changed.
+content/encounters/alchemists-dark-vault.json: protected fields match (pronouns normalized for inscription, prompts, chips and Look Back).
+content/encounters/castle-keep-portcullis.json: protected fields match (pronouns normalized for inscription, prompts, chips and Look Back).
+content/encounters/chasm-reverse-tolls.json: protected fields match (pronouns normalized for inscription, prompts, chips and Look Back).
+content/encounters/courtyard-five-shields.json: protected fields match (pronouns normalized for inscription, prompts, chips and Look Back).
+SPEC.md §2 design pillars match baseline byte-for-byte.

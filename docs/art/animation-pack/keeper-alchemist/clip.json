@@ -1,0 +1,22 @@
+{
+  "id": "keeper-alchemist",
+  "title": "The Alchemist arrives",
+  "proposed_duration_seconds": 3,
+  "loop": false,
+  "motion_prompt": "Over three seconds, the Alchemist bends the lantern-holding elbow and gently lifts the same upright lit lantern from hip to chest height. Keep the flame intensity and global scene brightness constant, without a flash, growing glow, particle effect or revealing light. Keep the face neutral and body, feet, other arm, costume and closed gate stationary. Hold the final pose without a nod or reaction. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.",
+  "trigger_restrictions": {
+    "allow": [
+      "Once when the ch1-n2-dark-vault arrival panel first appears, before the child responds or the encounter begins."
+    ],
+    "stop": [
+      "Stop at the final pose after the one-off introduction.",
+      "Stop immediately when the child leaves the arrival panel, navigates away, pauses, or the page becomes hidden.",
+      "With reduced motion enabled, show the first still frame and skip playback."
+    ],
+    "forbid": [
+      "Never trigger from tentative ideas, conjectures, draft typing, chip choices, hint requests, tutor generation, correctness checks or answer results.",
+      "Never play as a response to a gate opening or staying shut, a Seal, completion or reward.",
+      "Never replay automatically, loop, delay input, change the closed gate, emit audio or display a timer."
+    ]
+  }
+}

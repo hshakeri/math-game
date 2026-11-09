@@ -1,0 +1,58 @@
+{
+  "clip": "card-draw-chameleon",
+  "created_date": "2026-11-09",
+  "generation_tool": "built-in image_gen.imagegen",
+  "model": "Not exposed by built-in tool",
+  "transparent_background": false,
+  "dimensions": {
+    "width": 1672,
+    "height": 941,
+    "source_files": [
+      "first.png",
+      "last.png"
+    ],
+    "verification": "PNG IHDR header"
+  },
+  "first": {
+    "prompt": "Use case: precise-object-edit.\nAsset type: first endpoint frame of a collectible chameleon card.\nInput image 1 is the EXACT SCENE AND CARD TEMPLATE. Preserve its camera, card size/position/aspect, all four corners, thin antique-gold ornamental border, parchment cream face, stone wall, moss, blue-gray workbench, lighting and framing exactly.\nReplace ONLY the crab illustration inside the card. Remove the crab entirely. Paint one muted-sage chameleon, full body, expressive dark eye, gently curled spiral tail, subtle olive and cream shading, holding exactly ONE small wooden paintbrush with ochre bristles in one forefoot. Selected detailed pixel illustration style comes from input image 2 (style reference only); input image 3 supplies the chameleon-with-brush motif only, not its chunky block rendering.\nChameleon sits in the lower-middle of the cream card face, body slightly left of center, facing right, with curled tail comfortably contained to its left/below. Its free feet rest naturally on the illustrated ground. The brush extends slightly right, its tip hovering above a small completely BLANK region of parchment INSIDE the card near the creature. No stroke has been painted yet. Leave space for one loose curved brushstroke within the card to the right of/below the brush. Entire creature including tail and brush stays comfortably inside the gold border. No brush must touch or cross the border.\nNo paint jar, palette, extra brushes, clothing, other creatures or extra objects. Parchment is otherwise blank. No writing, text, digits, runes, diagrams, geometric constructions, symbols, sparkle, effects, UI or watermark. Quiet focused curiosity, no celebration. Opaque landscape16:9 PNG, match template dimensions exactly.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-backwards-crab/first.png",
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png",
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/runtime-cast-preview.png"
+    ],
+    "output": "first.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-c609a4ed-19b8-4e5d-ab4c-28f5640e25d5.png"
+  },
+  "last": {
+    "prompt": "Use case: precise-object-edit.\nCorrect ONLY the ochre brushstroke in this exact frame. The brush tip currently rests in the middle of the stroke. It must rest at the END.\nErase the entire part of the ochre mark to the RIGHT of the brush tip, restoring the same blank cream parchment there. Preserve only the short, loose, shallow curved stroke running from the left end toward the brush tip. End that one stroke EXACTLY where the ochre bristles touch the parchment, with absolutely no stroke continuing beyond the bristles to the right. The final mark should be one quiet organic curve, no loop or lettering, entirely inside the card.\nPreserve the chameleon, its face/body/tail, its single brush and forefoot pose, the card/border and their positions, all lighting, camera, workbench and mossy stone backdrop, pixel style, image dimensions and opacity. Do not introduce any other marks, letters, text, digits, runes, shapes, diagrams, objects, effects or sparkle. Make only this local correction.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-draw-chameleon/last-draft-v1.png"
+    ],
+    "output": "last.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-51f8f08c-69cd-4e06-8598-4e3d29d601c7.png"
+  },
+  "draft": {
+    "prompt": "Use case: precise-object-edit.\nAsset type: last endpoint of a three-second chameleon card inspection animation.\nInput image 1 is the exact FIRST frame. Preserve the entire card, position, size, aspect, gold border, corners, parchment, stone wall, moss, blue-gray workbench, lighting, camera and frame dimensions unchanged.\nChange ONLY the brush-holding forefoot and brush angle of the same sage chameleon, and add ONE small loose abstract ochre paint stroke INSIDE the card. Preserve the chameleon's face, eye, body shape, scale texture, colors, sitting pose, curled tail and all other feet at their exact locations.\nThe chameleon gently lowers the SAME single brush from hovering into the blank cream space just to its right and slightly below. Its bristles now rest at the end of ONE short, loose, shallow ochre curved stroke on the card face. The brush remains a single continuous wooden handle with one ochre bristle tuft, held in the same forefoot. The painted mark is a casual organic arc, like a slight wavy brush gesture, no closed loop, no sharp corner, not a letter, numeral, equation, rune, diagram or geometric construction. Limit the entire mark to the small blank region to the right/below the brush and well inside the gold border; it must never touch or cross that border. No other paint marks anywhere. Do not add a paintpot or palette.\nNo second brush, extra limbs, other objects, writing, text, digits, symbols, sparkles, particles, effects, motion lines or celebration. Calm focused expression unchanged. Maintain detailed pixel illustration and fixed scene. Opaque output same dimensions.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-draw-chameleon/first.png"
+    ],
+    "output": "last-draft-v1.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-f70df3b4-dc13-4d7a-978c-d5596723d27e.png",
+    "reason": "The first final-pose generation placed the brush midway along the mark; a built-in edit removed the mark beyond its tip so the brush rests at the end of one loose curve.",
+    "include_in_endpoint_pack": false
+  },
+  "qa": {
+    "inspected": true,
+    "no_text_or_digits": true,
+    "no_puzzle_diagrams": true,
+    "creature_inside_card": true,
+    "card_corners_visible": true,
+    "notes": [
+      "Dimensions and RGB color type were read from each final PNG IHDR header; no alpha channel is present.",
+      "No cropping, resizing, compositing, or external raster editing was used.",
+      "Card, camera, and scene anchors remain visually fixed; generated edits introduce small parchment and background texture variations."
+    ],
+    "motion": "Same sage chameleon lowers one brush and finishes one short abstract ochre curve inside the card. The final brush tip is at the right endpoint of the stroke."
+  },
+  "runtime_status": "Design-only endpoint frames; not added to runtime assets, manifest, or videos."
+}

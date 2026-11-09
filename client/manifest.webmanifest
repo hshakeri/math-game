@@ -1,10 +1,10 @@
 {
-  "name": "Castle of Theorems",
-  "short_name": "CastleTheorems",
+  "name": "Keybreakers: The Goblin’s Gate",
+  "short_name": "Keybreakers",
   "start_url": "/#map",
   "display": "standalone",
-  "background_color": "#f7f1e3",
-  "theme_color": "#f7f1e3",
+  "background_color": "#18262b",
+  "theme_color": "#18262b",
   "orientation": "any",
   "icons": [
     {

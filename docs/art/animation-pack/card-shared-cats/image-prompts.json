@@ -1,0 +1,50 @@
+{
+  "id": "card-shared-cats",
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "date": "2026-11-09",
+  "style_status": "User-selected detailed pixel cast concept",
+  "runtime_status": "Offline animation endpoints only; not integrated or approved for runtime serving",
+  "endpoints": {
+    "first": {
+      "file": "first.png",
+      "intent": "Edit the common card layout to create a new creature illustration",
+      "prompt": "Use case: precise-object-edit. Create the first endpoint of a collectible creature-card animation, landscape 16:9 PNG. Image 1 is the edit target and exact composition template. Change ONLY the creature illustration within its cream cardface; remove the crab completely. Preserve exactly the upright card's position, size, thin gold ornamental edge, corners, cream texture, cast shadow, blue-gray empty workbench, dim mossy stone wall, lighting and fixed camera. Image 2 is the authoritative detailed pixel-art character style, not a background source. Image 3 supplies creature motifs only, not its chunky low-detail style. Keep richly detailed visible pixels and muted colors. The new illustration must be entirely contained INSIDE the cardface, never protruding or becoming three-dimensional. No additional background props, hands or other cast. No words, letters, digits, runes, mathematical notation, diagrams, praise, sparkle, logos or watermark. Replace the crab with exactly TWO little sibling cats seated side by side, one charcoal with cream markings and one cream with charcoal markings, heads forward and mouths closed, anatomically distinct bodies with paws planted. They visibly share ONE continuous long S-shaped tail curling behind both cats, a single fantastical shared appendage, not two overlapping tails. Tail tip relaxed toward the outer side. Leave room for only its tip to curl inward later. No second tail, duplicated limbs or bodies, no accessories.",
+      "referenced_image_paths": [
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-backwards-crab/first.png",
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png",
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/runtime-cast-preview.png"
+      ],
+      "transparent_background": false,
+      "original_output": "/Users/hs9hd/.codex/generated_images/01a1bfd6-554f-7c41-a95a-5c3db7e65b52/exec-e69fd512-59fe-4c2f-88c3-b4aa684e6470.png"
+    },
+    "last": {
+      "file": "last.png",
+      "intent": "Edit only the creature pose from the first endpoint",
+      "prompt": "Use case: precise-object-edit. Image 1 is the first endpoint and sole edit target. Create the final endpoint of a short silent card animation. Preserve the full landscape canvas exactly: fixed camera, card position and size, border, parchment texture, workbench, stone wall, lighting, shadows and visible-pixel style. Change ONLY the two cats' head angles a little inward toward each other and the terminal tip of the ONE existing continuous S-shaped shared tail. Curl just that tip from the outside gently toward the shared middle between the cats. Keep the tail base and all remaining tail segments fixed, keep each seated body, markings and paws in exactly the same position. Preserve exactly two sibling cats and exactly one shared continuous tail; no second tail, duplicate body, head or limb. Illustration remains within the cream cardface. No text, letters, digits, runes, math, diagram, counting cue, praise, sparkle, new props, logo or watermark. Original PNG, landscape 16:9.",
+      "referenced_image_paths": [
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-shared-cats/first.png"
+      ],
+      "transparent_background": false,
+      "original_output": "/Users/hs9hd/.codex/generated_images/01a1bfd6-554f-7c41-a95a-5c3db7e65b52/exec-0bf0f4e8-d462-4fd2-ba0d-f94e953389d1.png"
+    }
+  },
+  "inspection": {
+    "visually_reviewed": true,
+    "notes": "Two distinct cats; one continuous shared S-shaped tail. Last frame keeps both bodies fixed while the heads incline and the terminal tail curl turns inward."
+  },
+  "frames": {
+    "first": {
+      "file": "first.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "0d4e87cfde2152c85a8274069c1271b8771cf9ffa93fbeedecd77675ccebc6f3"
+    },
+    "last": {
+      "file": "last.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "5f2701358d7a786e76b008f8ff35157d0d29efdf55530bdb349993e63e21fec6"
+    }
+  }
+}

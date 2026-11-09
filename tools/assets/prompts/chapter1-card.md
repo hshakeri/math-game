@@ -1,4 +1,5 @@
-# Prompt: Chapter 1 Title Card
+# chapter1-card — pixel art direction
 
-## Direction
-Architectural parchment title plate with drafting compass dividers, plumb line, and geometric corner fretwork. Muted antique gold and iron gall ink. No text in image.
+Issue cover environment: the outer road and castle, with negative space for the HTML title. Composite reusable hero, Rivet and Lemma sprites in the interface.
+
+Canonical implementation: `tools/assets/generate.py`; art direction: `tools/assets/style.md`. Locked/open scenes reuse the same integer-grid environment and swap only door tiles. Runtime art contains no text, numbers, puzzle hints or generated-at-play images. Regenerate with `npm run assets`. Parent visual review is required before commit.

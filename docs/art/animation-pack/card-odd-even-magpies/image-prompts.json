@@ -1,0 +1,50 @@
+{
+  "id": "card-odd-even-magpies",
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "date": "2026-11-09",
+  "style_status": "User-selected detailed pixel cast concept",
+  "runtime_status": "Offline animation endpoints only; not integrated or approved for runtime serving",
+  "endpoints": {
+    "first": {
+      "file": "first.png",
+      "intent": "Edit the common card layout to create a new creature illustration",
+      "prompt": "Use case: precise-object-edit. Create the first endpoint of a collectible creature-card animation, landscape 16:9 PNG. Image 1 is the edit target and exact composition template. Change ONLY the creature illustration within its cream cardface; remove the crab completely. Preserve exactly the upright card's position, size, thin gold ornamental edge, corners, cream texture, cast shadow, blue-gray empty workbench, dim mossy stone wall, lighting and fixed camera. Image 2 is the authoritative detailed pixel-art character style, not a background source. Image 3 supplies creature motifs only, not its chunky low-detail style. Keep richly detailed visible pixels and muted colors. The new illustration must be entirely contained INSIDE the cardface, never protruding or becoming three-dimensional. No additional background props, hands or other cast. No words, letters, digits, runes, mathematical notation, diagrams, praise, sparkle, logos or watermark. Replace the crab with exactly TWO black-and-white magpies with subtle teal iridescence, side by side on one small bare blank branch inside the card. They are separate natural birds with closed beaks, both heads facing forward toward the viewer. Keep feet gripping the same perch. They have slightly distinct natural chest-feather shapes so their identities stay clear. The pair is one illustration without separate boxes or counting marks. Leave space for each bird to tilt its head inward later. No accessories.",
+      "referenced_image_paths": [
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-backwards-crab/first.png",
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png",
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/runtime-cast-preview.png"
+      ],
+      "transparent_background": false,
+      "original_output": "/Users/hs9hd/.codex/generated_images/01a1bfd6-554f-7c41-a95a-5c3db7e65b52/exec-cea055e3-6d75-4cc5-9e69-796d0247fb8f.png"
+    },
+    "last": {
+      "file": "last.png",
+      "intent": "Edit only the creature pose from the first endpoint",
+      "prompt": "Use case: precise-object-edit. Image 1 is the first endpoint and sole edit target. Create the final endpoint of a short silent card animation. Preserve the full landscape canvas, fixed camera, upright parchment card position, border, cream paper texture, workbench, stone wall, lighting, shadows and visible pixel style exactly. Change ONLY the head poses of the two magpies within the cream cardface. Both gently tilt their heads in opposite directions inward toward each other, without moving their body centers, feet, wings, tails or the same bare branch. Keep closed beaks and the distinct chest-feather patterns so their identities are not swapped. Exactly the same two birds, no third bird, no duplicate heads or limbs. No emerging from the card. No text, letters, digits, runes, counting marks, patterns, mathematical notation, diagrams, praise, sparkle, new props, logo or watermark. Original PNG, landscape 16:9.",
+      "referenced_image_paths": [
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-odd-even-magpies/first.png"
+      ],
+      "transparent_background": false,
+      "original_output": "/Users/hs9hd/.codex/generated_images/01a1bfd6-554f-7c41-a95a-5c3db7e65b52/exec-aaebf81c-a256-4a76-926d-edfa865b64dc.png"
+    }
+  },
+  "inspection": {
+    "visually_reviewed": true,
+    "notes": "Two magpies keep their perch, feet, bodies and identities; only head angles change inward."
+  },
+  "frames": {
+    "first": {
+      "file": "first.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "b067388fc883b17098b1fc2fff2be58859a6969c6de4149c8271fb17d9dc90c8"
+    },
+    "last": {
+      "file": "last.png",
+      "width": 1671,
+      "height": 941,
+      "sha256": "40a7d29b7bc698880c895b2cbad77e6255c278355f4784da0eb47a5c201047e3"
+    }
+  }
+}

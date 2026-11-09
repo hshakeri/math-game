@@ -1,0 +1,234 @@
+/* One continuous map: landmarks carry the navigation, never separate cards. */
+.world-map {
+  --wm-ink:#30473c;
+  --wm-muted:#536a56;
+  --wm-paper:#f3f1dc;
+  position:relative;
+  isolation:isolate;
+  margin:0 -14px;
+  color:var(--wm-ink);
+}
+.world-map-canvas {
+  position:relative;
+  width:100%;
+  height:calc(720px + var(--wm-extra, 0) * 180px);
+  overflow:hidden;
+  background:radial-gradient(ellipse at 50% 42%,#e3ead9 15%,#eaf0df 58%,#f1ead9 82%);
+}
+.world-map-terrain {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+.world-map-terrain-portrait { display:none; }
+.world-map-heading {
+  position:absolute;
+  z-index:2;
+  top:24px;
+  left:7%;
+  max-width:310px;
+  pointer-events:none;
+}
+.world-map-heading p {
+  font:600 13px/1.5 var(--font-family-mono,monospace);
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+  color:#6c725a;
+}
+.world-map-heading h1 {
+  font:400 clamp(27px,3vw,36px)/1.2 var(--font-family-serif,Georgia,serif);
+  margin:5px 0 6px;
+  color:var(--wm-ink);
+}
+.world-map-heading>span { font-size:16px; color:var(--wm-muted); }
+.world-map-sites {
+  position:absolute;
+  inset:0;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.world-map-site {
+  position:absolute;
+  z-index:3;
+  left:var(--wm-x);
+  top:var(--wm-y);
+  transform:translate(-50%,-50%);
+  width:188px;
+  text-align:center;
+}
+.world-map-place {
+  position:relative;
+  display:flex;
+  min-height:156px;
+  min-width:56px;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  text-decoration:none;
+  border:0;
+  border-radius:18px;
+  padding:0 5px 7px;
+  color:var(--wm-ink);
+  background:transparent;
+  touch-action:manipulation;
+}
+.world-map-landmark {
+  width:142px;
+  height:115px;
+  flex:none;
+  overflow:visible;
+  filter:drop-shadow(0 5px 2px #405a4020);
+  transition:transform 160ms ease;
+}
+.world-map-place-label {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  margin-top:-8px;
+  padding:6px 10px 7px;
+  background:#f5f0d9ed;
+  border-bottom:2px solid #9f9f76;
+  box-shadow:0 3px 0 #61795515;
+}
+.world-map-place-label::before,.world-map-place-label::after {
+  content:'';
+  position:absolute;
+  top:5px;
+  bottom:5px;
+  width:3px;
+  background:#d5c6a0;
+}
+.world-map-place-label::before { left:-3px; }
+.world-map-place-label::after { right:-3px; }
+.world-map-place-name {
+  font:650 18px/1.22 var(--font-family-sans,system-ui,sans-serif);
+  text-wrap:balance;
+}
+.world-map-place-note {
+  font:400 15px/1.25 var(--font-family-sans,system-ui,sans-serif);
+  color:var(--wm-muted);
+}
+.world-map-lock { font-weight:700; color:#6d785e; }
+.world-map-site.is-available .world-map-place-label {
+  border-bottom-color:#ad8542;
+  background:#fff5d8;
+}
+.world-map-site.is-available .world-map-place-note { color:#6f5429; }
+.world-map-site.is-locked .world-map-landmark { filter:saturate(.68) drop-shadow(0 5px 2px #405a4020); }
+.world-map-site.is-locked .world-map-place-label { background:#e9e9d4ed; }
+.world-map-place[href]:hover .world-map-landmark { transform:translateY(-4px); }
+.world-map-place[href]:hover .world-map-place-label { background:#fff8df; }
+.world-map-place[href]:focus-visible {
+  outline:3px solid #806132;
+  outline-offset:5px;
+  background:#f7f1d64d;
+}
+.world-map-seal {
+  position:absolute;
+  top:66px;
+  right:18px;
+  display:grid;
+  place-items:center;
+  width:32px;
+  height:32px;
+  border:2px solid #8f6d31;
+  border-radius:50%;
+  background:#dbb567;
+  color:#775424;
+  font-size:17px;
+  box-shadow:0 2px 0 #53694830;
+}
+.world-map-start {
+  position:absolute;
+  z-index:4;
+  left:var(--wm-x);
+  top:var(--wm-y);
+  transform:translate(-50%,-50%);
+  display:flex;
+  width:180px;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  pointer-events:none;
+}
+.world-map-start img {
+  display:block;
+  width:96px;
+  height:96px;
+  image-rendering:pixelated;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 2px #41563825);
+}
+.world-map-start>span {
+  font:650 16px/1.4 var(--font-family-sans,system-ui,sans-serif);
+  padding:3px 8px 0;
+  color:#3a5141;
+  background:#f0f0daeb;
+}
+.world-map-start small {
+  padding:0 8px 4px;
+  font:400 14px/1.4 var(--font-family-sans,system-ui,sans-serif);
+  color:#566950;
+  background:#f0f0daeb;
+}
+.world-map-destination {
+  position:absolute;
+  right:6%;
+  bottom:10px;
+  z-index:2;
+  margin:0;
+  text-align:right;
+  font:600 11px/1.5 var(--font-family-mono,monospace);
+  letter-spacing:1.3px;
+  color:#67715b;
+  pointer-events:none;
+}
+.world-map-destination span {
+  display:block;
+  font:400 14px/1.5 var(--font-family-serif,Georgia,serif);
+  letter-spacing:0;
+  color:#73806a;
+}
+.world-map-sr-only {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+@media (max-width:980px) {
+  .world-map { margin:0 -12px; }
+  .world-map-canvas { height:calc(1200px + var(--wm-extra, 0) * 220px); }
+  .world-map-terrain-landscape { display:none; }
+  .world-map-terrain-portrait { display:block; }
+  .world-map-site,.world-map-start { left:var(--wm-px); top:var(--wm-py); }
+  .world-map-site { width:170px; }
+  .world-map-heading { top:14px; left:7%; max-width:280px; }
+  .world-map-heading h1 { font-size:29px; }
+  .world-map-heading>span { font-size:16px; }
+  .world-map-start { width:166px; }
+  .world-map-destination { bottom:2px; right:8%; }
+}
+@media (max-width:420px) {
+  .world-map-site { width:151px; }
+  .world-map-place-label { padding:7px 7px; }
+  .world-map-place-name { font-size:18px; }
+  .world-map-place-note { font-size:14px; }
+  .world-map-landmark { width:130px; height:106px; }
+  .world-map-start { width:145px; }
+  .world-map-start small { max-width:132px; }
+  .world-map-destination { font-size:10px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .world-map-landmark { transition:none; }
+  .world-map-place[href]:hover .world-map-landmark { transform:none; }
+}

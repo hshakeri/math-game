@@ -1,0 +1,48 @@
+{
+  "clip": "card-tiny-mouse",
+  "created_date": "2026-11-09",
+  "generation_tool": "built-in image_gen.imagegen",
+  "model": "Not exposed by built-in tool",
+  "transparent_background": false,
+  "dimensions": {
+    "width": 1672,
+    "height": 941,
+    "source_files": [
+      "first.png",
+      "last.png"
+    ],
+    "verification": "PNG IHDR header"
+  },
+  "first": {
+    "prompt": "Use case: precise-object-edit.\nAsset type: first endpoint frame of a collectible mouse card.\nInput image 1 is the EXACT SCENE AND CARD TEMPLATE. Preserve its camera, card size/position/aspect, all four corners, thin antique-gold ornamental border, parchment cream face, stone wall, moss, blue-gray workbench, lighting and framing exactly.\nReplace ONLY the crab illustration inside the card. Remove the crab entirely and in its place paint one small warm-gray mouse with soft pink round inner ears, long thin pink tail, tiny whiskers, dark curious eyes and four natural paws. The selected detailed pixel illustration style comes from input image 2 (character-style reference only); input image 3 supplies the mouse motif only, not its coarse block rendering. Use refined stepped pixel edges and rich restrained shading like image 2, not chunky icons.\nThe mouse is fully within the card, crouched low at the bottom-center of its interior, facing slightly right in three-quarter profile. A single tiny unmarked gray pebble rests just to its right INSIDE the card face at the same illustrated ground line. Mouse nose angled curiously toward the pebble. Leave generous cream space above for the mouse to stand upright in a later frame. Tail curves gently along the card's illustrated ground line and never touches or crosses the border. Mouse including tail occupies roughly half the usable card width. No clothing, accessories, other creatures or extra objects.\nKeep all parchment blank except this mouse, the tiny pebble and their restrained illustrated ground shadow. No text, digits, runes, labels, symbols, equations, shapes resembling diagrams, sparkle, effects, loose objects on workbench, UI or watermark. Quiet curiosity, no surprise or celebration. Opaque landscape16:9 PNG, match template dimensions exactly.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-backwards-crab/first.png",
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png",
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/runtime-cast-preview.png"
+    ],
+    "output": "first.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-a0f3ae69-1640-4488-921b-1d60985c578b.png"
+  },
+  "last": {
+    "prompt": "Use case: precise-object-edit.\nAsset type: last endpoint of a three-second mouse card inspection animation.\nInput image 1 is the exact FIRST frame. Preserve its entire card, position, size, aspect, gold border, corners, blank parchment, stone wall, moss, blue-gray workbench, lighting, camera and frame dimensions unchanged.\nChange ONLY the mouse pose INSIDE the card: the same warm-gray mouse gently rises onto its two rear feet, keeping those rear feet on the same illustrated ground line and in the same spot. Keep the same face shape, large pink ears, colors, long thin pink tail, body size and detailed pixel rendering. Its two front paws are held relaxed close to its chest. Its head leans slightly forward and down, nose directed toward the SAME single small gray pebble at the RIGHT. The pebble must stay identical and at exactly the same position. The tail remains gently curved along the ground, comfortably inside the card. Mouse is calmly curious and sniffing, not startled, smiling, triumphant or celebrating. Keep the full standing body well inside the card, with clear cream space above its ears.\nDo not add/remove a creature, duplicate paws, add clothing/accessories, change or multiply the pebble, or add any writing, text, digits, runes, diagrams, symbols, sparkle, effects, motion lines or new objects. Preserve detailed pixel illustration and fixed scene. Opaque output same dimensions.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-tiny-mouse/first.png"
+    ],
+    "output": "last.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-43668e99-551b-4652-9096-8f709dd93daf.png"
+  },
+  "qa": {
+    "inspected": true,
+    "no_text_or_digits": true,
+    "no_puzzle_diagrams": true,
+    "creature_inside_card": true,
+    "card_corners_visible": true,
+    "notes": [
+      "Dimensions and RGB color type were read from each final PNG IHDR header; no alpha channel is present.",
+      "No cropping, resizing, compositing, or external raster editing was used.",
+      "Card, camera, and scene anchors remain visually fixed; generated edits introduce small parchment and background texture variations."
+    ],
+    "motion": "The same mouse rises calmly onto its rear feet and sniffs toward the same single unmarked pebble. Its tail stays within the border."
+  },
+  "runtime_status": "Design-only endpoint frames; not added to runtime assets, manifest, or videos."
+}

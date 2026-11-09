@@ -1,9 +1,19 @@
-const CACHE_NAME = 'cot-v1-cache';
+const CACHE_NAME = 'keybreakers-v4-world-map';
 const ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/app.js',
+  '/story.js',
+  '/pixel-art.js',
+  '/timed-speech.js',
+  '/illustrations.js',
+  '/world-map.js',
+  '/world-map.css',
+  '/encounter-map.js',
+  '/calculation-tools.js',
+  '/calculation-tools.css',
+  '/adventure.css',
   '/manifest.webmanifest'
 ];
 

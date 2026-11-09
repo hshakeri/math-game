@@ -1,8 +1,20 @@
-# Architecture & Codebase Reference — Castle of Theorems v1
+# Architecture & Codebase Reference — Keybreakers
 
 This document maps **every folder, file, module contract, HTTP/SSE endpoint, diagram component, and test suite** in `Box/Teaching/math-game/`, including exact differences between the initial `SPEC.md` layout sketch and the verified v1 codebase.
 
 ---
+
+## Presentation revision (2026-11-09)
+
+`client/story.js` owns provisional branding, keeper metadata, HTML escaping and the pure engine-event reaction whitelist. `client/pixel-art.js` emits manifest-gated sprite markup without DOM globals. The client uses native buttons, modal focus containment, reduced motion, guarded device storage, in-flight action exclusion and stale-response checks. Diagram mounts are replaced before reattaching listeners. Seal Continue sends `complete` before refreshing the road catalog.
+
+`server/engine/clientView.js` now constructs an initial workspace diagram from public mechanic givens at low hint rungs, and reveals the tiny statement whenever the engine enters `simpler_problem`. Vault and Castle Keep number controls begin unanswered. Successful nonfinal conjectures seal their chamber; only final-part completion can expose the Codex/unlocked node. All content still passes the same sanitizer and leak gate.
+
+`client/world-map.js` renders catalog-driven links directly on a continuous cloud-edged map. Explicit `unlocked`/`completed` flags govern navigation; the boy sprite is fixed and starts at the beginning. There is no name/choice onboarding or child-facing Codex route. `client/encounter-map.js` turns the public inscription into selectable story captions; Reverse Tolls uses only an explicit `story` projection of `{kind, gates: [{mul, sub}], end}` from `clientView.js`. Static and session views never copy internal solution fields into this projection.
+
+`client/calculation-tools.js` supplies arithmetic, a calculation tape and scratchpad independently of the game engine. It uses child-entered operands, no `eval`, no auto-filled solutions, and local storage scoped by encounter/part. The controller mounts it once, so normal tutor replies do not destroy working. A newly selected card, revealed hint or Tiny Case opens both ancestor tool drawers; repeated state views respect manual closure.
+
+Original module inventory follows; current test evidence is in `docs/validation/`.
 
 ## 1. Complete Directory & File Map
 
@@ -45,14 +57,14 @@ math-game/
 │   │       └── factor-dials.js            # Node 4: prime factor leaves for 34 & 85, guardian assignment, sum
 │   └── tutor/                             # Pluggable LLM tutor router & direct HTTP REST adapters
 │       ├── index.js                       # Visibility-matrix context builder, leak-gate retry loop & fallback
-│       ├── prompt.md                      # Verbatim Archimedes the Owl system prompt (SPEC §6)
+│       ├── prompt.md                      # Rivet the clockwork owl system prompt (SPEC §6)
 │       ├── schema.json                    # Structured JSON output schema for tutor turns
 │       ├── gemini.js                      # Direct REST adapter for Gemini 3.8 Flash (`thinkingLevel: low`, 4s timeout)
 │       ├── claude.js                      # Direct REST adapter for Claude Sonnet 4.6 (tool-use schema, 4s timeout)
 │       └── scripted.js                    # Zero-network adapter wrapping `server/engine/scripted.js`
 │
 ├── client/                                # Zero-dependency vanilla ES6 PWA client
-│   ├── index.html                         # Five-screen child SPA shell (Map, Encounter, Deck, Codex)
+│   ├── index.html                         # Map/Encounter child shell with Deck and Seal overlays
 │   ├── app.js                             # Client router, state sync, ~40 char/s owl bubble, chips, Look Back & chime
 │   ├── style.css                          # Parchment (light) & Blueprint (dark) CSS variables, >=56px touch targets, dyslexia font
 │   ├── parent.html                        # PIN-gated Parent Dashboard shell (`/parent`)
@@ -182,13 +194,15 @@ Runs synchronously in `< 0.02 ms` average (`< 5 ms` SLA) after Unicode NFKC norm
 
 ---
 
-## 4. Tutor Router & Direct-REST Adapters (`server/tutor/`)
+## 4. Tutor Router, Direct-REST and Local CLI Adapters (`server/tutor/`)
 
 - **`server/tutor/index.js`** (`generateTurn(ctx, options)`):
   1. Calls `assertInformationDiet(ctx)` — throws immediately if `answer`, `targetAnswer`, `solution`, `intermediates`, `forbidden`, `isCorrect`, etc. appear anywhere in the context object.
   2. Builds the visibility-filtered `allowedContent` (`pool`, `hintText`, `cardNames`) for the current `(state, rung)`.
-  3. Calls the selected adapter (`scripted`, `gemini`, or `claude`) with `AbortSignal.timeout(4000)`.
+  3. Calls the selected adapter (`scripted`, `gemini`, `claude`, or `agy`). REST calls use the existing four-second budget; agy has its own bounded process startup allowance.
   4. Screens output via `checkUtterance(...)`. On failure, retries **once** with `style.correction = "Your last reply broke rule {rule}. Write a different reply."`. On second failure or network/timeout error, returns the deterministic round-robin probe from `server/engine/scripted.js` and logs `fallback: true` to telemetry.
+- **`server/tutor/agy.js`**: Runs the authenticated Antigravity CLI with explicit `gemini-3.8-flash-low`/low effort in a fresh temporary workspace. Prompt JSON goes over stdin, tools are denied by a fixed PreToolUse hook, and model/strict-mode/cwd are checked in the init event. Tool activity, malformed/multiple outputs, oversize output, timeout and nonzero exit fail closed to the normal scripted fallback. Provider keys are not inherited. Authentication retains the real HOME, so ambient agy customizations may load and normal CLI conversation retention still applies; no repository source is copied into the temporary workspace.
+- **`server/load-env.js`**: Optional `.env` preloader for `npm start`/`npm run dev`, using Node `process.loadEnvFile` before provider imports. Missing files are fine; invalid files fail visibly.
 - **`server/tutor/gemini.js`**: Calls `https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent` (`DEFAULT_MODEL = 'gemini-3.8-flash'`) with `thinkingConfig: { thinkingLevel: 'LOW' }` and `responseSchema`. Reads `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) and optional `GEMINI_MODEL`.
 - **`server/tutor/claude.js`**: Calls `https://api.anthropic.com/v1/messages` (`DEFAULT_MODEL = 'claude-sonnet-4-6-20260320'`, `anthropic-version: 2023-06-01`) using forced tool-choice (`respond_as_archimedes`) for strict JSON output. Reads `ANTHROPIC_API_KEY` and optional `ANTHROPIC_MODEL`.
 
@@ -218,8 +232,9 @@ Exports `{ createServer, startServer, closeServer, verifyParentPin, sessionStore
 ## 6. Client PWA & Dual-Mode SVG Diagrams (`client/`)
 
 - **Child Client (`index.html`, `app.js`, `style.css`):**
-  - Renders Map, Encounter, Heuristic Deck overlay (6 cards), and Codex.
-  - Owl speech bubble types at ~40 characters/sec with click/tap instant completion and **zero typing sound effects**.
+  - Renders the single world Map, coherent Encounter scene, Heuristic Deck overlay and Golden Seal. The engine still persists Codex entries, but there is no Codex navigation.
+  - `illustrations.js` maps reviewed, manifest-gated PNG stills; the current layout uses one keeper scene plus Lemma and creature-card pictures. Compact Rivet/Grubb sprites avoid separate portrait panels. `timed-speech.js` exports `TimedSpeech` with `speak`, `complete`, `cancel`, and `replay`; the default opening delay and silent character cadence live in that module. The client offers Read now / Read again and a persisted instant-speech preference. Full text remains available; reduced motion skips pacing. Dedicated full-line live regions avoid announcing individual character updates.
+  - Speech callbacks are cancelled on navigation, new sessions and part changes. Pacing does not set network `busy`. Modal opening is exclusive and finishes obscured speech; hidden tabs also finish pending text. Each action's duplicate view/response utterance is spoken once, while identical text on a later child turn is allowed. Grubb still uses only the existing engine-event whitelist.
   - Conjecture slate enforces number + reason input; Stage 3 Scroll drawer mounts interactive SVG mechanics; Look Back renders inline cards/chips (no `window.prompt`).
   - Plays a gentle Web Audio harmonic chord **only** when sealing a node.
 - **Diagram Components (`client/diagrams/*.js`):**
@@ -227,7 +242,7 @@ Exports `{ createServer, startServer, closeServer, verifyParentPin, sessionStore
   - `mode === 'hint'` renders static structure at rung `l2` with zero leaked intermediate/final numbers.
   - `mode === 'workspace'` renders interactive deduction steppers (`>= 44 px` handles; `>= 56 px` buttons) with no hardcoded answer buttons.
 - **Parent Dashboard (`parent.html`, `parent.js`):**
-  - Connects via `EventSource` to `/api/parent/transcript`, renders XSS-escaped live dialogue and gate telemetry, provides Scribe text submission, rung selector, chapter Look Back waiver button, and OpenDyslexic font toggle (`localStorage`).
+  - Connects via `EventSource` to `/api/parent/transcript`, renders XSS-escaped live dialogue and gate telemetry, shows configured adapter/model and latest live/fallback reply source, and provides Scribe text submission, rung selector, chapter Look Back waiver button, and OpenDyslexic font toggle (`localStorage`).
 
 ---
 

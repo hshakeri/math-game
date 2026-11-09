@@ -27,6 +27,17 @@ export function getRungName(rungIndex) {
   return rungs[rungIndex] || 'l0';
 }
 
+// A comic can show the inscription's forward rules before workspace tools unlock.
+// Copy only these public givens, never the mechanic object or solution values.
+function getStoryGivens(part) {
+  const mechanic = part?.mechanic;
+  return mechanic?.kind === 'inverse-chain' ? {
+    kind: 'toll-road',
+    gates: mechanic.gates.map(gate => ({ mul: gate.mul, sub: gate.sub })),
+    end: mechanic.end
+  } : null;
+}
+
 /**
  * Returns a static, client-safe encounter definition.
  * Used by GET /api/encounter/:id/view (SPEC §4 line 61).
@@ -52,6 +63,7 @@ export function getClientSafeEncounter(encounter) {
       arrival: encounter.narrative.arrival
     },
     inscription: encounter.inscription,
+    story: getStoryGivens(encounter.parts?.[0]),
     cards: [...(encounter.cards || [])],
     givens: [...(encounter.givens || [])],
     parts: encounter.parts.map(part => ({
@@ -63,7 +75,7 @@ export function getClientSafeEncounter(encounter) {
       },
       mechanic: {
         kind: part.mechanic.kind,
-        ...(part.mechanic.gates && { gates: part.mechanic.gates }),
+        ...(part.mechanic.gates && { gates: part.mechanic.gates.map(({ mul, sub }) => ({ mul, sub })) }),
         ...(part.mechanic.end !== undefined && { end: part.mechanic.end }),
         ...(part.mechanic.bins !== undefined && { bins: part.mechanic.bins }),
         ...(part.mechanic.perBin !== undefined && { perBin: part.mechanic.perBin }),
@@ -78,6 +90,47 @@ export function getClientSafeEncounter(encounter) {
       prompt: lb.prompt
     }))
   };
+}
+
+// Stage 3 tools use the problem's public givens, independently of hint access.
+// In particular, do not copy authored unit lengths, filled leaves, or values
+// from a hint diagram into an initial workspace.
+function getWorkspaceDiagram(part) {
+  const mechanic = part.mechanic;
+  let component;
+  let params;
+  switch (mechanic.kind) {
+    case 'inverse-chain':
+      component = 'inverse-chain';
+      params = {
+        gates: mechanic.gates.map(({ mul, sub }) => ({ mul, sub })),
+        end: mechanic.end
+      };
+      break;
+    case 'goblin-bins':
+      component = 'pigeonhole-bins';
+      params = {
+        bins: mechanic.bins,
+        perBin: mechanic.perBin,
+        target: { ...mechanic.target }
+      };
+      break;
+    case 'seam-grid':
+      component = 'seam-grid';
+      params = {
+        shortCount: mechanic.relation.shortCount,
+        longCount: mechanic.relation.longCount,
+        outerPerimeter: mechanic.outerPerimeter
+      };
+      break;
+    case 'factor-dials':
+      component = 'factor-tree';
+      params = { roots: mechanic.products.map(product => product.value) };
+      break;
+    default:
+      return null;
+  }
+  return { component, params, mode: 'workspace' };
 }
 
 /**
@@ -119,8 +172,9 @@ export function getClientSafeSessionView(session, encounter) {
     } : null;
   }
 
-  // Rung l4 (simpler problem): statement only (never secret answer)
-  if (rungIndex >= 3 && currentPart.ladder?.l4) {
+  // Keep an earned tiny worked step available after returning to the main task.
+  // Otherwise, an explicit Tiny Case request exposes only its statement.
+  if ((rungIndex >= 3 || phase === 'simpler_problem' || session.simplerProblemL3Unlocked) && currentPart.ladder?.l4) {
     revealedHints.push({
       rung: 'l4',
       statement: currentPart.ladder.l4.statement,
@@ -142,6 +196,12 @@ export function getClientSafeSessionView(session, encounter) {
     }
   }
 
+  // Choosing a card unlocks the mechanic even when no hint has been requested.
+  // Hint text above remains restricted to its earned rung.
+  if (workspaceUnlocked) {
+    clientDiagram = getWorkspaceDiagram(currentPart) || clientDiagram;
+  }
+
   // Chips available for current phase
   let availableChips = [];
   if (phase === 'understand') {
@@ -151,7 +211,7 @@ export function getClientSafeSessionView(session, encounter) {
   }
 
   const moreParts = hasMoreParts(session, encounter);
-  const isEncounterSealed = Boolean(session.completed || session.lookBackCompleted || (phase === 'sealed' && !moreParts) || phase === 'map');
+  const isEncounterSealed = !moreParts && Boolean(session.completed || session.lookBackCompleted || phase === 'sealed' || phase === 'map');
   const isPartSealed = Boolean(phase === 'sealed' && moreParts);
 
   return {
@@ -173,6 +233,7 @@ export function getClientSafeSessionView(session, encounter) {
     phase,
     state: phase,
     currentPartId: currentPart.id,
+    story: getStoryGivens(currentPart),
     prompt: currentPart.prompt,
     partPrompt: currentPart.prompt,
     availableCards: encounter.cards,

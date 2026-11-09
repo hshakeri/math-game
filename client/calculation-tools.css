@@ -1,0 +1,62 @@
+/* Optional paper tools; no animation or game-result styling. */
+.calculation-tools {
+  color:var(--ink-primary, #253b3b);
+  background:var(--parchment-card, #f4efe1);
+  border:1px solid var(--parchment-border, #b6bba8);
+  padding:18px;
+  border-radius:4px;
+}
+.calculation-tools-heading { display:flex; align-items:start; justify-content:space-between; gap:12px; margin-bottom:16px }
+.calculation-tools h3 { font:normal 24px Georgia, serif; margin:0 0 6px }
+.calculation-tools h4 { font:600 15px var(--font-family-ui, sans-serif); margin:20px 0 10px }
+.calculation-tools-heading p,.calculation-empty { font-size:14px; line-height:1.5; margin:0; color:var(--ink-secondary, #526666) }
+.calculation-tools-layout { display:grid; grid-template-columns:minmax(260px, 300px) minmax(0, 1fr); gap:20px }
+.calculation-pad,.calculation-notes { min-width:0 }
+.calculation-expression { min-height:24px; margin:0 0 5px; font-size:16px; overflow-wrap:anywhere }
+.calculation-tools label { display:block; font:600 14px var(--font-family-ui, sans-serif) }
+.calculation-entry,.calculation-notes textarea {
+  display:block;
+  box-sizing:border-box;
+  width:100%;
+  min-height:56px;
+  margin-top:7px;
+  padding:12px;
+  border:1px solid var(--ink-secondary, #526666);
+  border-radius:3px;
+  background:var(--parchment-bg, #faf7ed);
+  color:inherit;
+  font:20px var(--font-family-mono, monospace);
+}
+.calculation-entry { text-align:right }
+.calculation-notes textarea { resize:vertical; font:16px/1.6 var(--font-family-ui, sans-serif); min-height:140px }
+.calculation-rounding { min-height:20px; margin:6px 0; font-size:12px; color:var(--ink-secondary, #526666) }
+.calculation-keypad { display:grid; grid-template-columns:repeat(4, minmax(56px, 1fr)); gap:12px }
+.calculation-keypad button,.calculation-reset {
+  box-sizing:border-box;
+  min-width:56px;
+  min-height:56px;
+  padding:10px;
+  border:1px solid var(--ink-secondary, #526666);
+  border-radius:3px;
+  background:var(--parchment-bg, #faf7ed);
+  color:inherit;
+  font:20px var(--font-family-ui, sans-serif);
+  cursor:pointer;
+}
+.calculation-keypad button[data-calc-action="operator"] { border-color:var(--gold-dark, #806022) }
+.calculation-keypad .calculation-equals { grid-column:span 2; background:#e5ce96; color:#253b3b }
+.calculation-reset { font-size:13px; max-width:130px; flex-shrink:0; background:transparent }
+.calculation-tools button:hover { border-color:var(--gold-dark, #806022) }
+.calculation-tools button:focus-visible,.calculation-tools input:focus-visible,.calculation-tools textarea:focus-visible { outline:3px solid var(--gold-accent, #bc8b37); outline-offset:2px }
+/* Personal working remains available while the game waits for a tutor reply. */
+.is-busy .encounter-body .calculation-tools button { pointer-events:auto; opacity:1 }
+.calculation-status { min-height:42px; margin:10px 0 0; font-size:14px; line-height:1.5; overflow-wrap:anywhere }
+.calculation-tape { list-style:none; margin:0; padding:0; max-height:250px; overflow:auto }
+.calculation-tape li { border-bottom:1px solid var(--parchment-border, #b6bba8); padding:9px 0; font:15px/1.5 var(--font-family-mono, monospace); overflow-wrap:anywhere }
+@media(max-width:620px) {
+  .calculation-tools { padding:12px }
+  .calculation-tools-layout { grid-template-columns:1fr; gap:16px }
+  .calculation-keypad { grid-template-columns:repeat(4, minmax(56px, 1fr)) }
+  .calculation-tools-heading { align-items:center }
+  .calculation-tools h3 { font-size:22px }
+}

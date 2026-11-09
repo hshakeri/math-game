@@ -1,0 +1,37 @@
+{
+  "created": "2026-11-09",
+  "tool": "built-in image_gen.imagegen",
+  "requested_aspect_ratio": "16:9",
+  "native_dimensions": {
+    "width": 1672,
+    "height": 941,
+    "source_files": [
+      "first.png",
+      "last.png"
+    ],
+    "verified_with": "sips -g pixelWidth -g pixelHeight"
+  },
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: illustration-story. Asset type: FIRST endpoint of a three-second one-off neutral gatekeeper arrival introduction. The attached cast sheet is identity and rendering-style reference only. Full body, all props and comfortable safe margins in a landscape 16:9 image. Fixed front-threequarter orthographic-style camera at character height. Quiet simple mossy blue-gray stone courtyard, with a FULLY CLOSED gate centered behind the character. Detailed illustrated 16-bit pixel art matching the reference, crisp visible pixel clusters and refined dark outlines, muted parchment/brass/navy/sage palette, friendly age-nine design. No movement, no hero, no other cast, no text, letters, digits, equations, diagrams, puzzle clues, rewards, particles, motion lines, captions, audio notation, border or watermark. This introduction occurs before player interaction and has no correctness or outcome meaning. Opaque background. Show exactly the THREE identical closed-helmet Guardians from the lower right of the reference, all three full body standing beside each other with comfortable space between them. They share exactly the same silver-gray armor, closed visored helmet, brass trim, leather belt, boots and physique; only plume and tabard colors differ: muted rust red on the left, navy blue in the center, moss green on the right. Match the reference precisely. They stand at ease in a neutral sentinel stance, torsos facing front-threequarter, helmet faces turned subtly away from direct viewer gaze as if watching the approach. Hands relaxed; any sword is safely SHEATHED at the belt, no exposed blades and no raised weapon. No shields or hand props, no insignia on tabards, no salute or celebration. Entire feet and plumes visible. This is a quiet neutral introduction before an answer. The gate behind all three remains fully closed.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-749e843a-4125-4f80-93a0-21d5e88ae63a.png"
+  },
+  "last": {
+    "file": "last.png",
+    "prompt": "Use case: precise-object-edit. Asset type: LAST endpoint of a three-second one-off neutral gatekeeper arrival introduction. EDIT this exact first frame. Preserve the original canvas size, landscape 16:9 framing, fixed camera and perspective, composition, entire courtyard, masonry, moss, FULLY CLOSED gate, lighting, pixel grid, palette and detailed 16-bit illustrated pixel style. Preserve identity, clothing, body location, feet, stance, facial expression, and all objects except the specified small pose change. No gate movement, no new characters, words, digits, equations, diagrams, puzzle clues, rewards, particles, motion lines, salutes, celebration, captions, audio notation, border or watermark. This gesture introduces the keeper before player interaction and has no success/failure meaning. Single still final pose, no motion blur or ghosting. Change ONLY the helmet orientation of each of the THREE knights. All three modestly turn their heads toward the viewer together, ending nearly front-facing instead of the initial three-quarter-away direction. Turn helmet and attached plume naturally as one head unit. Keep torsos, relaxed arms, hands at belts, feet, stance, spacing, armor, plume/tabard colors and closed visors identical. Left knight remains rust, middle remains navy blue, right remains moss green. Do not raise a hand or weapon, do not salute, and do not bow. No visible face inside any visor. All three figures stay full body at their exact existing positions.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/keeper-guardians/first.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-f724bbf5-aa56-48fc-a521-fac9e448d4cc.png"
+  },
+  "review": {
+    "visually_inspected": true,
+    "notes": "Selected endpoints preserve the detailed concept identity, full-body framing and quiet closed-gate courtyard. Only the intended neutral introduction pose changes. No audio, rendered text, digits, equations or new puzzle markings.",
+    "runtime_approved": false
+  }
+}

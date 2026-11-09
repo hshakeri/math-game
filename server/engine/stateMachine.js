@@ -253,10 +253,10 @@ export function transition(session, action, encounter) {
 
       if (isRight) {
         if (wordCount >= 3) {
-          // T02: Conjecture -> Look back (SHORTCUT)
-          next.state = 'look_back';
+          // A shortcut opens this part. Look Back belongs to the final part only.
+          next.state = hasMoreParts(next, encounter) ? 'sealed' : 'look_back';
           next.shortcut = true;
-          recordEvent('engine.transition', { from: 'conjecture', to: 'look_back', shortcut: true });
+          recordEvent('engine.transition', { from: 'conjecture', to: next.state, shortcut: true });
           recordEvent('shortcut', { shortcut: true, words: wordCount });
           syncAliases();
           return { session: next, events };
@@ -308,10 +308,10 @@ export function transition(session, action, encounter) {
 
       if (isRight) {
         if (wordCount >= 3) {
-          // T02: Right answer with >= 3 words -> Shortcut to Look back
-          next.state = 'look_back';
+          // As with a first conjecture, only the final part enters Look Back.
+          next.state = hasMoreParts(next, encounter) ? 'sealed' : 'look_back';
           next.shortcut = true;
-          recordEvent('engine.transition', { from: 'understand', to: 'look_back', shortcut: true });
+          recordEvent('engine.transition', { from: 'understand', to: next.state, shortcut: true });
           recordEvent('shortcut', { shortcut: true, words: wordCount });
           syncAliases();
           return { session: next, events };
@@ -628,6 +628,7 @@ export function transition(session, action, encounter) {
         next.shortcut = false;
         next.misconceptionTag = null;
         next.simplerProblemState = null;
+        next.simplerProblemL3Unlocked = false;
         next.lookBackCompleted = false;
 
         const mechanic = MECHANICS[nextPart.mechanic.kind];
@@ -646,7 +647,7 @@ export function transition(session, action, encounter) {
       return { session: next, events };
     }
 
-    if (action.type === 'complete') {
+    if (action.type === 'complete' && !hasMoreParts(next, encounter)) {
       next.completed = true;
       next.state = 'map';
       recordEvent('session.end', { reason: 'finished', encounterId: encounter.id });

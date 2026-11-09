@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-11-09T12:49:04.119Z",
+  "scope": "Loopback HTTP smoke using a new synthetic session; no child history read.",
+  "resources": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/world-map.js",
+      "status": 200
+    },
+    {
+      "path": "/encounter-map.js",
+      "status": 200
+    },
+    {
+      "path": "/adventure.css",
+      "status": 200
+    },
+    {
+      "path": "/calculation-tools.js",
+      "status": 200
+    },
+    {
+      "path": "/assets/illustrations/lemma.png",
+      "status": 200
+    }
+  ],
+  "storyKind": "toll-road",
+  "phase": "conjecture",
+  "tutor": {
+    "adapter": "agy",
+    "model": "gemini-3.8-flash-low",
+    "source": "agy",
+    "fallback": false,
+    "latencyMs": 10088
+  },
+  "speechCharacters": 161,
+  "speechSha256": "2cb055f27f8e11761c0173e577f246e972f412f2230107706a6fd5c024f515a7"
+}

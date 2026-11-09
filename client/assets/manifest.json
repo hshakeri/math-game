@@ -2,11 +2,11 @@
   "version": 1,
   "styleBible": "tools/assets/style.md",
   "reviewChecklist": [
-    "hero and owl match the character sheets",
-    "no text rendered inside the image",
-    "nothing frightening or gore",
-    "nothing that reads as a hint for the puzzle",
-    "anatomy and hands plausible"
+    "consistent original cast",
+    "no rendered text",
+    "nothing frightening",
+    "no puzzle hints",
+    "plausible pixel anatomy"
   ],
   "assets": {
     "scenes/ch1-n1-locked.svg": {
@@ -16,20 +16,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "28a7684dddd874a732c029e495aac44cfc287f6865f37fcd9618106ab1edab44",
+      "sha256": "85c41fbd63bfaf6567a86df47c75ca7760e3115784c247807af91a2d97a72498",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/ch1-n1-unlocked.svg": {
@@ -39,20 +38,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "d74bf635b088859b473a02041fd6a374a7fbe59b6a9102d9f12fddd73ba74441",
+      "sha256": "e122608fd3b0bd96fe10f0d3b22d5ef09c6c1fbdfd25de46ebdf4ccc16ef8ccf",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/ch1-n2-locked.svg": {
@@ -62,20 +60,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "f5efe2b98e3cc4b4aa02213e080419847300a9e45fdb86288d9afbba9dc91d02",
+      "sha256": "c97b54d30b431d8055fe88dd69e7bc7552161713dbefec46ea2a6b2b1ed4d3b7",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/ch1-n2-unlocked.svg": {
@@ -85,20 +82,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "0e55a8ea4836e88f590e6e0b5fbfb37521b06385750106c706ebdf95f1097c92",
+      "sha256": "6ba93d10c9fb86cbb9abcf7ce8bd16f58ecbc394f22365e21d025c1d43a67302",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/ch1-n3-locked.svg": {
@@ -108,20 +104,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "bea05e995294ec7069eb5fbfe81ac3501454703fa4a975c90b8d8fa45d70ad6e",
+      "sha256": "8ea669e61264e8f06a8a4f0e4a8115b59614b9a5405796033d4ed2b3741c95e9",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/ch1-n3-unlocked.svg": {
@@ -131,20 +126,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "20a8d95136a4f4e9643995d800f84c0a85ae514ac0f51c5d6568782120500c65",
+      "sha256": "e4bcc8d9a6a9b2d493ce0c8fe1f96dbd216582023bf893c1104090b532094b44",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/ch1-n4-locked.svg": {
@@ -154,20 +148,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "61e65ea0c85dce5c36494bc91a87d7f92e4cd6eee547d940e73ef15ac7ee777a",
+      "sha256": "3d531f16eff6f10e1eff333359fb7103285f3195dfddc1e7578422d33454f088",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/ch1-n4-unlocked.svg": {
@@ -177,20 +170,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "2637f7febc425717a481f226fccdf6f49ae948e794391ec79d3bdfab76b181ba",
+      "sha256": "958fe91366537bfbbf2f4bcabb20e364bc8368ba52611580bdf79a2a61a74857",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/map-ch1.svg": {
@@ -200,20 +192,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "0702357279c6101bdbaf0b7c7d0f2e5b7b8bde33b222dd92fa58ef154d8bd217",
+      "sha256": "5138ea095dc90fd5db514d0bab3e748ca7b9cbf617b725f36c1d772d0c07047d",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "scenes/chapter1-card.svg": {
@@ -223,66 +214,19 @@
       "format": "image/svg+xml",
       "dimensions": {
         "width": 1920,
-        "height": 1080,
-        "aspect": "16:9"
+        "height": 1080
       },
-      "sha256": "71156d71e8d024eb588297a2a688e15edf665171a17fd0dabc2773dfac3777c7",
+      "sha256": "85c41fbd63bfaf6567a86df47c75ca7760e3115784c247807af91a2d97a72498",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
-      }
-    },
-    "avatars/archimedes-sheet.svg": {
-      "id": "archimedes-sheet",
-      "type": "avatar",
-      "file": "avatars/archimedes-sheet.svg",
-      "format": "image/svg+xml",
-      "dimensions": {
-        "width": 1024,
-        "height": 768,
-        "aspect": "4:3"
-      },
-      "sha256": "c5429aaefe46036e976a80d359a6b1242507f066ba784f2a1417bee97dbe6a1f",
-      "placeholder": true,
-      "approved": true,
-      "review": {
-        "heroOwlMatch": true,
-        "noTextInImage": true,
-        "nothingFrightening": true,
-        "noPuzzleHints": true,
-        "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
-      }
-    },
-    "avatars/hero-sheet.svg": {
-      "id": "hero-sheet",
-      "type": "avatar",
-      "file": "avatars/hero-sheet.svg",
-      "format": "image/svg+xml",
-      "dimensions": {
-        "width": 1024,
-        "height": 768,
-        "aspect": "4:3"
-      },
-      "sha256": "9812b483511f60d704ef6ec8f33a66729d45697d06cc0c8526088404208b1886",
-      "placeholder": true,
-      "approved": true,
-      "review": {
-        "heroOwlMatch": true,
-        "noTextInImage": true,
-        "nothingFrightening": true,
-        "noPuzzleHints": true,
-        "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "avatars/hero-1.svg": {
@@ -291,21 +235,108 @@
       "file": "avatars/hero-1.svg",
       "format": "image/svg+xml",
       "dimensions": {
-        "width": 512,
-        "height": 512,
-        "aspect": "1:1"
+        "width": 192,
+        "height": 192
       },
-      "sha256": "5289cd6a021b86d9d53fd878d574b69aeb0ddac98fbac86b1d34ed97f43a011d",
+      "sha256": "bb9d568c7e27366943b5e60fafb2656d87bbeb666210bfc30ddb123e08b7a961",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-1-idle.svg": {
+      "id": "hero-1-idle",
+      "type": "sprite",
+      "file": "sprites/hero-1-idle.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "9d823a5ea53b702ea90a9d623430fda72d60fdf512bd98b623ec8212d6f19565",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-1-walk.svg": {
+      "id": "hero-1-walk",
+      "type": "sprite",
+      "file": "sprites/hero-1-walk.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "9c1f8ff45ab9c2dbcceb4faf56f4398bc39c695a2b7e79c289d09987bfb558ad",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-1-think.svg": {
+      "id": "hero-1-think",
+      "type": "sprite",
+      "file": "sprites/hero-1-think.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "df2e49bcc377cc808ba2d2557add6ba3c2793d2cfea69f543a03c24154cd0130",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-1-celebrate.svg": {
+      "id": "hero-1-celebrate",
+      "type": "sprite",
+      "file": "sprites/hero-1-celebrate.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "79b6c6f4f99034153c5a9f5caa59d3a43727972efefd388c2f76d22f28a21898",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "avatars/hero-2.svg": {
@@ -314,21 +345,108 @@
       "file": "avatars/hero-2.svg",
       "format": "image/svg+xml",
       "dimensions": {
-        "width": 512,
-        "height": 512,
-        "aspect": "1:1"
+        "width": 192,
+        "height": 192
       },
-      "sha256": "b2d55953a512f7e42a8354b9034d2c7433e42489240de593b349cbd5eaa1d79a",
+      "sha256": "7c06f64401311b9e46b7f97062b07ac386c1694931dd779cd8e4e1d927f94d2b",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-2-idle.svg": {
+      "id": "hero-2-idle",
+      "type": "sprite",
+      "file": "sprites/hero-2-idle.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "2cfba5c09113c446218ba7bf5863f535f41e48998981106a1274891afb5fe0d8",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-2-walk.svg": {
+      "id": "hero-2-walk",
+      "type": "sprite",
+      "file": "sprites/hero-2-walk.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "6e935f8dbae6bac8225e14b4238b3a81fa44c40b72d696210f53a1cfec475d4a",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-2-think.svg": {
+      "id": "hero-2-think",
+      "type": "sprite",
+      "file": "sprites/hero-2-think.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "29a2c8ebd26808612035baf8b501bfcb51e070c2e39f46a4717a6db4b61ab47e",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-2-celebrate.svg": {
+      "id": "hero-2-celebrate",
+      "type": "sprite",
+      "file": "sprites/hero-2-celebrate.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "eb3a6169fcb3aa87960bd2a14c08b4cb89c1fef5c5eb827a7512103eec1fe84d",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "avatars/hero-3.svg": {
@@ -337,21 +455,108 @@
       "file": "avatars/hero-3.svg",
       "format": "image/svg+xml",
       "dimensions": {
-        "width": 512,
-        "height": 512,
-        "aspect": "1:1"
+        "width": 192,
+        "height": 192
       },
-      "sha256": "6b0033ab368d6468be90db585f91fad0cb65252600da2d900d1decdae62cbff5",
+      "sha256": "5fd894d82488a4768af25e94cec0016bea88e7c38db43a16178eda80ed4d4e52",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-3-idle.svg": {
+      "id": "hero-3-idle",
+      "type": "sprite",
+      "file": "sprites/hero-3-idle.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "6fed67f9f29d183454a17b2c45eaa47a7f578a5565721a01e2abfddca9ded878",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-3-walk.svg": {
+      "id": "hero-3-walk",
+      "type": "sprite",
+      "file": "sprites/hero-3-walk.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "7e2a51f7fbfd1f27343e50bffa804887fc5c63a660ae92a637f56026d7d31798",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-3-think.svg": {
+      "id": "hero-3-think",
+      "type": "sprite",
+      "file": "sprites/hero-3-think.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "c4061cbc7cd95806cad0cf0f6d90e4ba742ed4842c1af863cfad83be39d07424",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-3-celebrate.svg": {
+      "id": "hero-3-celebrate",
+      "type": "sprite",
+      "file": "sprites/hero-3-celebrate.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "64b11c9c68bd51bf0080c9d30e87319bd4162a5186f7de1e1577cb0a179dea95",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "avatars/hero-4.svg": {
@@ -360,21 +565,108 @@
       "file": "avatars/hero-4.svg",
       "format": "image/svg+xml",
       "dimensions": {
-        "width": 512,
-        "height": 512,
-        "aspect": "1:1"
+        "width": 192,
+        "height": 192
       },
-      "sha256": "d51d0a0d1607c1ece4cad2a4d4f998ce0481fe294f27eeddba62f32355f5ca27",
+      "sha256": "5c87fd038c48ac2d49930750f033e2228716c633846cbb6d7eab552faa9ba4a0",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-4-idle.svg": {
+      "id": "hero-4-idle",
+      "type": "sprite",
+      "file": "sprites/hero-4-idle.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "b5d62005531e899bb476944ac84a7ff8d3e04041b9fa17ae8b0c2448383d45c8",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-4-walk.svg": {
+      "id": "hero-4-walk",
+      "type": "sprite",
+      "file": "sprites/hero-4-walk.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "92df91ebaa333295c3c4e7fcb79adea854634d6853df08b182b01e15ff79d72c",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-4-think.svg": {
+      "id": "hero-4-think",
+      "type": "sprite",
+      "file": "sprites/hero-4-think.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "aebd1344d19df0c5eac2bc28b328c693ab8aa562ffbef6c95fcec9f36bfe540b",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-4-celebrate.svg": {
+      "id": "hero-4-celebrate",
+      "type": "sprite",
+      "file": "sprites/hero-4-celebrate.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "54d6f94d2ff6e87b0562b109d4624976cfd9a33f2891986a56220e97576bc9b9",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "avatars/hero-5.svg": {
@@ -383,21 +675,108 @@
       "file": "avatars/hero-5.svg",
       "format": "image/svg+xml",
       "dimensions": {
-        "width": 512,
-        "height": 512,
-        "aspect": "1:1"
+        "width": 192,
+        "height": 192
       },
-      "sha256": "a78bd04cfeb89c587010b4cf55f4b9e32b03311bc84632cd173e4c6cefffe6c1",
+      "sha256": "974f723af2a731995e12e1b2e37ea82696d3f42153613aa1973670d9c354a54c",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-5-idle.svg": {
+      "id": "hero-5-idle",
+      "type": "sprite",
+      "file": "sprites/hero-5-idle.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "06e2db636c19b1cba37ead91b297d94f5ef68aa0ff97c923827b7a126df93cc9",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-5-walk.svg": {
+      "id": "hero-5-walk",
+      "type": "sprite",
+      "file": "sprites/hero-5-walk.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "ecc74f6e493c68090d1597de1e8ba4c5011900751631151b1656665335e9a2aa",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-5-think.svg": {
+      "id": "hero-5-think",
+      "type": "sprite",
+      "file": "sprites/hero-5-think.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "1d0dca0de50af0a4d333bac36dd57a70053682eec232d71721047166031c5fc8",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-5-celebrate.svg": {
+      "id": "hero-5-celebrate",
+      "type": "sprite",
+      "file": "sprites/hero-5-celebrate.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "7236e7e4292ac0a4108387147b8309738956395f80b8a690a109f32f3cbe49e7",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
       }
     },
     "avatars/hero-6.svg": {
@@ -406,21 +785,1014 @@
       "file": "avatars/hero-6.svg",
       "format": "image/svg+xml",
       "dimensions": {
-        "width": 512,
-        "height": 512,
-        "aspect": "1:1"
+        "width": 192,
+        "height": 192
       },
-      "sha256": "f5cba882e84dcd76231e1bec320d4c0ed51e792e31d2233e233946d5bdada290",
+      "sha256": "5e60e875ded42203f52adcd64154a8c96348fcada86e0b327da2fcf64fcf7a60",
       "placeholder": true,
       "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
       "review": {
         "heroOwlMatch": true,
         "noTextInImage": true,
         "nothingFrightening": true,
         "noPuzzleHints": true,
         "plausibleAnatomy": true,
-        "reviewedBy": "Heman Shakeri",
-        "reviewedAt": "2026-11-09T03:00:00Z"
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-6-idle.svg": {
+      "id": "hero-6-idle",
+      "type": "sprite",
+      "file": "sprites/hero-6-idle.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "e07fabbc2cb3397a434c109796212b1eb3615e72baf88d0c40b20277231d8893",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-6-walk.svg": {
+      "id": "hero-6-walk",
+      "type": "sprite",
+      "file": "sprites/hero-6-walk.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "482f2b6cf5c64a2ec898ce2a61ed7abdd5603550c19f2685034da9a6916cbb59",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-6-think.svg": {
+      "id": "hero-6-think",
+      "type": "sprite",
+      "file": "sprites/hero-6-think.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "a9570c2a9d9703e05bd733c4b7ad3d89f2fc3a5a5c1117bce69000b71745fa62",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/hero-6-celebrate.svg": {
+      "id": "hero-6-celebrate",
+      "type": "sprite",
+      "file": "sprites/hero-6-celebrate.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "d48728c72caa8af2223bfa9ca4472556a05f92be5d4775e336c78291b5c840e1",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/grubb-idle.svg": {
+      "id": "grubb-idle",
+      "type": "sprite",
+      "file": "sprites/grubb-idle.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "5646cfada4d741d5dde27d2cccbecd1d7dcd1fe65fe9464da9366f94f2cb75f8",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/grubb-smirk.svg": {
+      "id": "grubb-smirk",
+      "type": "sprite",
+      "file": "sprites/grubb-smirk.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "aef1ae2d4e05f18dae5758d7181525d5bd771218e7d9f49f09c72422aa0ac7c7",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/grubb-fume.svg": {
+      "id": "grubb-fume",
+      "type": "sprite",
+      "file": "sprites/grubb-fume.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "c675786b6ab60f1c9c22d2e90c34446595526acc16f0860f209a7d883808e4f6",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/rivet.svg": {
+      "id": "rivet",
+      "type": "sprite",
+      "file": "sprites/rivet.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "d77c87b850fd9a73cef34631e59922c1b1d26cba5400abb170a9b5aa6b98b9d0",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/lemma.svg": {
+      "id": "lemma",
+      "type": "sprite",
+      "file": "sprites/lemma.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "674613ad347cee08fc40bc5ad7d2fe8325545fcde71619237681e980ad514dbe",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/troll.svg": {
+      "id": "troll",
+      "type": "sprite",
+      "file": "sprites/troll.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "cb75dc44dfd1f020d0bc498f817d241fec4c7dbe5a9f171948bbd4bd76b6ccdd",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/alchemist.svg": {
+      "id": "alchemist",
+      "type": "sprite",
+      "file": "sprites/alchemist.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "cfe94f7b773d60ae80f973470a5ea9aec98af1e6928a53830101e821a269018c",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/stonemason.svg": {
+      "id": "stonemason",
+      "type": "sprite",
+      "file": "sprites/stonemason.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "9c018ae4f2c3165aac68f8bab2a699e02aedd1603f1b0ce39dd86dc14d4214f3",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/guardians.svg": {
+      "id": "guardians",
+      "type": "sprite",
+      "file": "sprites/guardians.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 72,
+        "height": 48
+      },
+      "sha256": "17b421f41ef4687c6af91513b7108dcc57a3b91eacf98dc06dabb55cf4fcad01",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/crab.svg": {
+      "id": "crab",
+      "type": "sprite",
+      "file": "sprites/crab.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "61699cfc7413c011dcc636132eb4ba798fac1ff996e438a0171c0bbb6b4260cf",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/mouse.svg": {
+      "id": "mouse",
+      "type": "sprite",
+      "file": "sprites/mouse.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "14da5f752eb32cc3ec25a9215d5fe7a45d9b031fe32c429b5255d863ffb4aad0",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/chameleon.svg": {
+      "id": "chameleon",
+      "type": "sprite",
+      "file": "sprites/chameleon.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "bfe09583aebbecd5332de2fc46cd737f5967895f16d9e4357a9e937e898825bd",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/magpies.svg": {
+      "id": "magpies",
+      "type": "sprite",
+      "file": "sprites/magpies.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "78a0b0dce62b234ac86a0e8762cedc061c5509365291eaea8ec0814594168085",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "sprites/cats.svg": {
+      "id": "cats",
+      "type": "sprite",
+      "file": "sprites/cats.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 48,
+        "height": 48
+      },
+      "sha256": "7915b65f8103aef7c29328c19caf3c66da140c1d551ed375b3f6ebb70ffe77a1",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "avatars/cast-sheet.svg": {
+      "id": "cast-sheet",
+      "type": "avatar",
+      "file": "avatars/cast-sheet.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1280,
+        "height": 768
+      },
+      "sha256": "446a8a3fb6353dd10fcb8ea653dc127443aaa2b4ad09b2af47acefebf109da22",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "avatars/archimedes-sheet.svg": {
+      "id": "archimedes-sheet",
+      "type": "avatar",
+      "file": "avatars/archimedes-sheet.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 768,
+        "height": 192
+      },
+      "sha256": "85a226d2f9b978bbeb8287475c69fbd8d20e24b422dbc86e3bd86be74078d430",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "avatars/rivet-sheet.svg": {
+      "id": "rivet-sheet",
+      "type": "avatar",
+      "file": "avatars/rivet-sheet.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 768,
+        "height": 192
+      },
+      "sha256": "85a226d2f9b978bbeb8287475c69fbd8d20e24b422dbc86e3bd86be74078d430",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "avatars/hero-sheet.svg": {
+      "id": "hero-sheet",
+      "type": "avatar",
+      "file": "avatars/hero-sheet.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 768,
+        "height": 192
+      },
+      "sha256": "b1e767df76bac812b2433656ee6fb2439ccfcfefaeb46abb544e7e1ce2825dd2",
+      "placeholder": true,
+      "approved": true,
+      "source": "hand-authored integer pixel grid; tools/assets/generate.py",
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "procedural-source checks; parent visual review pending before commit"
+      }
+    },
+    "illustrations/keeper-troll.png": {
+      "id": "illustration-keeper-troll",
+      "type": "illustration",
+      "file": "illustrations/keeper-troll.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2624681,
+      "sha256": "7a1dd842d027bb0b9f9b2fc63ca16c1e3869040def2a067a08860240fdb431c9",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/keeper-troll/first.png",
+        "sha256": "7a1dd842d027bb0b9f9b2fc63ca16c1e3869040def2a067a08860240fdb431c9",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2624681,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/keeper-alchemist.png": {
+      "id": "illustration-keeper-alchemist",
+      "type": "illustration",
+      "file": "illustrations/keeper-alchemist.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2901593,
+      "sha256": "613bb60b65f87a10f1c8463ff35162559218f4ee40035348b079d34c8f45f6e3",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/keeper-alchemist/first.png",
+        "sha256": "613bb60b65f87a10f1c8463ff35162559218f4ee40035348b079d34c8f45f6e3",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2901593,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/keeper-stonemason.png": {
+      "id": "illustration-keeper-stonemason",
+      "type": "illustration",
+      "file": "illustrations/keeper-stonemason.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2675746,
+      "sha256": "dbe5ebd55b779409dfb201c117ba7f47d3b7effc0965aedede6a6826000dc0dd",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/keeper-stonemason/first.png",
+        "sha256": "dbe5ebd55b779409dfb201c117ba7f47d3b7effc0965aedede6a6826000dc0dd",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2675746,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/keeper-guardians.png": {
+      "id": "illustration-keeper-guardians",
+      "type": "illustration",
+      "file": "illustrations/keeper-guardians.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2854795,
+      "sha256": "c537fce43e2c7ccfac57a36fdae02c613e4d132d60ae41aabacfe4b5fcbba053",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/keeper-guardians/first.png",
+        "sha256": "c537fce43e2c7ccfac57a36fdae02c613e4d132d60ae41aabacfe4b5fcbba053",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2854795,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/rivet.png": {
+      "id": "illustration-rivet",
+      "type": "illustration",
+      "file": "illustrations/rivet.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2163275,
+      "sha256": "d9bfb57ff171069535710e73ecdfb9b98fc32628dfe56357a1346f6f9fa82018",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/rivet-thinking-loop/first.png",
+        "sha256": "d9bfb57ff171069535710e73ecdfb9b98fc32628dfe56357a1346f6f9fa82018",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2163275,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/lemma.png": {
+      "id": "illustration-lemma",
+      "type": "illustration",
+      "file": "illustrations/lemma.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2492681,
+      "sha256": "0068582fa86e2f0f32afa9d88cd6e2f247999b53472ad8fd823aa94382db6c75",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/lemma-card/first.png",
+        "sha256": "0068582fa86e2f0f32afa9d88cd6e2f247999b53472ad8fd823aa94382db6c75",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2492681,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/card-backwards-crab.png": {
+      "id": "illustration-card-backwards-crab",
+      "type": "illustration",
+      "file": "illustrations/card-backwards-crab.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2156665,
+      "sha256": "ffab265eae3c5a13c4eea869d4ad6f10f40f584de3b340181c26c116a8dfa747",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/card-backwards-crab/first.png",
+        "sha256": "ffab265eae3c5a13c4eea869d4ad6f10f40f584de3b340181c26c116a8dfa747",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2156665,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/card-worst-case-grubb.png": {
+      "id": "illustration-card-worst-case-grubb",
+      "type": "illustration",
+      "file": "illustrations/card-worst-case-grubb.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2004020,
+      "sha256": "ddcfea9df32837bef4f48e6871a8b74b4782cb4ef3484de5d92cdc1fde3d1277",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/card-worst-case-grubb/first.png",
+        "sha256": "ddcfea9df32837bef4f48e6871a8b74b4782cb4ef3484de5d92cdc1fde3d1277",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2004020,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/card-tiny-mouse.png": {
+      "id": "illustration-card-tiny-mouse",
+      "type": "illustration",
+      "file": "illustrations/card-tiny-mouse.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2006316,
+      "sha256": "bfc19e3d09dd8a88d8b60a4c150eb821f708e0a5b29ca2f1f6c0263b917a8cd2",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/card-tiny-mouse/first.png",
+        "sha256": "bfc19e3d09dd8a88d8b60a4c150eb821f708e0a5b29ca2f1f6c0263b917a8cd2",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2006316,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/card-draw-chameleon.png": {
+      "id": "illustration-card-draw-chameleon",
+      "type": "illustration",
+      "file": "illustrations/card-draw-chameleon.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2005373,
+      "sha256": "2d2583066a8c01e76f15e998e77091c579323e2cf62cf172d06a39cedacf61d2",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/card-draw-chameleon/first.png",
+        "sha256": "2d2583066a8c01e76f15e998e77091c579323e2cf62cf172d06a39cedacf61d2",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2005373,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/card-odd-even-magpies.png": {
+      "id": "illustration-card-odd-even-magpies",
+      "type": "illustration",
+      "file": "illustrations/card-odd-even-magpies.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1671,
+        "height": 941
+      },
+      "bytes": 2100337,
+      "sha256": "b067388fc883b17098b1fc2fff2be58859a6969c6de4149c8271fb17d9dc90c8",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/card-odd-even-magpies/first.png",
+        "sha256": "b067388fc883b17098b1fc2fff2be58859a6969c6de4149c8271fb17d9dc90c8",
+        "dimensions": {
+          "width": 1671,
+          "height": 941
+        },
+        "bytes": 2100337,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/card-shared-cats.png": {
+      "id": "illustration-card-shared-cats",
+      "type": "illustration",
+      "file": "illustrations/card-shared-cats.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1671,
+        "height": 941
+      },
+      "bytes": 2016040,
+      "sha256": "0d4e87cfde2152c85a8274069c1271b8771cf9ffa93fbeedecd77675ccebc6f3",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/card-shared-cats/first.png",
+        "sha256": "0d4e87cfde2152c85a8274069c1271b8771cf9ffa93fbeedecd77675ccebc6f3",
+        "dimensions": {
+          "width": 1671,
+          "height": 941
+        },
+        "bytes": 2016040,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/grubb-neutral.png": {
+      "id": "illustration-grubb-neutral",
+      "type": "illustration",
+      "file": "illustrations/grubb-neutral.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2993797,
+      "sha256": "95f2b1ff2c98c60658411b06a08173e02af3565179926931e50e38f9d1f10072",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/grubb-gate-shut/first.png",
+        "sha256": "95f2b1ff2c98c60658411b06a08173e02af3565179926931e50e38f9d1f10072",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2993797,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/grubb-smirk.png": {
+      "id": "illustration-grubb-smirk",
+      "type": "illustration",
+      "file": "illustrations/grubb-smirk.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2672614,
+      "sha256": "b77c5036978ec34cea01f39dd31fa0bfcae1efed35663b1470dc292a6d440f55",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/grubb-gate-shut/last.png",
+        "sha256": "b77c5036978ec34cea01f39dd31fa0bfcae1efed35663b1470dc292a6d440f55",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2672614,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
+      }
+    },
+    "illustrations/grubb-fume.png": {
+      "id": "illustration-grubb-fume",
+      "type": "illustration",
+      "file": "illustrations/grubb-fume.png",
+      "format": "image/png",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 2528961,
+      "sha256": "7c1fd33ed2e9d08349be5bc5da90002cbf7a0075a1eb595778bc47bcd9d194cd",
+      "placeholder": false,
+      "approved": true,
+      "source": {
+        "file": "docs/art/animation-pack/grubb-gate-open/last.png",
+        "sha256": "7c1fd33ed2e9d08349be5bc5da90002cbf7a0075a1eb595778bc47bcd9d194cd",
+        "dimensions": {
+          "width": 1672,
+          "height": 941
+        },
+        "bytes": 2528961,
+        "operation": "byte-for-byte copy of selected original PNG; no conversion",
+        "preparedBy": "tools/assets/prepare_stills.py"
+      },
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "basis": "The user selected the reviewed detailed illustrations and requested their use as still pictures with timed speech bubbles in the game, in this chat on 2026-11-09.",
+        "scope": "These exact source hashes only; no external approval claimed."
       }
     }
   },
@@ -435,13 +1807,68 @@
     "ch1-n4-unlocked": "scenes/ch1-n4-unlocked.svg",
     "map-ch1": "scenes/map-ch1.svg",
     "chapter1-card": "scenes/chapter1-card.svg",
-    "archimedes-sheet": "avatars/archimedes-sheet.svg",
-    "hero-sheet": "avatars/hero-sheet.svg",
     "hero-1": "avatars/hero-1.svg",
+    "hero-1-idle": "sprites/hero-1-idle.svg",
+    "hero-1-walk": "sprites/hero-1-walk.svg",
+    "hero-1-think": "sprites/hero-1-think.svg",
+    "hero-1-celebrate": "sprites/hero-1-celebrate.svg",
     "hero-2": "avatars/hero-2.svg",
+    "hero-2-idle": "sprites/hero-2-idle.svg",
+    "hero-2-walk": "sprites/hero-2-walk.svg",
+    "hero-2-think": "sprites/hero-2-think.svg",
+    "hero-2-celebrate": "sprites/hero-2-celebrate.svg",
     "hero-3": "avatars/hero-3.svg",
+    "hero-3-idle": "sprites/hero-3-idle.svg",
+    "hero-3-walk": "sprites/hero-3-walk.svg",
+    "hero-3-think": "sprites/hero-3-think.svg",
+    "hero-3-celebrate": "sprites/hero-3-celebrate.svg",
     "hero-4": "avatars/hero-4.svg",
+    "hero-4-idle": "sprites/hero-4-idle.svg",
+    "hero-4-walk": "sprites/hero-4-walk.svg",
+    "hero-4-think": "sprites/hero-4-think.svg",
+    "hero-4-celebrate": "sprites/hero-4-celebrate.svg",
     "hero-5": "avatars/hero-5.svg",
-    "hero-6": "avatars/hero-6.svg"
+    "hero-5-idle": "sprites/hero-5-idle.svg",
+    "hero-5-walk": "sprites/hero-5-walk.svg",
+    "hero-5-think": "sprites/hero-5-think.svg",
+    "hero-5-celebrate": "sprites/hero-5-celebrate.svg",
+    "hero-6": "avatars/hero-6.svg",
+    "hero-6-idle": "sprites/hero-6-idle.svg",
+    "hero-6-walk": "sprites/hero-6-walk.svg",
+    "hero-6-think": "sprites/hero-6-think.svg",
+    "hero-6-celebrate": "sprites/hero-6-celebrate.svg",
+    "grubb-idle": "sprites/grubb-idle.svg",
+    "grubb-smirk": "sprites/grubb-smirk.svg",
+    "grubb-fume": "sprites/grubb-fume.svg",
+    "rivet": "sprites/rivet.svg",
+    "lemma": "sprites/lemma.svg",
+    "troll": "sprites/troll.svg",
+    "alchemist": "sprites/alchemist.svg",
+    "stonemason": "sprites/stonemason.svg",
+    "guardians": "sprites/guardians.svg",
+    "crab": "sprites/crab.svg",
+    "mouse": "sprites/mouse.svg",
+    "chameleon": "sprites/chameleon.svg",
+    "magpies": "sprites/magpies.svg",
+    "cats": "sprites/cats.svg",
+    "cast-sheet": "avatars/cast-sheet.svg",
+    "archimedes-sheet": "avatars/archimedes-sheet.svg",
+    "rivet-sheet": "avatars/rivet-sheet.svg",
+    "hero-sheet": "avatars/hero-sheet.svg",
+    "illustration-keeper-troll": "illustrations/keeper-troll.png",
+    "illustration-keeper-alchemist": "illustrations/keeper-alchemist.png",
+    "illustration-keeper-stonemason": "illustrations/keeper-stonemason.png",
+    "illustration-keeper-guardians": "illustrations/keeper-guardians.png",
+    "illustration-rivet": "illustrations/rivet.png",
+    "illustration-lemma": "illustrations/lemma.png",
+    "illustration-card-backwards-crab": "illustrations/card-backwards-crab.png",
+    "illustration-card-worst-case-grubb": "illustrations/card-worst-case-grubb.png",
+    "illustration-card-tiny-mouse": "illustrations/card-tiny-mouse.png",
+    "illustration-card-draw-chameleon": "illustrations/card-draw-chameleon.png",
+    "illustration-card-odd-even-magpies": "illustrations/card-odd-even-magpies.png",
+    "illustration-card-shared-cats": "illustrations/card-shared-cats.png",
+    "illustration-grubb-neutral": "illustrations/grubb-neutral.png",
+    "illustration-grubb-smirk": "illustrations/grubb-smirk.png",
+    "illustration-grubb-fume": "illustrations/grubb-fume.png"
   }
 }

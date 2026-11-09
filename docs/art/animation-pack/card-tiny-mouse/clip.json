@@ -1,0 +1,22 @@
+{
+  "id": "card-tiny-mouse",
+  "title": "Try a Tiny Case — Mouse",
+  "proposed_duration_seconds": 3,
+  "loop": false,
+  "motion_prompt": "Over three seconds, the warm-gray mouse gently rises from its crouch onto its rear feet and sniffs toward the same tiny unmarked pebble. Preserve its face, ears, tail, colors and location; keep the pebble fixed. Calm curiosity, no startle or celebration. Fix the card, gold border, camera, lighting, workbench and backdrop. No added marks, sounds or effects. Interpolate from first.png to last.png and hold briefly; do not loop.",
+  "trigger_restrictions": {
+    "allow": [
+      "Play once when the child intentionally inspects this card.",
+      "Play once when the child intentionally selects this card."
+    ],
+    "stop": [
+      "Stop on navigation away or when the card closes.",
+      "Use the static first frame when reduced motion is requested."
+    ],
+    "forbid": [
+      "Never trigger from answer correctness, a conjecture result, a gate result, a hint rung, or a tutor evaluation.",
+      "Never animate a card to recommend, automatically select, or imply that its strategy is appropriate.",
+      "No autoplay on encounter arrival, timers, points, counts, sound effects, or celebration."
+    ]
+  }
+}

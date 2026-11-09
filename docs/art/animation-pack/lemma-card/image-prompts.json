@@ -1,0 +1,35 @@
+{
+  "created": "2026-11-09",
+  "tool": "built-in image_gen.imagegen",
+  "requestedAspectRatio": "16:9",
+  "actualDimensions": {
+    "width": 1672,
+    "height": 941
+  },
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: illustration-story. Asset type: first frame for a game character offering a blank card, landscape 16:9. The attached cast concept sheet is an identity and style reference only. Isolate Lemma, the friendly ochre-yellow spotted salamander in the upper-right corner. Preserve that exact character identity: expressive large black eyes, rounded salamander snout, ochre-yellow skin with warm brown spots, cream belly, curling tail, teal-blue shoulder cape with fine brass-gold edging and leather cross-body card satchel. Render the entire salamander alone, full body including feet and tail, standing at the LEFT side of a small BLUE-GRAY BLANK DRAFTING WORKBENCH that occupies the right side. Its right/front arm holds exactly ONE entirely blank cream rectangular card close to its chest with elbow bent; the arm will extend toward the empty tabletop in the final frame. Let the open hand gently support the card, never hide it inside the bag. The other arm rests naturally, and the satchel is closed with no additional visible cards. The tabletop is entirely empty: no tools, paper, diagrams or props. Quiet mossy gate courtyard, subdued blue-gray stone wall in the distance; simple uncluttered scenery. Fixed orthographic front-threequarter camera at character eye height, medium-wide framing, consistent landscape 16:9 aspect ratio, comfortable safe margins with room for the offered card to move over the bench later. Match the reference's detailed 16-bit illustrated pixel-art style: crisp visible pixel clusters, refined dark outlines, muted parchment gold, brass, teal and navy. No decorative frame, no other cast, no writing, letters, numbers, symbols, math, diagrams, emblems, watermarks, motion lines, particles or audio notation. No chunky 8-bit simplification. Opaque background.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png"
+    ],
+    "generatedOriginal": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-970e5bd7-2c3a-4e08-94e7-f3998f69b1d5.png",
+    "transparent_background": false
+  },
+  "last": {
+    "file": "last.png",
+    "prompt": "Use case: precise-object-edit. Asset type: last endpoint of a short game animation in which Lemma offers a card. EDIT THIS IMAGE, preserving its entire camera, landscape 16:9 framing, canvas size, viewpoint, workbench, background masonry, moss, gate, lighting, palette, crisp pixel clusters, outlines and scene layout exactly. Preserve Lemma's identity and position exactly: same head and facial expression, eyes and mouth, skin spots, cream belly, legs and feet, tail, teal cape, leather strap, closed satchel and resting arm. Change ONLY the currently bent card-holding arm and the position/orientation of that same single cream card: extend the arm smoothly to the right toward the empty workbench, elbow nearly straight, offering the card forward just above the left portion of the tabletop. The hand still holds the card at its lower edge; the cream face of the card remains visible and entirely blank, with the same restrained border and size as the original. No extra fingers, no second card, no card left near the chest, no new objects. This is a single still last frame, no motion blur, no ghosted previous pose or movement lines. No writing, digits, diagrams, symbols, emblems, sparkles, sound notation or watermarks. Everything outside the arm and card remains unchanged. Keep the full body and safe margins exactly as they are in the supplied first frame.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/lemma-card/first.png"
+    ],
+    "generatedOriginal": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-1a7e9e04-5523-455b-82fb-644d99929c0c.png",
+    "transparent_background": false
+  },
+  "animationIntent": {
+    "loop": false,
+    "motion": "Lemma extends the bent card-holding arm toward the empty drafting workbench while holding the same single blank cream card. Fixed camera and scene."
+  },
+  "review": {
+    "visuallyInspected": true,
+    "notes": "Same character and fixed composition; bent-arm first pose changes to extended-arm last pose. One blank card in each endpoint; no other props on tabletop. Images are model-generated endpoints, not a rendered animation."
+  }
+}

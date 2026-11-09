@@ -42,3 +42,7 @@ ehthumbs.db
 coverage/
 *.tmp
 *.temp
+
+# Rebuildable art handoff archives and superseded local image drafts
+docs/art/*.zip
+docs/art/animation-pack/**/*-draft-*.png

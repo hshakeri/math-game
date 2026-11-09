@@ -1,0 +1,93 @@
+{
+  "observed_at": "2026-11-09T12:47:18.207Z",
+  "model": "gemini-3.8-flash-low",
+  "effort": "low",
+  "scope": "Public synthetic requests only; no child transcript or game solution was used.",
+  "sources": [
+    {
+      "artifact": "keybreakers-agy-public-PnEcEI/public-probe-result.json",
+      "sha256": "04aa98da86e5af00fbacb76c4468eb87bf2e3e67717b63884ab3c32f74e13424"
+    },
+    {
+      "artifact": "tmp/keybreakers-agy-router-proof.json",
+      "sha256": "e764dda3ff09d3fda31effbfd35173bfaacec21e82cf41ca97b0d7be4a5fe8fc"
+    },
+    {
+      "artifact": "tmp/keybreakers-agy-live-adapter-result.json",
+      "sha256": "f67e8dbb4f10ec392e5843719af287ed9156266db845941fabc21cc20f321dfd"
+    }
+  ],
+  "guard_probe": {
+    "source": "keybreakers-agy-public-PnEcEI/public-probe-result.json",
+    "elapsed_ms": 8190.282292,
+    "denied_tools": [
+      {
+        "tool": "read_file",
+        "error": "tool call denied by pre-tool hook: The tutor may only return text."
+      },
+      {
+        "tool": "run_command",
+        "error": "tool call denied by pre-tool hook: The tutor may only return text."
+      },
+      {
+        "tool": "write_file",
+        "error": "tool call denied by pre-tool hook: The tutor may only return text."
+      }
+    ],
+    "forbidden_command_file_created": false,
+    "forbidden_write_file_created": false
+  },
+  "direct_adapter_probe": {
+    "source": "tmp/keybreakers-agy-live-adapter-result.json",
+    "elapsed_ms": 3703.212375,
+    "provider_status": "SUCCESS",
+    "turn_count": 1,
+    "guard_ready_required": true
+  },
+  "full_router_probe": {
+    "source": "tmp/keybreakers-agy-router-proof.json",
+    "distinct": true,
+    "turns": [
+      {
+        "adapter": "agy",
+        "latency_ms": 4335,
+        "retries": 0,
+        "fallback": false,
+        "gate_allowed": true,
+        "characters": 159,
+        "utterance_sha256": "6592ad3b12d767986b2b8705c3586fdf3d7e261ec4e41a9d752a532b02b3ba41"
+      },
+      {
+        "adapter": "agy",
+        "latency_ms": 8367,
+        "retries": 0,
+        "fallback": false,
+        "gate_allowed": true,
+        "characters": 163,
+        "utterance_sha256": "7ca30dbaa66de4d35f2075a27e8fd5dd1ca56e32cf918403cc27c8b8c43ad0ce"
+      }
+    ]
+  },
+  "runtime_controls": [
+    "Fresh temporary git project; no game files copied",
+    "Fixed wildcard PreToolUse deny hook; hook-ready check",
+    "Strict deny rules for commands, file reads/writes, web and MCP",
+    "Reject all tool/subagent activity and unsupported stream events",
+    "Single final JSON object; no ambiguous concatenation",
+    "Prompt on stdin; shell:false; child environment excludes provider API keys",
+    "Parent deadline and CLI print-timeout; process-group cleanup; explicit shutdown cancellation",
+    "Two concurrent calls maximum; existing tutor gate, retry and offline fallback"
+  ],
+  "limitations": [
+    "The authenticated CLI retains its real HOME and may automatically load the user’s global agy rules, skills metadata, plugins or preferences. This is not an exclusive-context model transport.",
+    "The game sends only its whitelisted tutor request; the temporary cwd contains no repository source or solution files, and model-requested access is denied.",
+    "The CLI may retain its own conversation records according to the user’s agy settings. Runtime temporary workspaces are deleted.",
+    "Custom agent inheritance isolation was explored but did not preserve the explicit deny hook reliably on this installation; it is not used."
+  ],
+  "documentation": [
+    "https://antigravity.google/docs/cli/headless",
+    "https://antigravity.google/docs/permissions?tab=cli",
+    "https://antigravity.google/docs/settings",
+    "https://antigravity.google/schemas/v1/settings.json"
+  ]
+}

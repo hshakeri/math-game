@@ -1,0 +1,6 @@
+Protected content unchanged against HEAD 096064c5f9ee8c7039c29e3d9045f33fa2a5f1c6:
+content/encounters/castle-keep-portcullis.json
+content/encounters/chasm-reverse-tolls.json
+content/encounters/courtyard-five-shields.json
+content/encounters/alchemists-dark-vault.json
+Inscriptions, givens, answers, intermediates, forbidden lists, mechanics, chips, Look Back checks, Codex and all design pillars match.

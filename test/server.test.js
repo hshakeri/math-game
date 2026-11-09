@@ -29,6 +29,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const CLIENT_DIR = path.resolve(__dirname, '../client');
 
+function readSseEvent(content, eventName, matches = () => true) {
+  const event = content.split('\n\n').slice(0, -1)
+    .filter(item => item.startsWith(`event: ${eventName}\n`))
+    .map(block => JSON.parse(block.split('\n').find(line => line.startsWith('data: ')).slice(6)))
+    .find(matches);
+  assert.ok(event, `Expected complete matching ${eventName} event`);
+  return event;
+}
+
+function assertNoTutorDiagnostics(value) {
+  if (!value || typeof value !== 'object') return;
+  for (const [key, child] of Object.entries(value)) {
+    assert.ok(!['tutor', 'adapter', 'model', 'fallback', 'latencyMs', 'lastTutorStatus'].includes(key),
+      `Child view must not contain tutor diagnostic field ${key}`);
+    assertNoTutorDiagnostics(child);
+  }
+}
+
 describe('M3 Server & Integration Test Suite', () => {
   let testEnv;
   let testUrl;
@@ -146,6 +164,7 @@ describe('M3 Server & Integration Test Suite', () => {
       // Verify zero secret leakage
       const encounter = getEncounter(encounterId);
       assert.doesNotThrow(() => assertClientSafe(data.view, encounter));
+      assertNoTutorDiagnostics(data.view);
     });
 
     it('GET /api/session/:id/state returns current client-safe view', async () => {
@@ -155,6 +174,7 @@ describe('M3 Server & Integration Test Suite', () => {
       assert.ok(data.view);
       assert.equal(data.view.sessionId, sessionId);
       assert.equal(data.view.state, 'arrive');
+      assertNoTutorDiagnostics(data.view);
     });
 
     it('POST /api/session/:id/action advances game state and records events', async () => {
@@ -188,6 +208,8 @@ describe('M3 Server & Integration Test Suite', () => {
       assert.equal(data2.view.state, 'understand');
       assert.ok(Array.isArray(data2.events));
       assert.ok(data2.speech);
+      assertNoTutorDiagnostics(data2.view);
+      assert.equal(data2.tutor, undefined, 'Tutor diagnostics belong on the parent stream');
     });
 
     it('GET /api/encounter/:id/view returns sanitized encounter without secret keys', async () => {
@@ -208,7 +230,7 @@ describe('M3 Server & Integration Test Suite', () => {
       const startRes = await fetch(`${testUrl}/api/session/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ encounterId: 'ch1-n1-reverse-tolls' })
+        body: JSON.stringify({ encounterId: 'ch1-n1-reverse-tolls', tutorAdapter: 'scripted' })
       });
       const { sessionId } = await startRes.json();
 
@@ -222,7 +244,8 @@ describe('M3 Server & Integration Test Suite', () => {
           let buffer = '';
           res.on('data', (chunk) => {
             buffer += chunk.toString();
-            if (buffer.includes('event: connected') && buffer.includes('event: update')) {
+            if (buffer.includes('event: connected') && buffer.split('\n\n').slice(0, -1)
+              .some(block => block.startsWith('event: tutor.say\n'))) {
               req.destroy();
               resolve(buffer);
             }
@@ -247,6 +270,13 @@ describe('M3 Server & Integration Test Suite', () => {
       const sseContent = await ssePromise;
       assert.match(sseContent, /event: connected/);
       assert.match(sseContent, /event: update/);
+      assert.deepEqual(readSseEvent(sseContent, 'connected').tutor, { adapter: 'scripted', model: null });
+      const tutorEvent = readSseEvent(sseContent, 'tutor.say');
+      assert.equal(tutorEvent.tutor.adapter, 'scripted');
+      assert.equal(tutorEvent.tutor.model, null);
+      assert.equal(tutorEvent.tutor.source, 'scripted');
+      assert.equal(tutorEvent.tutor.fallback, false);
+      assert.ok(Number.isFinite(tutorEvent.tutor.latencyMs) && tutorEvent.tutor.latencyMs >= 0);
     });
 
     it('discovers session and streams events when connected without session query param', async () => {
@@ -280,7 +310,7 @@ describe('M3 Server & Integration Test Suite', () => {
       const startRes = await fetch(`${testUrl}/api/session/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ encounterId: 'ch1-n2-dark-vault' })
+        body: JSON.stringify({ encounterId: 'ch1-n2-dark-vault', tutorAdapter: 'scripted' })
       });
       const startData = await startRes.json();
       assert.ok(startData.sessionId);
@@ -297,6 +327,9 @@ describe('M3 Server & Integration Test Suite', () => {
       assert.match(content, /event: connected/);
       assert.match(content, /session\.start/);
       assert.match(content, new RegExp(startData.sessionId));
+      assert.deepEqual(readSseEvent(content, 'session.start', event => event.sessionId === startData.sessionId).tutor,
+        { adapter: 'scripted', model: null });
+      assertNoTutorDiagnostics(startData.view);
     });
   });
 
@@ -480,7 +513,9 @@ describe('M3 Server & Integration Test Suite', () => {
       assert.equal(res.status, 200);
       assert.match(res.headers.get('content-type'), /text\/javascript/);
       const text = await res.text();
-      assert.match(text, /cot-v1-cache/);
+      assert.match(text, /keybreakers-v4-world-map/);
+      assert.match(text, /\/timed-speech\.js/);
+      assert.match(text, /\/illustrations\.js/);
     });
 
     it('confirms zero runtime dependencies in package.json', () => {

@@ -1,0 +1,13 @@
+{
+  "id": "card-worst-case-grubb",
+  "title": "Worst Case · Grubb",
+  "proposed_duration_seconds": 3,
+  "loop": false,
+  "motion_prompt": "Use first.png and last.png as exact endpoints. Keep the camera, card border, cream face, blue-gray workbench, mossy stone backdrop, lighting, scale and visible pixel texture fixed. Animate only the Grubb illustration within the card: lift one hand from the sack strap to tip the same patched cap slightly, retaining the quiet sly smile, then settle into last.png. His other hand, harmless closed sack, feet and costume remain in place. No gesture evaluates an outcome. No new props, text, digits, runes, math, diagram, praise, sparkle, morphing, sound, music or lip sync.",
+  "trigger_restrictions": {
+    "allow": "Only explicit inspection or selection of the Worst Case card, independent of answer correctness.",
+    "stop": "Play once per explicit card inspection or selection, hold the last frame, and stop when the card closes or another card is chosen.",
+    "forbid": "Never automatically choose a strategy, react to an answer, advertise a correct card, or play as a reward."
+  },
+  "duration_note": "Proposed creative specification; not a measured clip length."
+}

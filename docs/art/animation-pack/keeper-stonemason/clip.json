@@ -1,0 +1,22 @@
+{
+  "id": "keeper-stonemason",
+  "title": "The Stonemason arrives",
+  "proposed_duration_seconds": 3,
+  "loop": false,
+  "motion_prompt": "Over three seconds, the Stonemason bends the chisel-holding arm and gently lifts and rotates the same chisel from the side to rest safely against the shoulder. The other arm hangs still. Keep the golem's face, amber eyes, body, feet, moss, apron and background fixed. No carving, striking, new markings, dust or stone chips. The gate remains fully closed. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.",
+  "trigger_restrictions": {
+    "allow": [
+      "Once when the ch1-n3-five-shields arrival panel first appears, before the child responds or the encounter begins."
+    ],
+    "stop": [
+      "Stop at the final pose after the one-off introduction.",
+      "Stop immediately when the child leaves the arrival panel, navigates away, pauses, or the page becomes hidden.",
+      "With reduced motion enabled, show the first still frame and skip playback."
+    ],
+    "forbid": [
+      "Never trigger from tentative ideas, conjectures, draft typing, chip choices, hint requests, tutor generation, correctness checks or answer results.",
+      "Never play as a response to a gate opening or staying shut, a Seal, completion or reward.",
+      "Never replay automatically, loop, delay input, change the closed gate, emit audio or display a timer."
+    ]
+  }
+}

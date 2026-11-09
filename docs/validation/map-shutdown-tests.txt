@@ -1,0 +1,10 @@
+✔ server SIGINT stops an in-flight detached tutor and its helper (291.974292ms)
+✔ server SIGTERM stops an in-flight detached tutor and its helper (238.687042ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 572.225167

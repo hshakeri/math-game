@@ -1,0 +1,8 @@
+
+> keybreakers@1.0.0 assets
+> python3 tools/assets/generate.py
+
+Keybreakers — deterministic pixel artwork
+Manifest successfully written to /Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/client/assets/manifest.json
+Total assets: 73
+Reviewed stills: 15 (36196894 bytes; original PNGs)

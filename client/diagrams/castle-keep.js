@@ -47,7 +47,7 @@ export function render(spec, mode = 'hint', state = null) {
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">−</text>
       </g>
       <rect x="48" y="0" width="54" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
-      <text x="75" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f0-1">2</text>
+      <text x="75" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f0-1">?</text>
       <g class="btn-f0-1-plus" data-action="delta-f0-1" data-delta="1" transform="translate(106, 0)" cursor="pointer">
         <rect x="0" y="0" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">+</text>
@@ -59,7 +59,7 @@ export function render(spec, mode = 'hint', state = null) {
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">−</text>
       </g>
       <rect x="48" y="48" width="54" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
-      <text x="75" y="76" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f0-2">2</text>
+      <text x="75" y="76" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f0-2">?</text>
       <g class="btn-f0-2-plus" data-action="delta-f0-2" data-delta="1" transform="translate(106, 48)" cursor="pointer">
         <rect x="0" y="0" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">+</text>
@@ -101,7 +101,7 @@ export function render(spec, mode = 'hint', state = null) {
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">−</text>
       </g>
       <rect x="48" y="0" width="54" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
-      <text x="75" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f1-1">2</text>
+      <text x="75" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f1-1">?</text>
       <g class="btn-f1-1-plus" data-action="delta-f1-1" data-delta="1" transform="translate(106, 0)" cursor="pointer">
         <rect x="0" y="0" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">+</text>
@@ -113,7 +113,7 @@ export function render(spec, mode = 'hint', state = null) {
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">−</text>
       </g>
       <rect x="48" y="48" width="54" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
-      <text x="75" y="76" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f1-2">2</text>
+      <text x="75" y="76" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-f1-2">?</text>
       <g class="btn-f1-2-plus" data-action="delta-f1-2" data-delta="1" transform="translate(106, 48)" cursor="pointer">
         <rect x="0" y="0" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">+</text>
@@ -181,7 +181,7 @@ export function render(spec, mode = 'hint', state = null) {
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">−</text>
       </g>
       <rect x="58" y="58" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
-      <text x="80" y="86" fill="#c8963e" font-size="18" font-weight="bold" text-anchor="middle" id="keep-val-assign">2</text>
+      <text x="80" y="86" fill="#c8963e" font-size="18" font-weight="bold" text-anchor="middle" id="keep-val-assign">?</text>
       <g class="btn-assign-val-plus" data-action="delta-assign-val" data-delta="1" transform="translate(106, 58)" cursor="pointer">
         <rect x="0" y="0" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">+</text>
@@ -210,7 +210,7 @@ export function render(spec, mode = 'hint', state = null) {
         <text x="22" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">−</text>
       </g>
       <rect x="48" y="0" width="54" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
-      <text x="75" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-sum">20</text>
+      <text x="75" y="28" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle" id="keep-val-sum">?</text>
       <g class="btn-sum-plus" data-action="delta-sum" data-delta="1" cursor="pointer">
         <rect x="106" y="0" width="44" height="44" rx="6" fill="#1c2631" stroke="#3d5166" stroke-width="1.5" />
         <text x="128" y="28" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">+</text>
@@ -237,30 +237,30 @@ export function mount(container, spec, mode, state, onStep) {
 
   if (mode !== 'workspace' || !onStep) return;
 
-  let f0_1 = 2;
-  let f0_2 = 2;
-  let f1_1 = 2;
-  let f1_2 = 2;
+  let f0_1 = null;
+  let f0_2 = null;
+  let f1_1 = null;
+  let f1_2 = null;
   let selectedGuardian = 'Kimmy';
-  let assignVal = 2;
-  let sumVal = 20;
+  let assignVal = null;
+  let sumVal = null;
 
   const updateDisplays = () => {
     const el_f0_1 = container.querySelector('#keep-val-f0-1');
-    if (el_f0_1) el_f0_1.textContent = f0_1;
+    if (el_f0_1) el_f0_1.textContent = f0_1 ?? '?';
     const el_f0_2 = container.querySelector('#keep-val-f0-2');
-    if (el_f0_2) el_f0_2.textContent = f0_2;
+    if (el_f0_2) el_f0_2.textContent = f0_2 ?? '?';
 
     const el_f1_1 = container.querySelector('#keep-val-f1-1');
-    if (el_f1_1) el_f1_1.textContent = f1_1;
+    if (el_f1_1) el_f1_1.textContent = f1_1 ?? '?';
     const el_f1_2 = container.querySelector('#keep-val-f1-2');
-    if (el_f1_2) el_f1_2.textContent = f1_2;
+    if (el_f1_2) el_f1_2.textContent = f1_2 ?? '?';
 
     const el_assign = container.querySelector('#keep-val-assign');
-    if (el_assign) el_assign.textContent = assignVal;
+    if (el_assign) el_assign.textContent = assignVal ?? '?';
 
     const el_sum = container.querySelector('#keep-val-sum');
-    if (el_sum) el_sum.textContent = sumVal;
+    if (el_sum) el_sum.textContent = sumVal ?? '?';
 
     // Update guardian chip styling
     ['Kimmy', 'Jimmy', 'Timmy'].forEach(name => {
@@ -281,13 +281,13 @@ export function mount(container, spec, mode, state, onStep) {
     // Clue 0 factor steppers
     const deltaF0_1 = e.target.closest('[data-action="delta-f0-1"]');
     if (deltaF0_1) {
-      f0_1 = Math.max(2, f0_1 + Number(deltaF0_1.dataset.delta));
+      f0_1 = Math.max(2, (f0_1 ?? 1) + Number(deltaF0_1.dataset.delta));
       updateDisplays();
       return;
     }
     const deltaF0_2 = e.target.closest('[data-action="delta-f0-2"]');
     if (deltaF0_2) {
-      f0_2 = Math.max(2, f0_2 + Number(deltaF0_2.dataset.delta));
+      f0_2 = Math.max(2, (f0_2 ?? 1) + Number(deltaF0_2.dataset.delta));
       updateDisplays();
       return;
     }
@@ -295,13 +295,13 @@ export function mount(container, spec, mode, state, onStep) {
     // Clue 1 factor steppers
     const deltaF1_1 = e.target.closest('[data-action="delta-f1-1"]');
     if (deltaF1_1) {
-      f1_1 = Math.max(2, f1_1 + Number(deltaF1_1.dataset.delta));
+      f1_1 = Math.max(2, (f1_1 ?? 1) + Number(deltaF1_1.dataset.delta));
       updateDisplays();
       return;
     }
     const deltaF1_2 = e.target.closest('[data-action="delta-f1-2"]');
     if (deltaF1_2) {
-      f1_2 = Math.max(2, f1_2 + Number(deltaF1_2.dataset.delta));
+      f1_2 = Math.max(2, (f1_2 ?? 1) + Number(deltaF1_2.dataset.delta));
       updateDisplays();
       return;
     }
@@ -311,6 +311,7 @@ export function mount(container, spec, mode, state, onStep) {
     if (confirmFactorBtn) {
       const idx = Number(confirmFactorBtn.dataset.idx);
       const factors = idx === 0 ? [f0_1, f0_2] : [f1_1, f1_2];
+      if (factors.some(value => value === null)) return;
       onStep({ action: 'factor', productIndex: idx, factors });
       return;
     }
@@ -326,7 +327,7 @@ export function mount(container, spec, mode, state, onStep) {
     // Guardian value stepper
     const deltaAssignBtn = e.target.closest('[data-action="delta-assign-val"]');
     if (deltaAssignBtn) {
-      assignVal = Math.max(2, assignVal + Number(deltaAssignBtn.dataset.delta));
+      assignVal = Math.max(2, (assignVal ?? 1) + Number(deltaAssignBtn.dataset.delta));
       updateDisplays();
       return;
     }
@@ -334,6 +335,7 @@ export function mount(container, spec, mode, state, onStep) {
     // Confirm assignment
     const confirmAssignBtn = e.target.closest('[data-action="confirm-assign"]');
     if (confirmAssignBtn) {
+      if (assignVal === null) return;
       if (selectedGuardian === 'Kimmy') {
         onStep({ action: 'assign_shared', guardian: 'Kimmy', value: assignVal });
       } else {
@@ -345,7 +347,7 @@ export function mount(container, spec, mode, state, onStep) {
     // Sum stepper
     const deltaSumBtn = e.target.closest('[data-action="delta-sum"]');
     if (deltaSumBtn) {
-      sumVal = Math.max(2, sumVal + Number(deltaSumBtn.dataset.delta));
+      sumVal = Math.max(2, (sumVal ?? 1) + Number(deltaSumBtn.dataset.delta));
       updateDisplays();
       return;
     }
@@ -353,6 +355,7 @@ export function mount(container, spec, mode, state, onStep) {
     // Submit sum
     const submitSumBtn = e.target.closest('[data-action="submit-sum"]');
     if (submitSumBtn) {
+      if (sumVal === null) return;
       onStep({ action: 'submit_sum', value: sumVal });
       return;
     }

@@ -19,6 +19,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 import { startServer, closeServer } from '../server/index.js';
+import { ILLUSTRATIONS, ILLUSTRATION_DIMENSIONS } from '../client/illustrations.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -87,11 +88,33 @@ describe('Milestone M4: Asset Pipeline & Approval Gate', () => {
         assert.equal(actualHash, entry.sha256, `SHA-256 digest mismatch for ${relPath}`);
 
         assert.equal(entry.approved, true, `Asset ${relPath} must be approved: true`);
-        assert.equal(entry.placeholder, true, `Asset ${relPath} must be placeholder: true`);
-        assert.match(entry.format, /svg/);
         const width = entry.dimensions?.width ?? entry.width;
         const height = entry.dimensions?.height ?? entry.height;
         assert.ok(width > 0 && height > 0, `Width and height must be positive for ${relPath}`);
+
+        if (entry.format === 'image/svg+xml') {
+          assert.equal(entry.placeholder, true, `Procedural SVG ${relPath} must remain marked as a placeholder`);
+          assert.equal(path.extname(relPath), '.svg');
+          const svg = fileBuffer.toString('utf8');
+          const viewBox = svg.match(/<svg\b[^>]*\bviewBox="0 0 ([\d.]+) ([\d.]+)"/);
+          assert.ok(viewBox, `Missing root SVG viewBox for ${relPath}`);
+          assert.equal(Number(viewBox[1]), width, `SVG width differs from manifest for ${relPath}`);
+          assert.equal(Number(viewBox[2]), height, `SVG height differs from manifest for ${relPath}`);
+        } else {
+          assert.equal(entry.format, 'image/png', `Unsupported asset format for ${relPath}`);
+          assert.equal(path.extname(relPath), '.png');
+          assert.equal(entry.placeholder, false, `Selected illustration ${relPath} must not be marked as a placeholder`);
+          assert.ok(fileBuffer.length >= 33, `Truncated PNG for ${relPath}`);
+          assert.deepEqual(fileBuffer.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+          assert.equal(fileBuffer.toString('ascii', 12, 16), 'IHDR');
+          assert.equal(fileBuffer.readUInt32BE(16), width, `PNG width differs from manifest for ${relPath}`);
+          assert.equal(fileBuffer.readUInt32BE(20), height, `PNG height differs from manifest for ${relPath}`);
+          assert.equal(fileBuffer.length, entry.bytes, `PNG byte count differs from manifest for ${relPath}`);
+          assert.ok(entry.source?.file, `Missing selected source for ${relPath}`);
+          const source = fs.readFileSync(path.resolve(REPO_ROOT, entry.source.file));
+          assert.deepEqual(fileBuffer, source, `Illustration must preserve its selected source bytes: ${relPath}`);
+          assert.equal(entry.source.sha256, actualHash, `Selected source hash differs for ${relPath}`);
+        }
 
         // Verify review checklist passes all 5 criteria
         const review = entry.review || entry.reviewChecklist;
@@ -130,6 +153,20 @@ describe('Milestone M4: Asset Pipeline & Approval Gate', () => {
       assert.ok(manifest.assets['avatars/hero-sheet.svg'], 'Must include hero-sheet.svg');
     });
 
+    it('includes every illustrated still used by the presentation helper with its native dimensions', () => {
+      const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
+      for (const [id, url] of Object.entries(ILLUSTRATIONS)) {
+        assert.ok(url.startsWith('/assets/illustrations/'), `Still ${id} must use the local approval gate`);
+        const relPath = url.slice('/assets/'.length);
+        const entry = manifest.assets[relPath];
+        assert.ok(entry, `Presentation still missing from manifest: ${id}`);
+        assert.equal(entry.format, 'image/png');
+        assert.equal(entry.approved, true);
+        assert.deepEqual(entry.dimensions, ILLUSTRATION_DIMENSIONS[id]);
+        assert.equal(manifest.byAssetId[entry.id], relPath);
+      }
+    });
+
     it('scene SVGs comply with Royal Architect Guild palette and SVG structure', () => {
       const scenePath = path.join(ASSETS_DIR, 'scenes/ch1-n1-locked.svg');
       const content = fs.readFileSync(scenePath, 'utf8');
@@ -157,6 +194,14 @@ describe('Milestone M4: Asset Pipeline & Approval Gate', () => {
       assert.match(text, /<svg/);
     });
 
+    it('serves an approved illustrated PNG with its original bytes and image/png type', async () => {
+      const relPath = 'illustrations/rivet.png';
+      const res = await fetch(`${testUrl}/assets/${relPath}`);
+      assert.equal(res.status, 200);
+      assert.match(res.headers.get('content-type'), /image\/png/);
+      assert.deepEqual(Buffer.from(await res.arrayBuffer()), fs.readFileSync(path.join(ASSETS_DIR, relPath)));
+    });
+
     it('returns 404 for unlisted static asset path under /assets/', async () => {
       const res = await fetch(`${testUrl}/assets/scenes/non-existent-ghost.svg`);
       assert.equal(res.status, 404);
@@ -170,33 +215,34 @@ describe('Milestone M4: Asset Pipeline & Approval Gate', () => {
       assert.ok(res.status === 403 || res.status === 404, `Expected 403/404, got ${res.status}`);
     });
 
-    it('blocks unapproved asset with HTTP 403 Forbidden', async () => {
+    it('blocks unapproved SVG and PNG assets with HTTP 403 Forbidden', async () => {
       // Temporarily mark an asset as approved: false in manifest.json
       const rawManifest = fs.readFileSync(MANIFEST_PATH, 'utf8');
       const manifestObj = JSON.parse(rawManifest);
-      const originalEntry = manifestObj.assets['scenes/ch1-n1-locked.svg'];
+      for (const relPath of ['scenes/ch1-n1-locked.svg', 'illustrations/rivet.png']) {
+        const originalEntry = manifestObj.assets[relPath];
+        try {
+          manifestObj.assets[relPath] = { ...originalEntry, approved: false };
+          fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifestObj, null, 2));
 
-      try {
-        manifestObj.assets['scenes/ch1-n1-locked.svg'] = {
-          ...originalEntry,
-          approved: false
-        };
-        fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifestObj, null, 2));
-
-        const res = await fetch(`${testUrl}/assets/scenes/ch1-n1-locked.svg`);
-        assert.equal(res.status, 403);
-        const data = await res.json();
-        assert.equal(data.ok, false);
-        assert.equal(data.error, 'Asset not approved');
-      } finally {
-        // Restore manifest
-        fs.writeFileSync(MANIFEST_PATH, rawManifest);
+          const res = await fetch(`${testUrl}/assets/${relPath}`);
+          assert.equal(res.status, 403, `Unapproved ${relPath} must be blocked`);
+          const data = await res.json();
+          assert.equal(data.ok, false);
+          assert.equal(data.error, 'Asset not approved');
+        } finally {
+          manifestObj.assets[relPath] = originalEntry;
+          fs.writeFileSync(MANIFEST_PATH, rawManifest);
+        }
       }
     });
 
     it('re-serves asset with 200 OK once approved is restored to true', async () => {
-      const res = await fetch(`${testUrl}/assets/scenes/ch1-n1-locked.svg`);
-      assert.equal(res.status, 200);
+      for (const relPath of ['scenes/ch1-n1-locked.svg', 'illustrations/rivet.png']) {
+        const res = await fetch(`${testUrl}/assets/${relPath}`);
+        assert.equal(res.status, 200);
+        await res.arrayBuffer();
+      }
     });
   });
 });

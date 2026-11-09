@@ -1,0 +1,11 @@
+
+> keybreakers@1.0.0 eval:ci
+> node eval/run.js --ci
+
+======================================================================
+Castle of Theorems — Evaluation Harness (CI Mode)
+======================================================================
+[INFO] No GEMINI_API_KEY, GOOGLE_API_KEY, or ANTHROPIC_API_KEY detected.
+[INFO] Skipping LLM evaluation in CI environment without failing build.
+[INFO] To run evaluation locally: configure API keys in .env.
+======================================================================

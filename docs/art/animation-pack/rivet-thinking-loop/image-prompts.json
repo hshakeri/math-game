@@ -1,0 +1,35 @@
+{
+  "created": "2026-11-09",
+  "tool": "built-in image_gen.imagegen",
+  "requestedAspectRatio": "16:9",
+  "actualDimensions": {
+    "width": 1672,
+    "height": 941
+  },
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: illustration-story. Asset type: first frame for a quiet three-second game animation loop, landscape 16:9. Use the attached character concept sheet as an identity and style reference only. Isolate Rivet, the brass clockwork owl engineer in the upper row second from left. Preserve that exact owl identity: brown and cream facial feathers, swept gold eyebrow feathers, large round eyes, brass monocle over its right-hand eye as seen in the reference, layered brass mechanical wings, small gear breastplate, articulated brass feet, and compact tool satchel. Rivet is alone, full body, resting neutrally on a small flat stone ledge in a quiet mossy gate courtyard; wings folded, eyes open, beak closed, brass monocle at its baseline neutral orientation. No movement shown: this is the identical beginning and ending pose of a later blink and monocle-turn loop. Fixed orthographic front-threequarter camera, eye-height with the owl. Compose the owl centered in a wide landscape 16:9 image, with comfortable safe margins around the entire body and plenty of quiet space at the sides; feet and ledge fully visible. Match the reference's detailed 16-bit illustrated pixel-art rendering, visible crisp pixel clusters, delicate dark outlines and warm parchment/brass highlights, muted navy, sage moss and blue-gray stone. Background is subdued and simple, softly receding pixel masonry and a blurred-looking but still pixel-clustered closed gate, no competing props. No other characters, no frame or border, no text, letters, digits, math, diagrams, symbols, emblems, sound notation, particles, glow effects or watermarks. Do not simplify into chunky 8-bit art. Opaque background.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png"
+    ],
+    "generatedOriginal": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-aebc141b-dd66-4bba-b43e-9565b3cf7c08.png",
+    "transparent_background": false
+  },
+  "last": {
+    "file": "last.png",
+    "operation": "byte-identical copy of first.png; no second image generation",
+    "prompt": null,
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/rivet-thinking-loop/first.png"
+    ]
+  },
+  "animationIntent": {
+    "durationSeconds": 3,
+    "loop": true,
+    "motion": "Rivet blinks and the brass monocle makes one complete turn between identical neutral endpoints. Fixed camera, feet, wings, body position, ledge and background."
+  },
+  "review": {
+    "visuallyInspected": true,
+    "notes": "Full owl and ledge visible, quiet mossy courtyard, muted palette, no text or mathematical clues. Endpoints are byte identical."
+  }
+}

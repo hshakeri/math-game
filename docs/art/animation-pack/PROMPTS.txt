@@ -1,0 +1,126 @@
+RIVET · THINKING LOOP
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Animate Rivet from first.png through a quiet waiting loop. Rotate the brass monocle rim through one full turn around its fixed mount; Rivet blinks once while his body and tools stay still. Finish precisely at the opening pose, with the same open eyes and monocle orientation, matching last.png exactly. Make the loop seam invisible. Keep the camera fixed and pixels crisp. Preserve his design without morphing or new props. No text, digits, math, praise, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+HERO · A MOMENT TO THINK
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Animate the apprentice from the relaxed idle pose in first.png to the hand-on-chin pose in last.png. Lift the existing hand gently to the chin and make a slight thoughtful head tilt; the feet stay planted, goggles stay pushed up, and the scarf and card satchel retain their shape. Settle without a flourish. Fixed camera, crisp visible pixels, unchanged identity and background. No morphing, new props, text, digits, math, praise, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+LEMMA · A CARD FOR THE TABLE
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Animate Lemma offering the single blank card already held in first.png. Extend the card-bearing arm in a short smooth slide toward the empty workspace, then settle into last.png with the same card still held and clearly offered. Keep the card's size and blank face unchanged; do not create a fan, duplicate card or new object. Fixed camera, crisp visible pixels, stable salamander design and background. No morphing, text, digits, math, praise, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+GRUBB · THE GATE STAYS SHUT
+Create a 2-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Animate Grubb from the neutral watchful pose in first.png to the restrained sideways smirk in last.png. Raise one brow slightly and settle his shoulders without pointing, laughing or gesturing at the viewer. The gate remains fully shut and motionless throughout; the sabotage sack stays in place. Fixed camera, crisp visible pixels and stable identity. No morphing, new props, text, digits, math, praise, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+GRUBB · THE GATE OPENS
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Begin with the closed gate and watchful Grubb in first.png. Move the existing gate hardware along its visible hinge or slide into the open position specified by last.png. As it opens, Grubb lowers his brows and folds his arms into a quiet fume, keeping the same sack and silhouette. End with the open gate and settled frown. No celebration, steam, sparks or added objects. Fixed camera and crisp pixels; no morphing, text, digits, math, praise, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+HERO · THE GOLDEN SEAL
+Create a 4-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Animate the apprentice making one small hop and landing in the same spot, then raising the blank Golden Seal already held low in first.png. Settle into the final raised-Seal pose in last.png. Keep the Seal entirely blank, with unchanged size and shape, and preserve the goggles, scarf and satchel. No extra hops, confetti, sparkles or new objects. Fixed camera and crisp visible pixels; no morphing, text, digits, math, praise, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+THE TOLL TROLL · A CLOSER LOOK
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Over three seconds, the Toll Troll inclines his head slightly and tilts the same abacus a little toward the viewer while holding it at belly height. Every bead stays in its original packed group on the same side of its rod; do not slide, add, remove or separate beads. Keep his expression neutral, feet planted, body position and costume fixed, and the gate fully closed. Ease gently into the ending pose, without a bow, approving nod or reward signal. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+THE ALCHEMIST · LIFT THE LANTERN
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Over three seconds, the Alchemist bends the lantern-holding elbow and gently lifts the same upright lit lantern from hip to chest height. Keep the flame intensity and global scene brightness constant, without a flash, growing glow, particle effect or revealing light. Keep the face neutral and body, feet, other arm, costume and closed gate stationary. Hold the final pose without a nod or reaction. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+THE STONEMASON · TOOLS AT REST
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Over three seconds, the Stonemason bends the chisel-holding arm and gently lifts and rotates the same chisel from the side to rest safely against the shoulder. The other arm hangs still. Keep the golem's face, amber eyes, body, feet, moss, apron and background fixed. No carving, striking, new markings, dust or stone chips. The gate remains fully closed. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+THE THREE GUARDIANS · KEEP WATCH
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Over three seconds, the three closed-helmet Guardians turn only their heads and attached plumes modestly toward the viewer together. Keep their torsos, resting arms, hands, feet, sentinel stance and spacing fixed; maintain the rust, navy and moss-green color order. No exposed blades, salute, bow or celebration. All three remain full body and the gate stays completely closed. Use a fixed camera, unchanged pixel-art rendering and palette, stable scenery and lighting. No camera motion, text, dialogue, captions, symbols, particles or audio. This is a one-off neutral arrival introduction, not a response to player ideas or results.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+WORK BACKWARDS · THE CRAB
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Over three seconds, the same terra-cotta crab quietly scuttles a short distance backward to the left inside its card and settles. Maintain its orientation, two claws, six walking legs and scale. Fix the camera, card, gold border, lighting, backdrop and workbench. No trails, arrows, symbols, sounds, effects or celebration. Interpolate from first.png to last.png and hold briefly; do not loop.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+WORST CASE · GRUBB’S CARD
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Use first.png and last.png as exact endpoints. Keep the camera, card border, cream face, blue-gray workbench, mossy stone backdrop, lighting, scale and visible pixel texture fixed. Animate only the Grubb illustration within the card: lift one hand from the sack strap to tip the same patched cap slightly, retaining the quiet sly smile, then settle into last.png. His other hand, harmless closed sack, feet and costume remain in place. No gesture evaluates an outcome. No new props, text, digits, runes, math, diagram, praise, sparkle, morphing, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+TRY A TINY CASE · THE MOUSE
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Over three seconds, the warm-gray mouse gently rises from its crouch onto its rear feet and sniffs toward the same tiny unmarked pebble. Preserve its face, ears, tail, colors and location; keep the pebble fixed. Calm curiosity, no startle or celebration. Fix the card, gold border, camera, lighting, workbench and backdrop. No added marks, sounds or effects. Interpolate from first.png to last.png and hold briefly; do not loop.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+DRAW IT · THE CHAMELEON
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Over three seconds, the same sage chameleon lowers its single brush into the blank card area and gently paints one short, loose, shallow ochre curve. The final bristles rest at the end of that one mark. Preserve the body, face, curled tail and other feet. The mark must remain abstract, never a letter, numeral, equation or diagram. Keep all artwork inside the border; fix the card, camera, lighting, workbench and backdrop. No extra brushes, paintpots, sounds, sparkles or celebration. Interpolate from first.png to last.png and hold briefly; do not loop.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+ODD OR EVEN · THE MAGPIES
+Create a 3-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Use first.png and last.png as exact endpoints. Lock the camera, card, workbench, backdrop, lighting, scale and crisp visible pixel texture. Within the cream cardface, exactly two black-and-white magpies with teal-iridescent feathers gently tilt their heads in opposite directions, inward toward each other, settling into last.png. Keep their separate identities, bodies, tails, feet and shared blank branch fixed. Do not swap birds, add birds, suggest a count or form a pattern. No new props, text, digits, runes, math, diagrams, praise, sparkle, morphing, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.
+
+
+FIND WHAT IS SHARED · THE TWIN CATS
+Create a 4-second silent animation. Use first.png as the opening frame and last.png as the closing frame.
+
+Use first.png and last.png as exact endpoints. Fix the camera, card, workbench, mossy backdrop, lighting, scale and crisp pixel texture. Animate only the twin-cat illustration inside the cream cardface: each sibling turns its head a little toward the other while only the tip of their one shared S-shaped tail curls toward the middle. Preserve exactly two separate bodies and one continuous tail, with the tail base, bodies, paws and seated positions fixed. Settle at last.png. No extra tail, duplicate body or limbs, new props, text, digits, runes, math, diagrams, praise, sparkle, morphing, sound, music or lip sync.
+
+Fixed camera, framing, scale, lighting and background; no cuts, pans, zooms or shake. Match the supplied cast reference and endpoint frames. Preserve silhouette, costume, anatomy, facial features and palette. Keep pixels visibly crisp and stable; no morphing or style drift. No text, letters, digits, equations, puzzle clues, praise, sparkles, extra characters or unplanned props. The hero’s Seal and the card offered by Lemma stay unmarked. Creature cards contain only their intended illustrations; Draw It adds one abstract brushstroke, never a diagram or mathematical symbol. Silent video: no sound effects, music, speech or lip sync.

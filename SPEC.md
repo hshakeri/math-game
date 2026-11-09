@@ -1,6 +1,8 @@
-# Castle of Theorems — Build Spec v1 (Home Edition)
+# Keybreakers — Build Spec v1 (Home Edition)
 
 Nov 8, 2026 · Heman Shakeri
+
+Presentation revision, Nov 9: **Keybreakers: The Goblin’s Gate** is the provisional series/issue title. The **Castle of Theorems** remains the destination. See `docs/NAME-CHECK.md` for the existing adjacent use; this title is not cleared for public release. The design pillars and protected mathematical content remain unchanged.
 
 ## 1. Scope
 
@@ -43,7 +45,7 @@ Ten rules override any later convenience; each is testable and §14 cites them a
 
 One Node process serves the PWA and exposes a small JSON API; the engine inside it is the only component that knows answers, and every tutor utterance passes through it before the child sees it.
 
-*(Architecture diagram lives in the Claude Doc. In text: the PWA client, the parent dashboard and the eval harness are three thin callers of one local API on the Node server; inside the server sit the Engine (state machine, checker, ZPD ladder, leak gate, scripted probes; sole holder of the solution tree), the Tutor adapter (gemini-3.8-flash default, Claude alternative, 4 s timeout → scripted fallback), Content and assets, and Telemetry; the adapter calls the Gemini or Claude API; an offline image model feeds the asset store through the dev-time asset tool.)*
+*(Architecture diagram lives in the Claude Doc. In text: the PWA client, the parent dashboard and the eval harness are three thin callers of one local API on the Node server; inside the server sit the Engine (state machine, checker, ZPD ladder, leak gate, scripted probes; sole holder of the solution tree), the Tutor adapter (gemini-3.8-flash default, Claude alternative, 4 s REST timeout / bounded local agy startup → scripted fallback), Content and assets, and Telemetry; the adapter calls the Gemini or Claude API; an offline image model feeds the asset store through the dev-time asset tool.)*
 
 The child's device and the parent's browser are thin views over one local API. The engine decides every transition and screens every utterance; LLM and image providers are adapters, and image generation happens offline through the asset tool.
 
@@ -52,7 +54,7 @@ The child's device and the parent's browser are thin views over one local API. T
 | PWA client | Child's device (browser) | Render map, encounter UI, Scroll workspace, Heuristic Deck, Codex; draw SVG diagrams from engine-supplied parameters; send actions. Never receives answers, intermediate values, or hint text beyond the current level. | `/api/session/*` |
 | Parent dashboard | Parent's browser, same PWA at `/parent` | Live transcript, hint-level override, waive Look Back, scribe mode (parent types what the child says), pause, end session. | `/api/parent/*` |
 | Engine | Node, `server/engine/` | Encounter state machine, deterministic checker, ZPD ladder, misconception table lookup, leak gate, scripted probe pools, telemetry writer. Pure functions over `(state, action, encounter)`; no I/O inside. | Tutor adapter, content store, telemetry |
-| Tutor adapter | Node, `server/tutor/` | One interface `generateTurn(ctx) → TutorTurn`; implementations `gemini.js` (default) and `claude.js`. Builds the per-stage context (§6), enforces JSON schema, 4 s timeout. | Gemini API, Claude API |
+| Tutor adapter | Node, `server/tutor/` | One interface `generateTurn(ctx) → TutorTurn`; implementations `scripted.js` (offline default), `gemini.js`, `claude.js` and local `agy.js`. Builds the per-stage context (§6), enforces output schema, and bounds provider calls. | Gemini API, Claude API |
 | Content store + validator | `content/encounters/*.json`, `content/validate.js` | Encounter schema (§5), load at boot, fail fast on invalid content, flag given/forbidden number collisions. | Engine |
 | Asset tool | `tools/assets/` (dev time, Python or Node) | Generate character sheets and scene states with an image model, write `client/assets/manifest.json`; parent reviews before commit. | Image model API |
 | Telemetry | `server/telemetry/`, `data/sessions/*.jsonl` | One event per action and tutor turn: stage, level, raw model output, gate verdict, latency. Source for the parent view and the eval reports. | Parent dashboard, eval |
@@ -214,7 +216,7 @@ The model phrases one probe per turn from a context the engine assembles; it nev
   childAction: { type: 'step', summary: 'placed a crystal in a bin' },
   stepVerdict: 'wrong',
   allowedContent: { pool: ['...', '...'], hintText: null, cardNames: ['Worst case', 'Try a tiny case'] },
-  style: { minChars: 150, maxChars: 300, persona: 'Archimedes the Owl, Royal Architect' }
+  style: { minChars: 150, maxChars: 300, persona: 'Rivet the clockwork owl, deadpan engineer' }
 }
 ```
 
@@ -232,12 +234,14 @@ The model phrases one probe per turn from a context the engine assembles; it nev
 
 `understanding` is read only in the Understand state and is the one classification the model performs. `studentSignal` is advisory telemetry and never changes a transition. `suggestCard` is honoured only at rung l1 or higher and only if the card is in `encounter.cards`.
 
-**Adapter rules.** Call with the lowest thinking setting the provider offers (for `gemini-3.8-flash`, `thinking_level: low`); hard timeout 4 s; one retry with a short appended correction if the first candidate fails the gate; then the scripted probe for the same (part, state, rung). Do not pass sampling knobs the provider has deprecated; verify parameter names against the provider's current documentation before coding. Log the raw model output, the gate verdict and latency on every call. The Claude implementation differs only in request format and is used for A/B and eval. The system prompt and persona are stable across turns so the provider's prompt cache applies; only the request object changes.
+**Adapter rules.** Call with the lowest thinking setting the provider offers (for `gemini-3.8-flash`, `thinking_level: low`); hard timeout 4 s for direct REST, with a separate 30 s process allowance for the explicitly selected local agy CLI; one retry with a short appended correction if the first candidate fails the gate; then the scripted probe for the same (part, state, rung). Do not pass sampling knobs the provider has deprecated; verify parameter names against the provider's current documentation before coding. Log the raw model output, the gate verdict and latency on every call. The Claude implementation differs only in request format and is used for A/B and eval. The system prompt and persona are stable across turns so the provider's prompt cache applies; only the request object changes.
 
-**System prompt** (`server/tutor/prompt.md`, used verbatim by both adapters):
+**Local agy transport.** The user-selected model is `gemini-3.8-flash-low` at low effort. Each turn uses a fresh temporary workspace, stdin rather than command arguments for the prompt, deny-all tool hooks, strict output parsing, bounded output and a process deadline. Model output still passes every normal leak-gate stage; transport failure or blocked tool use returns a scripted probe. The longer transport deadline does not establish or relax the direct-API latency/evaluation targets in §11. Parent-only diagnostics distinguish live replies from fallback.
+
+**System prompt** (`server/tutor/prompt.md`, shared by all live adapters):
 
 ```text
-You are Archimedes the Owl, Royal Architect to a young builder (8 years old, strong at math) on a quest to the Castle of Theorems. You speak in plain words a third grader reads easily.
+You are Rivet the clockwork owl, deadpan engineer to a young builder (8 years old, strong at math) on a quest to the Castle of Theorems. You speak in plain words a third grader reads easily.
 
 Your job each turn is to write ONE short reply that moves the builder's own thinking forward. You never solve the problem, never state or imply a number that could be the answer or a step toward it, and never say whether the builder's idea is right or wrong.
 
@@ -294,45 +298,49 @@ Two pipelines, never mixed: mathematical diagrams are drawn by code from engine 
 
 Rendering rules: colours from CSS variables so light and dark themes come free; touch handles at least 44 px; no text smaller than 14 px; every SVG carries `role=img` and an `aria-label` from the spec; no animation longer than 200 ms. Diagram params are built by the engine, pass through the client-safe view, and are logged with the turn.
 
-**Scene pipeline** (`tools/assets/`, run by Heman, not by the game).
+**Pixel-art pipeline** (`tools/assets/`, offline only).
 
-1. **Style bible** (`tools/assets/style.md`): one paragraph of art direction and a six-colour palette. Direction: a Royal Architect's Guild, parchment and blueprint, ink lines, muted gold accent; drawn for a nine-year-old who dislikes anything babyish; no text rendered inside images.
-2. **Character sheets**: hero avatar and Archimedes the Owl, front, back, left and right views on a plain white background, generated once and committed. Every later scene prompt attaches these sheets as references so the characters do not drift.
-3. **Scene states**: two images per node (`locked`, `unlocked`), one map background, one chapter card; for Chapter 1 that is 10 images at 16:9, 1K. Prompts are stored as JSON beside the outputs with the model name and date, so a regeneration is reproducible. Output path `client/assets/scenes/{nodeId}-{state}.webp`; `client/assets/manifest.json` records the file, its sha256, dimensions and `approved: true|false`.
-4. **Parent review** before commit, checklist in the manifest: hero and owl match the sheets; no text in the image; nothing frightening; nothing that reads as a hint for the puzzle; anatomy and hands plausible. The server refuses to serve an unapproved asset.
-5. **Avatar onboarding**: six pre-generated hero variants to choose from at first launch. Custom avatar generation from a child's description is deferred (§15) because it is the only place runtime generation would be needed.
+1. **Style bible:** `tools/assets/style.md` defines muted sixteen-bit proportions, integer pixel grids, parchment/blueprint panels and antique gold accents. Art has no rendered words, digits or puzzle hints.
+2. **Reusable cast:** a boy apprentice Keybreaker with goggles, scarf and card satchel; Rivet the clockwork owl; Grubb the skeptic; Lemma the salamander; the Toll Troll, Alchemist, Stonemason and Three Guardians. Runtime sprite sources live in `tools/assets/generate.py`. The hero has idle, walk, thinking and Seal-only celebration poses; Grubb has idle, smirk and fume poses. The current game uses the first boy sprite only; there is no naming or avatar-selection step. Other source variants are retained for possible later use.
+3. **Tiles and scenes:** paint environments on a 320-by-180 integer grid, using reusable stone, door, foliage and light elements. Locked/open pairs share their environment and differ in gate tiles. SVG output uses a 1920-by-1080 viewBox; 48-by-48 character sprites remain separate. The Guardians use a 72-by-48 group strip. Source dimensions are enforced by the generator.
+4. **Asset gate and parent review:** keep SHA-256, dimensions and approval flags in `client/assets/manifest.json`. The server refuses unapproved art. Code-drawn prototypes retain their prototype marker. After viewing the detailed illustrations, the user requested still pictures with timed speech bubbles. The selected endpoint PNGs are copied unchanged into `client/assets/illustrations/`; `tools/assets/prepare_stills.py` records and verifies their reviewed source hashes and preserves explicit approval revocations. Other image-generated concepts stay outside runtime assets until reviewed. No live image model calls during play.
+5. **Creature deck:** Work Backwards / crab; Worst Case / Grubb; Try a Tiny Case / mouse; Draw It / brush-bearing chameleon; Odd or Even / paired magpies; Find What Is Shared / shared-tail cats.
 
-Model: any current image model with multi-reference consistency; the research memo names `gemini-nano-banana-2.1` for its reference-image support. Verify the current model name, resolution options and price before running the tool; the pipeline is model-agnostic by design.
+The concept board and full built-in imagegen prompt are saved under `docs/art/`. It is a reference for the cast's direction, not a sprite atlas. The detailed stills introduce the keepers and Lemma, and illustrate the creature Deck. A single scene holds the story: Reverse Tolls uses a code-drawn route with selectable places, and other encounters place story clues on one keeper illustration. Rivet is a small owl beside the dialogue; Grubb appears only with an explicit gate outcome. The fixed boy sprite marks the beginning of the road. All mathematical diagrams retain the separate code-based pipeline and the same hint/workspace information restrictions.
 
 ## 9. UI and UX
 
-The client is a five-screen PWA with one layout rule: the scene is the backdrop, the Scroll is where thinking happens, and the owl speaks in one short bubble at a time. Nothing on screen counts down, ranks, or flashes.
+The client is a PWA built around one cloud-edged world map and one coherent encounter scene. Story places on the encounter map reveal one caption at a time; Rivet’s dialogue and the hero’s replies share the scene below. Calculation tools and the Blueprint fold away until needed. Nothing on screen counts down, ranks, or flashes.
 
 | Screen | Route | What is on it | Notes |
 | --- | --- | --- | --- |
-| Map | `/` | Chapter 1 road with four nodes; completed nodes show the unlocked scene thumbnail and the Golden Seal; the next node pulses once on arrival | No scores anywhere; progress is the road itself |
-| Encounter | `/n/:nodeId` | Scene (full-bleed backdrop) · Inscription panel (problem text, tap to re-read aloud by the parent) · Owl bubble (150–300 chars) · Reply strip (chips + short text field + "I'm stuck") · Scroll drawer (workspace / diagram) · Deck button | The submit control is a stone dial that is visibly locked until Stage 3; the conjecture control is a separate small slate with a one-line reason field |
-| Deck | overlay | Six heuristic cards with a one-line child-facing description each; selected card snaps to the Scroll header | Cards: Work backwards · Worst case · Try a tiny case · Draw it · Odd or even · Find what is shared |
-| Codex | `/codex` | One entry per sealed node: child name, formal theorem, one-line statement, the diagram at its final state | The Look Back answer the child gave is shown as their own note |
+| Map | `/#map` | One continuous cloud-edged road, the boy at its beginning, and four challenge landmarks with labels and unlock state | Challenge navigation lives on the map; discreet For grown-ups and GitHub links sit above it. New catalog nodes extend the map. No name field, avatar chooser or Codex link |
+| Encounter | `/#encounter?id=:nodeId` | One map/keeper scene with selectable story captions; small Rivet sprite and paced bubble; hero reply chips; optional calculation tools, Blueprint and creature Deck | Reverse Tolls shows forward public givens only; gate reactions use explicit engine outcomes only; partial chambers never award a node Seal |
+| Deck | overlay | Lemma’s six creature cards, each with a way of thinking and a child-facing description | Keyboard-operable buttons, Escape, focus containment and return |
 | Parent | `/parent` | Live transcript, current state and rung, hint override (set rung), waive Look Back, scribe mode toggle, pause, end session; session history | Protected by a four-digit PIN set in `.env`; not a security boundary, only a child-proofing one |
 
 **Interaction rules.**
 
 - Touch targets at least 56 px with 12 px spacing; single taps and simple drags only, no double-tap, no long-press, no multi-touch.
 - Reply strip offers two to four chips per probe (from `chips.*`, order shuffled, the best answer never first) plus a free-text field capped at 140 characters. Chips are tap-to-send; free text sends on Enter or the arrow.
-- The owl bubble renders character by character at about 40 characters per second so a reply feels spoken; a tap completes it instantly.
+- Rivet is the tutor. Character pictures remain still, including its monocle. The boy sprite and Seal-only celebration pose remain still too. Grubb's sprite changes to a smirk only on an explicit rejected final submission and to a fume only when the server opens the whole node. “CLANK” and “whirr” are silent text, never sound effects.
+- Speech bubbles for Rivet and Lemma use a short opening pause followed by silent character reveal. Story captions change only when a child taps a place or Next; Grubb’s gate outcome is immediate status text. `client/timed-speech.js` specifies the default pause and approximately 40 characters per second; the opening Rivet line uses the same controller. “Read now” finishes a line; “Read again” replays it. Words remain until replaced, and never expire or advance play. The saved “Speech: instant” preference and reduced-motion settings remove pacing. Timing never disables gameplay, starts a countdown, or evaluates an answer. Screen readers receive each full line rather than character updates. Navigation and part changes cancel stale callbacks; hidden tabs and modal transitions finish any pending text without continuing presentation in the background.
 - One tutor utterance per child action, never two in a row; a 90 s idle produces at most one scripted probe.
 - "I'm stuck" is always visible and never shamed; its label does not change with use.
+- A requested Tiny Case exposes its authored statement and a separate blank answer control. Workspace tools are available immediately after a card is chosen, using public givens only. New cards, hints and Tiny Cases open their containing tool drawers; routine replies preserve the child’s choice to close them.
+- The optional calculator offers the four arithmetic operations, an editable scratchpad and a local calculation tape. Operands come only from the child; it never solves a gate or sends calculations to the tutor. Notes are saved per encounter and part on the device.
 - The Look Back panel presents the options as cards; the child picks one; the check is a chip set or a number field.
 - Dark and light themes from CSS variables; default to the device setting; parchment light, blueprint dark.
 - Minimum body text 18 px; inscription 20 px; owl bubble 19 px; a dyslexia-friendly font toggle in the parent screen.
 - No sound in v1 except an optional single chime on Seal; no music.
 
-**Copy rules** (apply to authored content and are checked by the validator where mechanical): plain words a third grader reads; contractions allowed; no exclamation marks in tutor speech; the owl says "we" for shared work and "you" for the child's decisions; never "easy", "simple" or "just"; the word "proof" is avoided in favour of "explain why" until Chapter 2; formal theorem names appear only in the Codex and in the Look Back naming line.
+**Copy rules** (apply to authored content and are checked by the validator where mechanical): plain words a third grader reads; contractions allowed; no exclamation marks in tutor speech; the owl says "we" for shared work and "you" for the child's decisions; never "easy", "simple" or "just"; the word "proof" is avoided in favour of "explain why" until Chapter 2; formal theorem names appear only in the Look Back naming line and the earned Golden Seal. The engine retains its Codex record for persistence, but there is no child-facing Codex route.
 
 **Accessibility and devices.** iPad Safari and desktop Chrome are the test targets; the PWA installs to the home screen; the layout works at 768 px width in portrait and landscape; keyboard navigation covers every control for the parent screen.
 
 ## 10. Chapter 1 content
+
+**Rivet’s voice.** Authored pools in `server/engine/scripted.js` and the content JSON use dry engineering observations, shared “we” language, Grubb’s skepticism and Lemma’s cards while keeping the existing numeric and question gates. Example Reverse Tolls l0: “Grubb says you’re bluffing. I prefer a written account. In your own words, what number are we hunting, and what do we know for certain about the journey?” Every inscription, target, forbidden list and deterministic check remains protected.
 
 Four encounters, one heuristic each, every number below checked by hand; the agent transcribes these into `content/encounters/ch1-n{1..4}-*.json` and the validator must pass before any UI work. Reverse Tolls is renumbered from the research memo (payments 5, 3, 9 and end 13) so that no intermediate value collides with a given; Dark Vault uses 12 crystals per colour for the same reason.
 
@@ -345,7 +353,7 @@ Four encounters, one heuristic each, every number below checked by hand; the age
 
 ### Node 1 · Chasm of Reverse Tolls
 
-**Inscription.** A traveler crossed three magic toll gates on the road to the castle. At the first gate her pouch of Star-Coins doubled, then she paid 5 coins. At the second gate her coins doubled again, then she paid 3. At the third gate they doubled once more, then she paid 9. She walked into the castle with exactly 13 Star-Coins. How many did she start with?
+**Inscription.** A traveler crossed three magic toll gates on the road to the castle. At the first gate his pouch of Star-Coins doubled, then he paid 5 coins. At the second gate his coins doubled again, then he paid 3. At the third gate they doubled once more, then he paid 9. He walked into the castle with exactly 13 Star-Coins. How many did he start with?
 
 **Solution tree.** Forward: 6 → 12 − 5 = 7 → 14 − 3 = 11 → 22 − 9 = 13. Backward: (13 + 9) ÷ 2 = 11; (11 + 3) ÷ 2 = 7; (7 + 5) ÷ 2 = 6. Intermediates in order: 11, 7, 6. Givens: 3, 5, 9, 13.
 
@@ -356,7 +364,7 @@ Four encounters, one heuristic each, every number below checked by hand; the age
 | 1 to 4 | halved-everything | l2 | Your start is tiny. Walk it forward through the first gate only. Does the pouch grow or shrink before the toll is paid? |
 | any other | default | l0 | We know the end of the road and we want the start. Which gate could we undo without guessing at all? |
 
-**Ladder.** l0: Say the goal in your own words: what number are we hunting for, and what do we know for certain? · What happened at a gate, in order? Tell me the two things, first then second. · Which end of the road do we know exactly, the start or the finish? — l1: If you walked this road backwards, which gate would you reach first, and what would you have to undo there? · Think of putting on socks and then shoes. To take them off, which comes off first? · Is there a card in the Deck that starts from the end of a story instead of its beginning? — l2 (with `inverse-chain` in hint mode): Each gate did two things in order, first doubling, then paying. Walking backwards you meet the paying first, so you undo it first by giving the coins back, and only then undo the doubling. Which gate will you undo first, and what do you give back there? — l4 simpler: A tiny road has one gate. Coins double, then she pays 3, and she leaves with 11. How many did she start with? (answer 7; scripted step: give back the 3 she paid, then undo the doubling by splitting into two equal halves) — l3: Start at the castle door with her 13 coins. Undo the third gate: give back the 9 she paid, then split the result in half to undo the doubling. Write that number on the gate, then do the same at the second gate.
+**Ladder.** l0: Grubb says you're bluffing. I prefer a written account. In your own words, what number are we hunting, and what do we know for certain about the journey? · What happened at a gate, in order? Tell me the two things, first then second. · Which end of the road do we know exactly, the start or the finish? — l1: I once tried taking off my socks before my boots. A poor design. When we undo getting dressed, which thing has to come off first? · We could look at the road from the castle door. If you walked backwards from there, which gate would you reach first, and what would you have to undo? · Lemma keeps a card for journeys like this. Is there a card in the Deck that starts from the end of a story instead of its beginning? — l2 (with `inverse-chain` in hint mode): Each gate doubles the coins, then takes a toll. Backwards, we meet the payment first: return those coins, then undo the doubling. Which gate will you undo first, and what do you give back there? — l4 simpler: A tiny road has one gate. Coins double, then she pays 3, and she leaves with 11. How many did he start with? (answer 7; scripted step: give back the 3 she paid, then undo the doubling by splitting into two equal halves) — l3: Set the blueprint at the castle door with 13 coins. Give back the 9 paid at the third gate, then split the pouch in half to undo the doubling. What count belongs on that gate before we move on?
 
 **Mechanic.** `inverse-chain` with gates `[{mul: 2, sub: 5}, {mul: 2, sub: 3}, {mul: 2, sub: 9}]`, `end: 13`. Gates render right to left. At each gate the child first taps the undo order (give back, then un-double) and the engine checks the order; then types the value and the engine checks it against 11, 7, 6. Final value 6.
 
@@ -371,21 +379,21 @@ Four encounters, one heuristic each, every number below checked by hand; the age
 | Part | Wrong conjecture | Tag | Start rung | Scripted probe |
 | --- | --- | --- | --- | --- |
 | a | 2 | possibility-vs-guarantee | l1 | Two grabs could match, but could they also not? Picture a sneaky goblin inside the chest handing you the crystals. What would it hand you to spoil your pair? |
-| a | 3 | off-by-one | l2 | You stopped at the number of colours. Can the goblin still keep every grab a different colour at that point, and what happens on the grab after that? |
+| a | 3 | off-by-one | l2 | You stopped at the number of colours. Can Grubb still keep every grab a different colour at that point, and what happens on the grab after that? |
 | a | 11 to 13 | empty-a-colour | l1 | You planned to grab until a whole colour is gone. Is that needed for one matching pair, or could a pair appear far earlier? |
 | a | any other | default | l0 | What does certain mean here: that a pair is possible, or that a pair cannot be avoided? |
-| b | 4 | reused-part-a | l1 | Four was the number for a pair. This torch wants a bigger club of one colour. How many of each colour could the goblin hand over while still dodging that club? |
-| b | 9 | off-by-one | l2 | You found how many the goblin can hand out while every colour stays below the club size. What must the very next grab do? |
-| b | 11 to 13 | empty-a-colour | l1 | Do you need a whole colour gone, or only enough that the goblin runs out of ways to dodge? |
-| b | any other | default | l0 | Say in your own words what the goblin is trying to avoid this time? |
+| b | 4 | reused-part-a | l1 | Four was the number for a pair. This torch wants a bigger club of one colour. How many of each colour could Grubb hand over while still dodging that club? |
+| b | 9 | off-by-one | l2 | You found how many Grubb can hand out while every colour stays below the club size. What must the very next grab do? |
+| b | 11 to 13 | empty-a-colour | l1 | Do you need a whole colour gone, or only enough that Grubb runs out of ways to dodge? |
+| b | any other | default | l0 | Say in your own words what Grubb is trying to avoid this time? |
 | c | 4 | pattern-transfer | l1 | Same number as the pair torch, but this torch wants two different colours. What is the goblin's best trick now to keep every crystal the same? |
 | c | 2 | possibility-vs-guarantee | l1 | Two grabs might differ, but might they also match? What would the goblin hand you? |
-| c | 12 | off-by-one | l2 | You counted a whole colour. If the goblin hands you every crystal of one colour, what colour is the grab after that? |
-| c | any other | default | l0 | What is the opposite of what the goblin tried in the earlier torches? |
+| c | 12 | off-by-one | l2 | You counted a whole colour. If Grubb hands you every crystal of one colour, what colour is the grab after that? |
+| c | any other | default | l0 | What is the opposite of what Grubb tried in the earlier torches? |
 
-**Ladder for a** (b and c reuse l0 and l1 with the torch named). l0: What exactly must be true for a grab to count as certain, no matter how unlucky we are? · What do we know about the chest, and what is the torch asking us to guarantee? · Is the question asking what could happen, or what must happen? — l1: Imagine a goblin inside the chest choosing which crystals you get, trying to ruin your torch. What is its best trick? · Is there a card in the Deck about the unluckiest case? · Try a chest with only two colours. How long could the goblin keep your grabs all different? — l2 (`pigeonhole-bins`, three labelled bins, threshold 2): Think of one bin per colour. The goblin keeps putting crystals into empty bins to avoid a pair, but once every bin holds one crystal it has nowhere left to hide a new one. How many can it place before it runs out of empty bins, and what does the next one do? — l4 simpler: A tiny chest has 5 red and 5 blue crystals; how many grabs make a matching pair certain? (answer 3; scripted step: the goblin gives you one red, then one blue; whatever comes next matches one of them) — l3: Fill each bin with one crystal; that is the most the goblin can place with no pair. Count the bins, then add one for the grab that must land in a bin that is already full.
+**Ladder for a** (b and c reuse l0 and l1 with the torch named). l0: What exactly must be true for a grab to count as certain, no matter how unlucky we are? · Let's read the torch's demand before opening the chest. What must be true for a grab to count as certain, no matter how unlucky we are? · Grubb would like us to rely on luck. Look at the inscription: is it asking what could happen, or what must happen every single time? — l1: Picture Grubb inside the chest, choosing each crystal to delay our torch. What would he hand you on each grab to keep a pair from appearing? · Lemma has a card for a day when luck refuses to help. Which card in the Deck could help us think about the unluckiest case? · Let's try a chest small enough for my workbench, with only two colours. How long could Grubb keep every crystal you grab a different colour? — l2 (`pigeonhole-bins`, three labelled bins, threshold 2): A bin for each colour gives us a place to keep watch. Grubb uses empty bins to avoid a pair. Once every bin holds one crystal, what must the next crystal do? — l4 simpler: A tiny chest has 5 red and 5 blue crystals; how many grabs make a matching pair certain? (answer 3; scripted step: the goblin gives you one red, then one blue; whatever comes next matches one of them) — l3: Put one crystal in each bin on the blueprint, leaving Grubb no empty bin to choose. What happens when the next crystal has to join an occupied bin?
 
-**Ladder differences for b and c.** b/l2: The goblin wants no bin to reach the club size, so it fills every bin to one below the club size. When all bins are filled that way, where does the next crystal go? b/l4: tiny chest of 5 red and 5 blue; how many grabs make three of one colour certain? (5) b/l3: Fill each bin to one less than the club size, count all the crystals, then add one for the grab that must complete a club. c/l2: The goblin's trick is now the opposite: it hands you the same colour for as long as it can. How long can that last, and what must the next grab be? c/l4: tiny chest of 5 red and 5 blue; how many grabs make two different colours certain? (6) c/l3: Give the goblin every crystal of one colour, count them, then add one.
+**Ladder differences for b and c.** b/l2: Grubb fills each bin one below the club size so no bin reaches the goal. Once every bin is filled that way, where can the next crystal go? b/l4: tiny chest of 5 red and 5 blue; how many grabs make three of one colour certain? (5) b/l3: On the blueprint, fill each bin until it is one crystal short of four. Then let Grubb choose a bin for a final grab. What does that grab force to happen? c/l2: The goblin's trick is now the opposite: it hands you the same colour for as long as it can. How long can that last, and what must the next grab be? c/l4: tiny chest of 5 red and 5 blue; how many grabs make two different colours certain? (6) c/l3: Give the goblin every crystal of one colour, count them, then add one.
 
 **Mechanic.** `goblin-bins` with `bins: 3`, `perBin: 12`, target `{same: 2}` for a, `{same: 4}` for b, `{different: true}` for c. The child plays the goblin: drags crystals into bins to build the longest grab sequence that still dodges the torch. The engine accepts the layout only when it is maximal (a: one per bin; b: three per bin; c: twelve in one bin) and then opens the number field for the final answer, which must equal the layout count plus one.
 
@@ -404,7 +412,7 @@ Four encounters, one heuristic each, every number below checked by hand; the age
 | 33 | divided-by-rows | l1 | Where did your number come from? Look at the seam where the standing shields meet the lying ones: what does that shared line tell you about a long side and a short side? |
 | any other | default | l0 | Which lengths do we know as numbers, and which do we know only as a relationship between shapes? |
 
-**Ladder.** l0: What do we know as a number, and what do we know only as a shape fact? · Where do the standing shields touch the lying ones, and what is special about that line? · What is the question asking for, the walk around the courtyard or around one shield? — l1: Is there a card in the Deck about something the two rows share? · Without numbers, how many short sides cover the same length as how many long sides along the middle seam? · Could you invent a small unit that measures both a short side and a long side exactly? — l2 (`seam-grid` in hint mode with the seam highlighted): Along the middle seam, the short sides of the standing shields and the long sides of the lying shields cover the very same length. Choose a small unit so both come out whole: a short side of two units and a long side of three units fits. Then count the outside of the courtyard in units. How many units is the whole walk around? — l4 simpler: Two identical squares side by side make a rectangle whose outside walk is 36 cubits. How far is it around one square? (answer 24; scripted step: count how many square sides lie on the outside of the rectangle, then share the 36 cubits among them) — l3: Count the outside walk in units: across the top, across the bottom, and down each side, which is a long side plus a short side. Then find how many cubits one unit is worth, and multiply by the units around one shield.
+**Ladder.** l0: Boots ready, notebook open. Before we trace any edges, are we looking for the walk around the whole courtyard or the walk around a single stone shield? · My blueprint has room for measurements and for things we know from the arrangement. What does the inscription tell us as a number, and what does the shape tell us? · The Stonemason set these shields edge to edge. Where do the standing shields touch the lying ones, and what can we say about that line? — l1: I'll hold the blueprint still. At the place where the standing shields meet the flat shields, what does the shared seam tell us about their sides? · Lemma is sorting the Deck beside the blueprint. Is there a card that could help us look at something the rows of shields share? · Could you invent a small unit that measures both a short side and a long side exactly? — l2 (`seam-grid` in hint mode with the seam highlighted): Along the middle seam, the short sides of the standing shields and the long sides of the lying shields cover the very same length. Choose a small unit so both come out whole: a short side of two units and a long side of three units fits. Then count the outside of the courtyard in units. How many units is the whole walk around? — l4 simpler: Two identical squares side by side make a rectangle whose outside walk is 36 cubits. How far is it around one square? (answer 24; scripted step: count how many square sides lie on the outside of the rectangle, then share the 36 cubits among them) — l3: Trace the outer border in units across the top, bottom and sides. Use its length to find the cubits in a unit. What distance does that give for the walk around a single shield?
 
 **Mechanic.** `seam-grid` with `relation: {shortCount: 3, longCount: 2}`, `outerPerimeter: 66`. Steps the engine checks in order: the child sets unit lengths for short and long sides (accepted when 3 × short = 2 × long); counts the outside walk in units (22 for the 2/3 pair, scaled for others); derives cubits per unit (66 ÷ units); enters the shield's walk in cubits. `finalValue` is 30 whatever unit pair was chosen.
 
@@ -422,7 +430,7 @@ Four encounters, one heuristic each, every number below checked by hand; the age
 | 19 or 22 | missed-a-guardian | l1 | Which guardian appears in both clues, and does your sum include every guardian? |
 | any other | default | l0 | What kind of number is a rune, and which guardian is named in both clues? |
 
-**Ladder.** l0: What is special about a prime rune: in how many ways can it be made by multiplying? · Which guardian's rune shows up in both clues? · What are we asked for at the end, a product or a sum? — l1: Is there a Deck card about something the clues share? · If one rune sits inside both products, what must it be a factor of? · Could you break each clue number into prime pieces and compare the pieces? — l2 (`factor-tree` twice, roots 34 and 85, leaves empty): Kimmy stands in both clues, so Kimmy's rune divides both 34 and 85. Break each of those into prime factors and look for the factor they share. Which prime appears in both lists? — l4 simpler: A pair of runes multiplies to 21; the second rune and a third multiply to 77; which rune is shared? (answer 7; scripted step: split 21 into primes and 77 into primes; the one in both lists is shared) — l3: Split 34 into a pair of primes and 85 into a pair of primes. Circle the prime that appears in both pairs: that is Kimmy. The remaining primes are Jimmy and Timmy. Add all three.
+**Ladder.** l0: The guardians have handed us clues, not their runes. What kind of number is a prime rune, and which guardian is named in both clues? · Which guardian's rune shows up in both clues? · My notebook has a space for what the portcullis wants. At the end of this puzzle, are we being asked for a product or a sum? — l1: Lemma has brought the Deck up to the arch. Which card might help us find something shared between the clue numbers written there? · Keep both clues in view on the blueprint. If a rune sits inside both products, what must it be a factor of? · We can inspect the clues like parts on a workbench. Could you break each clue number into prime pieces and compare the pieces? — l2 (`factor-tree` twice, roots 34 and 85, leaves empty): Kimmy stands in both clues, so Kimmy's rune divides both 34 and 85. Break each of those into prime factors and look for the factor they share. Which prime appears in both lists? — l4 simpler: A pair of runes multiplies to 21; the second rune and a third multiply to 77; which rune is shared? (answer 7; scripted step: split 21 into primes and 77 into primes; the one in both lists is shared) — l3: Find the prime factor shared by 34 and 85 for Kimmy, then the remaining prime factors for Jimmy and Timmy. What do all three runes give when combined?
 
 **Mechanic.** `factor-dials` with `products: [{left: Jimmy, right: Kimmy, value: 34}, {left: Kimmy, right: Timmy, value: 85}]`. The child fills the leaves of both factor trees (engine checks primality and product), drags the shared leaf onto Kimmy, the others onto Jimmy and Timmy (engine checks both products), then enters the sum.
 
@@ -453,23 +461,23 @@ The shape every encounter file takes, shown as a JS literal for readability (the
       forbidden: [3, 4],
       misconceptions: [
         { match: 2, tag: 'possibility-vs-guarantee', startLevel: 1, probe: 'Two grabs could match, but could they also not? Picture a sneaky goblin inside the chest handing you the crystals. What would it hand you to spoil your pair?' },
-        { match: 3, tag: 'off-by-one', startLevel: 2, probe: 'You stopped at the number of colours. Can the goblin still keep every grab a different colour at that point, and what happens on the grab after that?' },
+        { match: 3, tag: 'off-by-one', startLevel: 2, probe: 'You stopped at the number of colours. Can Grubb still keep every grab a different colour at that point, and what happens on the grab after that?' },
         { match: { min: 11, max: 13 }, tag: 'empty-a-colour', startLevel: 1, probe: 'You planned to grab until a whole colour is gone. Is that needed for one matching pair, or could a pair appear far earlier?' },
         { match: 'any-wrong', tag: 'default', startLevel: 0, probe: 'What does certain mean here: that a pair is possible, or that a pair cannot be avoided?' }
       ],
       ladder: {
         l0: [
           'What exactly must be true for a grab to count as certain, no matter how unlucky we are?',
-          'What do we know about the chest, and what is the torch asking us to guarantee?',
-          'Is the question asking what could happen, or what must happen?'
+          'Let's read the torch's demand before opening the chest. What must be true for a grab to count as certain, no matter how unlucky we are?',
+          'Grubb would like us to rely on luck. Look at the inscription: is it asking what could happen, or what must happen every single time?'
         ],
         l1: [
-          'Imagine a goblin inside the chest choosing which crystals you get, trying to ruin your torch. What is its best trick?',
-          'Is there a card in the Deck about the unluckiest case?',
-          'Try a chest with only two colours. How long could the goblin keep your grabs all different?'
+          'Picture Grubb inside the chest, choosing each crystal to delay our torch. What would he hand you on each grab to keep a pair from appearing?',
+          'Lemma has a card for a day when luck refuses to help. Which card in the Deck could help us think about the unluckiest case?',
+          'Let's try a chest small enough for my workbench, with only two colours. How long could Grubb keep every crystal you grab a different colour?'
         ],
         l2: {
-          text: 'Think of one bin per colour. The goblin keeps putting crystals into empty bins to avoid a pair, but once every bin holds one crystal it has nowhere left to hide a new one. How many can it place before it runs out of empty bins, and what does the next one do?',
+          text: 'A bin for each colour gives us a place to keep watch. Grubb uses empty bins to avoid a pair. Once every bin holds one crystal, what must the next crystal do?',
           diagram: { component: 'pigeonhole-bins', params: { bins: 3, labels: ['ruby', 'sapphire', 'emerald'], threshold: 2 } }
         },
         l4: {
@@ -478,7 +486,7 @@ The shape every encounter file takes, shown as a JS literal for readability (the
           l3: 'The goblin gives you one red, then one blue. Whatever comes next matches one of them. Count the grabs.'
         },
         l3: {
-          text: 'Fill each bin with one crystal; that is the most the goblin can place with no pair. Count the bins, then add one for the grab that must land in a bin that is already full.',
+          text: 'Put one crystal in each bin on the blueprint, leaving Grubb no empty bin to choose. What happens when the next crystal has to join an occupied bin?',
           diagram: { component: 'pigeonhole-bins', params: { bins: 3, labels: ['ruby', 'sapphire', 'emerald'], threshold: 2 } }
         }
       },

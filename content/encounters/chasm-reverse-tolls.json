@@ -12,13 +12,13 @@
     "arrival": "A sheer canyon cuts across the road. Three stone gates float above the mist, each glowing with an ancient toll balance. The bridge only appears if you know how many coins to set out with.",
     "sealed": "The third gate swings open with a deep chime. The stone bridge locks into place, the mist clears, and the path to the alchemist’s vault lies open."
   },
-  "inscription": "A traveler crossed three magic toll gates on the road to the castle. At the first gate her pouch of Star-Coins doubled, then she paid 5 coins. At the second gate her coins doubled again, then she paid 3. At the third gate they doubled once more, then she paid 9. She walked into the castle with exactly 13 Star-Coins. How many did she start with?",
+  "inscription": "A traveler crossed three magic toll gates on the road to the castle. At the first gate his pouch of Star-Coins doubled, then he paid 5 coins. At the second gate his coins doubled again, then he paid 3. At the third gate they doubled once more, then he paid 9. He walked into the castle with exactly 13 Star-Coins. How many did he start with?",
   "cards": ["work-backwards"],
   "givens": [3, 5, 9, 13],
   "parts": [
     {
       "id": "a",
-      "prompt": "Find how many Star-Coins the traveler had in her pouch before crossing the first gate.",
+      "prompt": "Find how many Star-Coins the traveler had in his pouch before crossing the first gate.",
       "answer": { "type": "integer", "value": 6 },
       "intermediates": [
         { "id": "after-gate-2", "value": 11, "label": "coins entering gate 3: (13 + 9) / 2" },
@@ -54,17 +54,17 @@
       ],
       "ladder": {
         "l0": [
-          "Say the goal in your own words: what number are we hunting for, and what do we know for certain?",
-          "Tell me the story of a single gate in order: what happened first, and what happened second?",
-          "Which end of the road do we know for certain, the start or the finish?"
+          "Grubb says you're bluffing. I prefer a written account. In your own words, what number are we hunting, and what do we know for certain about the journey?",
+          "My gears work in order; these gates have an order too. Tell me the story of a single gate: what happened first, and what happened second?",
+          "Before we set off, let's mark what the inscription actually tells us. Which end of the road do we know for certain, the start or the finish?"
         ],
         "l1": [
-          "If you walked this road backwards, which gate would you reach first, and what would you have to undo there?",
-          "Think of putting on socks and then shoes. To take them off, which comes off first?",
-          "Is there a card in the Deck that starts from the end of a story instead of its beginning?"
+          "I once tried taking off my socks before my boots. A poor design. When we undo getting dressed, which thing has to come off first?",
+          "We could look at the road from the castle door. If you walked backwards from there, which gate would you reach first, and what would you have to undo?",
+          "Lemma keeps a card for journeys like this. Is there a card in the Deck that starts from the end of a story instead of its beginning?"
         ],
         "l2": {
-          "text": "Each gate did two things in order, first doubling, then paying. Walking backwards you meet the paying first, so you undo it first by giving the coins back, and only then undo the doubling. Which gate will you undo first, and what do you give back there?",
+          "text": "Each gate doubles the coins, then takes a toll. Backwards, we meet the payment first: return those coins, then undo the doubling. Which gate will you undo first, and what do you give back there?",
           "diagram": {
             "component": "inverse-chain",
             "params": {
@@ -78,12 +78,12 @@
           }
         },
         "l4": {
-          "statement": "A tiny road has one gate. Coins double, then she pays 3, and she leaves with 11. How many did she start with?",
+          "statement": "A tiny road has one gate. Coins double, then he pays 3, and he leaves with 11. How many did he start with?",
           "answer": { "type": "integer", "value": 7 },
-          "l3": "Give back the 3 coins she paid, then undo the doubling by splitting into equal halves. Count the start."
+          "l3": "Give back the 3 coins he paid, then undo the doubling by splitting into equal halves. Count the start."
         },
         "l3": {
-          "text": "Start at the castle door with her 13 coins. Undo the third gate: give back the 9 she paid, then split the result in half to undo the doubling. Write that number on the gate, then do the same at the second gate.",
+          "text": "Set the blueprint at the castle door with 13 coins. Give back the 9 paid at the third gate, then split the pouch in half to undo the doubling. What count belongs on that gate before we move on?",
           "diagram": {
             "component": "inverse-chain",
             "params": {
@@ -108,8 +108,8 @@
       },
       "chips": {
         "understand": [
-          "Find how many coins she paid in total",
-          "Find the coins she had at the start before any gates",
+          "Find how many coins he paid in total",
+          "Find the coins he had at the start before any gates",
           "Find what happened at the third gate",
           "I am not sure where to begin"
         ],
@@ -124,12 +124,12 @@
   "lookBack": [
     {
       "kind": "verify",
-      "prompt": "Run your number forward through all three gates. What does she hold at the castle door?",
+      "prompt": "Run your number forward through all three gates. What does he hold at the castle door?",
       "check": { "type": "integer", "value": 13 }
     },
     {
       "kind": "perturb",
-      "prompt": "Suppose every gate doubled her coins and then took 6. Which starting number walks out with the same count it walked in with?",
+      "prompt": "Suppose every gate doubled his coins and then took 6. Which starting number walks out with the same count it walked in with?",
       "check": { "type": "integer", "value": 6 }
     },
     {

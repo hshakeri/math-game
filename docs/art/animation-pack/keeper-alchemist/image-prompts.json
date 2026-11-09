@@ -1,0 +1,46 @@
+{
+  "created": "2026-11-09",
+  "tool": "built-in image_gen.imagegen",
+  "requested_aspect_ratio": "16:9",
+  "native_dimensions": {
+    "width": 1672,
+    "height": 941,
+    "source_files": [
+      "first.png",
+      "last.png"
+    ],
+    "verified_with": "sips -g pixelWidth -g pixelHeight"
+  },
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: illustration-story. Asset type: FIRST endpoint of a three-second one-off neutral gatekeeper arrival introduction. The attached cast sheet is identity and rendering-style reference only. Full body, all props and comfortable safe margins in a landscape 16:9 image. Fixed front-threequarter orthographic-style camera at character height. Quiet simple mossy blue-gray stone courtyard, with a FULLY CLOSED gate centered behind the character. Detailed illustrated 16-bit pixel art matching the reference, crisp visible pixel clusters and refined dark outlines, muted parchment/brass/navy/sage palette, friendly age-nine design. No movement, no hero, no other cast, no text, letters, digits, equations, diagrams, puzzle clues, rewards, particles, motion lines, captions, audio notation, border or watermark. This introduction occurs before player interaction and has no correctness or outcome meaning. Opaque background. Isolate the exact Alchemist in the lower row of the reference, second from left: human lantern keeper with a calm young face, brown hair, deep plum-purple hood and flowing cloak with restrained muted gold edging, cream undershirt, dark trousers, brown boots, belt and leather utility pouch. Match the reference costume and friendly proportions closely. The Alchemist stands neutrally facing slightly toward viewer's right, one hand holding the SAME warm brass lantern at HIP HEIGHT, elbow relaxed and arm down. The lantern is lit with a small steady warm amber light, without dramatic radiance or magical effects. Other hand rests naturally; do not include the flask or additional items. Keep the closed gate and all surroundings dimly but clearly visible, with even quiet daylight. Leave open space from hip to chest for later lifting the lantern without changing camera or stance.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-7f591244-1065-4169-ab6a-37374be9a61a.png",
+    "refinement": {
+      "prompt": "Use case: precise-object-edit. EDIT this exact image with one small background cleanup. Remove ONLY the two hanging navy wall banners with potion symbols, including their rods, one on each side of the gate. Fill those two regions with ordinary blue-gray stone masonry matching the adjacent wall's exact pixel grid, shading, perspective, moss and lighting. No replacement banners, signage, symbols, emblems or props. Preserve absolutely everything else: the Alchemist's exact body, pose, face, costume, lit lantern at hip height, every pixel of the closed gate, camera, canvas dimensions, foreground, colors and detailed illustrated 16-bit pixel style. This remains the first endpoint before any motion; DO NOT raise the lantern or alter the character. The result is the same quiet courtyard with blank walls and no symbols.",
+      "referenced_image_paths": [
+        "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/keeper-alchemist/first.png"
+      ],
+      "reference_file_at_generation": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-7f591244-1065-4169-ab6a-37374be9a61a.png",
+      "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-f7851089-29fa-4809-a2ad-5fe56fd888c4.png",
+      "reason": "Remove invented symbol-bearing banners before creating the paired endpoint."
+    }
+  },
+  "last": {
+    "file": "last.png",
+    "prompt": "Use case: precise-object-edit. Asset type: LAST endpoint of a three-second one-off neutral gatekeeper arrival introduction. EDIT this exact first image. Preserve original canvas size and landscape 16:9 framing, camera position and perspective, the whole courtyard, blank stone walls, moss, FULLY CLOSED gate, overall lighting, palette, crisp pixel grid and detailed illustrated 16-bit art. Preserve the Alchemist's identity, facial expression, plum hood and cloak, gold edging, cream clothes, pouch, other arm, body and feet in exactly the same positions. Change ONLY the lantern-holding forearm and hand pose: bend the elbow and lift the SAME lit brass lantern gently from hip height to CHEST HEIGHT. It remains upright and the same size, with the same metalwork and amber flame. Keep its luminous intensity and the overall scene brightness exactly constant: no flash, increase in glow, glowing eyes, new pools of light, particle effects or lighting cue. The face stays neutrally watchful, no approving nod or smile change. No gate movement, no interaction with a puzzle or answer, no additional props. No wall banners, inscriptions, symbols, equations, digits, text, emblems, rewards, salutes, celebration, motion lines, sound notation, borders or watermarks. Single still ending pose with no motion blur or ghosted first position. This is solely an arrival introduction before any player idea, independent of correctness and outcomes.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/keeper-alchemist/first.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-94fc32bf-3aab-484e-95fb-5e8fd7c3d4cb.png"
+  },
+  "review": {
+    "visually_inspected": true,
+    "notes": "Selected endpoints preserve the detailed concept identity, full-body framing and quiet closed-gate courtyard. Only the intended neutral introduction pose changes. No audio, rendered text, digits, equations or new puzzle markings.",
+    "runtime_approved": false
+  }
+}

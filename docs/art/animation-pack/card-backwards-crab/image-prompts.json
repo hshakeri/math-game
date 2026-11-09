@@ -1,0 +1,57 @@
+{
+  "clip": "card-backwards-crab",
+  "created_date": "2026-11-09",
+  "generation_tool": "built-in image_gen.imagegen",
+  "model": "Not exposed by built-in tool",
+  "transparent_background": false,
+  "dimensions": {
+    "width": 1672,
+    "height": 941,
+    "source_files": [
+      "first.png",
+      "last.png"
+    ],
+    "verification": "PNG IHDR header"
+  },
+  "first": {
+    "prompt": "Use case: precise-object-edit.\nReframe this collectible card scene from farther away. The current card is too tall in the frame. Preserve the exact crab artwork, its slightly right-of-center placement within the card, the card's gold border and cream texture, proportions, and front-on camera angle, but make the WHOLE CARD including its illustration uniformly smaller in the frame.\nTarget composition: opaque landscape image of the same dimensions. Card outer rectangle centered at frame x=50%, y=50%; its top at y=20%, bottom at y=80%, so its height is exactly about 60% of the whole frame. Preserve its portrait aspect ratio. At 1672 by 941, its approximate bounding box should be x=612 to1060, y=188 to753. Leave large quiet margins of mossy stone wall above and beside it, and blue-gray workbench below it. The bottom of the card stands on the workbench surface. Keep the stone backdrop dim and the workbench quiet. All corners visible.\nNo new marks or creatures. No text, words, digits, symbols, equations, labels, names, badges, sparkles, effects or other cards. Only change the framing/scale of the card as described; keep its detailed pixel illustration style, palette and lighting.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-backwards-crab/first-draft-v1.png"
+    ],
+    "output": "first.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-ea178fb8-b3c4-4871-8910-56cb263acd97.png"
+  },
+  "last": {
+    "prompt": "Use case: precise-object-edit.\nAsset type: last endpoint of a three-second backward-scuttle card inspection animation.\nInput image 1 is the exact FIRST frame. Preserve the entire card, its position/size/aspect, gold border, corners, blank parchment areas, stone wall, moss, workbench, lighting, camera and frame dimensions unchanged.\nChange ONLY the crab illustration INSIDE the card: move the same crab a SHORT distance LEFT within the card, approximately forty-five image pixels, as if it scuttled backward and settled. Keep its original front-three-quarter orientation, shell shape, terra-cotta colors, raised claw pose, eye-stalk orientation and size. It must NOT turn around. Preserve exactly the same pair of claws and six walking legs; adjust leg placements only enough to finish a small scuttle. Maintain its same vertical ground line and scale. It remains fully inside the cream card face with room from the border. Move its tiny illustrated ground shadow with it.\nNo extra limbs, duplicate crab, motion trails, arrows, text, digits, symbols, markers, diagrams, effects or sparkle. No celebration or startled expression. This is a quiet voluntary card inspection, not a correctness signal. Keep the detailed pixel illustration consistent with the input.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/card-backwards-crab/first.png"
+    ],
+    "output": "last.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-b35358d7-4854-48fe-8162-bf25c58d548c.png"
+  },
+  "draft": {
+    "prompt": "Use case: illustration-story.\nAsset type: animation endpoint frame for a collectible creature card in Keybreakers.\nInput image 1 is the selected DETAILED illustrated cast style reference: match its refined 16-bit inspired pixel illustration, stepped edges, rich but restrained shading, warm parchment, muted moss, weathered brown and antique gold. Input image 2 is CREATURE MOTIF ONLY: use the appropriate little creature concept but DO NOT copy its chunky low-resolution block style or its sheet layout.\nOutput one landscape 16:9 opaque PNG frame. Composition: one large portrait-orientation parchment collectible card stands upright on a quiet blue-gray wooden workbench in front of a dim mossy stone wall. Fixed straight-on eye-level camera, no perspective tilt. Card centered horizontally, occupies approximately sixty percent of image height, with its four corners fully visible. Thin antique-gold ornamental edge, understated corner flourishes only, warm cream card face, generous empty space around the creature. Top and bottom of card are unmarked parchment. No nameplate, badge, logo, text, digits, runes, letters, signs, math, diagrams, stars or decorative emblems. The same simple scene will be maintained for a matching final frame.\nThe creature is a detailed pixel illustration WITHIN the cream card face, full body, never physically outside its border and never obscuring its gold edge. No human hands, extra cast, loose objects on the workbench, other cards, sparkle, particles, glow, UI, border around the whole frame or watermark. Nothing about the card indicates a right or wrong strategy. Quiet exploratory mood for a nine-year-old.\nCreature and first pose: one terra-cotta crab with a rounded warm rust shell, a pair of raised claws, exactly six small walking legs, and two expressive eye stalks. Small gold-brown shadow details, no costume or face accessories. The crab is positioned slightly RIGHT of center inside the card, leaving enough cream space for a short move left. Front-three-quarter orientation facing slightly to the right; its body and eyes hold that orientation. Resting walking legs, raised claws held gently, no alarm or celebration. The crab illustration fills about half the card's usable width and sits in its lower-middle area. Its entire body including all legs and both claws stays comfortably inside the border.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png",
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/runtime-cast-preview.png"
+    ],
+    "output": "first-draft-v1.png",
+    "source_generation_path": "/Users/hs9hd/.codex/generated_images/01a1bfd6-e366-77e0-a8ba-e35a06351300/exec-0483b68e-0aa8-4cda-b603-8dbbb3261fb0.png",
+    "reason": "The first generation made the card too tall in the frame; a built-in edit reduced its scale and supplied the canonical card template.",
+    "include_in_endpoint_pack": false
+  },
+  "qa": {
+    "inspected": true,
+    "no_text_or_digits": true,
+    "no_puzzle_diagrams": true,
+    "creature_inside_card": true,
+    "card_corners_visible": true,
+    "notes": [
+      "Dimensions and RGB color type were read from each final PNG IHDR header; no alpha channel is present.",
+      "No cropping, resizing, compositing, or external raster editing was used.",
+      "Card, camera, and scene anchors remain visually fixed; generated edits introduce small parchment and background texture variations."
+    ],
+    "motion": "Same crab scuttles a short distance left, with two claws and six walking legs, then settles. Orientation is preserved."
+  },
+  "runtime_status": "Design-only endpoint frames; not added to runtime assets, manifest, or videos."
+}

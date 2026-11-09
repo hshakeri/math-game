@@ -2,279 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#f7f1e3">
-  <meta name="description" content="Castle of Theorems — Pólya-style mathematical encounters for home play">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#18262b">
+  <meta name="description" content="Keybreakers: The Goblin’s Gate. Explore the map, meet its keepers, and find a way through.">
   <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦉</text></svg>">
-  <title>Castle of Theorems</title>
+  <title>Keybreakers · The Goblin’s Gate</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="world-map.css">
+  <link rel="stylesheet" href="calculation-tools.css">
+  <link rel="stylesheet" href="adventure.css">
 </head>
 <body class="parchment-theme">
-  <!-- Screen Router Root -->
+  <a class="skip-link" href="#app-root">Skip to adventure</a>
   <main id="app-root">
-
-    <!-- 1. MAP SCREEN (#map) -->
-    <section id="screen-map" class="screen" aria-label="Castle Map">
-      <header class="map-header">
-        <h1 class="game-title">Castle of Theorems</h1>
-        <p class="chapter-badge">Chapter 1: The Outer Road</p>
-        <nav class="map-nav">
-          <a href="#codex" class="nav-btn codex-btn" aria-label="Open Royal Codex">📜 Codex</a>
-          <a href="/parent.html" class="nav-btn parent-link" aria-label="Parent Dashboard">🔒 Parent</a>
-        </nav>
-      </header>
-
-      <div class="map-canvas-container">
-        <!-- Pure SVG Castle Road Map -->
-        <svg id="castle-map-svg" viewBox="0 0 900 600" role="img" aria-label="Interactive map showing four encounter nodes on the road to the castle">
-          <!-- Road Path -->
-          <path d="M 120 500 Q 280 460 380 340 T 640 220 T 780 100" class="road-path" />
-          
-          <!-- Node 1: Reverse Tolls -->
-          <g class="map-node" id="map-node-1" data-node="ch1-n1-reverse-tolls" tabindex="0" role="button" aria-label="Encounter 1: Chasm of Reverse Tolls">
-            <circle cx="120" cy="500" r="44" class="node-circle" />
-            <text x="120" y="506" class="node-num">I</text>
-            <text x="120" y="565" class="node-label">Reverse Tolls</text>
-          </g>
-
-          <!-- Node 2: Dark Vault -->
-          <g class="map-node" id="map-node-2" data-node="ch1-n2-dark-vault" tabindex="0" role="button" aria-label="Encounter 2: Alchemist's Dark Vault">
-            <circle cx="380" cy="340" r="44" class="node-circle" />
-            <text x="380" y="346" class="node-num">II</text>
-            <text x="380" y="405" class="node-label">Dark Vault</text>
-          </g>
-
-          <!-- Node 3: Five Shields -->
-          <g class="map-node" id="map-node-3" data-node="ch1-n3-five-shields" tabindex="0" role="button" aria-label="Encounter 3: Courtyard of Five Shields">
-            <circle cx="640" cy="220" r="44" class="node-circle" />
-            <text x="640" y="226" class="node-num">III</text>
-            <text x="640" y="285" class="node-label">Five Shields</text>
-          </g>
-
-          <!-- Node 4: Castle Keep -->
-          <g class="map-node" id="map-node-4" data-node="ch1-n4-castle-keep" tabindex="0" role="button" aria-label="Encounter 4: Castle Keep Portcullis">
-            <circle cx="780" cy="100" r="44" class="node-circle" />
-            <text x="780" y="106" class="node-num">IV</text>
-            <text x="780" y="165" class="node-label">Castle Keep</text>
-          </g>
-        </svg>
-      </div>
+    <section id="screen-map" class="screen" aria-label="The road to the Castle of Theorems">
+      <header class="simple-map-header"><div><span class="wordmark">KEYBREAKERS</span><h1>The Goblin’s Gate</h1></div><nav class="quiet-links" aria-label="For adults"><a href="/parent">For grown-ups</a><a href="https://github.com/hshakeri/math-game" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav></header>
+      <div id="world-map-mount"></div>
     </section>
-
-    <!-- 2. ENCOUNTER SCREEN (#encounter) -->
-    <section id="screen-encounter" class="screen hidden" aria-label="Active Mathematical Encounter">
-      <div id="encounter-backdrop" class="encounter-backdrop" aria-hidden="true"></div>
-      <!-- Top Navigation & Status -->
-      <header class="encounter-header">
-        <a href="#map" class="btn-touch back-btn" aria-label="Return to Map">← Road</a>
-        <h2 id="encounter-title" class="encounter-title">The Encounter</h2>
-        <button id="btn-toggle-deck" class="btn-touch deck-toggle-btn locked" aria-label="Heuristic Deck (Locked)">
-          🎴 Deck <span id="deck-lock-badge" class="badge">🔒</span>
-        </button>
-      </header>
-
-      <!-- Main Encounter Layout -->
-      <div class="encounter-body">
-        <!-- Story / Inscription Panel -->
-        <article class="inscription-card" aria-label="Stone Inscription">
-          <div class="card-header">
-            <span class="card-label">Stone Inscription</span>
-            <button id="btn-audio-toggle" class="btn-icon" aria-label="Toggle Golden Seal chime sound" title="Toggle Golden Seal chime sound">🔔</button>
-          </div>
-          <p id="inscription-text" class="inscription-content"></p>
-          <div id="part-prompt-banner" class="part-prompt hidden"></div>
-        </article>
-
-        <!-- Owl Speech Bubble (Archimedes) -->
-        <section class="owl-dialogue-section" aria-label="Archimedes the Owl">
-          <div class="owl-avatar-container">
-            <svg class="owl-avatar-svg" viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="Archimedes the Owl">
-              <circle cx="40" cy="40" r="36" fill="#e8d8b8" stroke="#8b5a2b" stroke-width="4"/>
-              <!-- Owl Eyes -->
-              <circle cx="28" cy="36" r="12" fill="#fff" stroke="#4a3728" stroke-width="3"/>
-              <circle cx="52" cy="36" r="12" fill="#fff" stroke="#4a3728" stroke-width="3"/>
-              <circle cx="28" cy="36" r="5" fill="#2c2523"/>
-              <circle cx="52" cy="36" r="5" fill="#2c2523"/>
-              <!-- Beak -->
-              <polygon points="40,42 34,50 46,50" fill="#c8963e"/>
-              <!-- Brow -->
-              <path d="M 16 28 Q 28 32 40 28 Q 52 32 64 28" fill="none" stroke="#6e4726" stroke-width="3"/>
-            </svg>
-            <span class="owl-name">Archimedes</span>
-          </div>
-
-          <div id="owl-bubble" class="owl-bubble" tabindex="0" role="status" aria-live="polite" aria-label="Archimedes speech bubble (Tap to complete)">
-            <p id="owl-speech-text" class="owl-text">Greetings, young architect. Read the inscription carefully.</p>
-            <span class="bubble-tap-cue">Tap to read instantly</span>
-          </div>
-        </section>
-
-        <!-- Arrival Panel (Active during Stage: arrive) -->
-        <section id="arrival-panel" class="arrival-panel hidden" aria-label="Arrival Inscription Controls">
-          <div class="arrival-prompt-box">
-            <p class="arrival-guidance">Read the stone inscription above, then approach the portal to begin.</p>
-            <button id="btn-approach-inscription" class="btn-touch btn-primary arrive-btn" aria-label="Approach Inscription and Begin">
-              📜 Approach Inscription
-            </button>
-          </div>
-        </section>
-
-        <!-- Intermediate Part Complete Panel (Stage: sealed with hasMoreParts) -->
-        <section id="part-complete-panel" class="part-complete-panel hidden" role="region" aria-label="Part Complete">
-          <div class="part-complete-card">
-            <h3 id="part-complete-title" class="part-title">Torch Lit!</h3>
-            <p id="part-complete-desc" class="part-desc">You have mastered this chamber. The path opens to the next challenge.</p>
-            <button id="btn-next-part" class="btn-touch btn-primary">Proceed to Next Part</button>
-          </div>
-        </section>
-
-        <!-- Conjecture Slate (Active during Stage: conjecture) -->
-        <section id="conjecture-slate" class="conjecture-slate hidden" aria-label="Conjecture Slate">
-          <h3>State Your Early Conjecture</h3>
-          <p class="conjecture-help">What do you suspect before we begin? (Optional)</p>
-          <div class="conjecture-inputs">
-            <select id="conjecture-stem" class="select-touch">
-              <option value="think">I think...</option>
-              <option value="notice">I notice...</option>
-              <option value="what_if">What if...</option>
-            </select>
-            <input type="text" id="conjecture-value" class="input-touch" placeholder="Your value / idea" />
-            <input type="text" id="conjecture-reason" class="input-touch" placeholder="Because... (at least 3 words)" />
-            <div class="conjecture-actions">
-              <button id="btn-conjecture-submit" class="btn-touch btn-primary">Test Conjecture</button>
-              <button id="btn-conjecture-skip" class="btn-touch btn-secondary">Explore Step by Step</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Interactive Workspace / The Scroll (Blueprint Theme) -->
-        <section id="workspace-scroll" class="workspace-scroll blueprint-theme" aria-label="Interactive Diagram Workspace">
-          <header class="workspace-header">
-            <span class="workspace-title">The Royal Scroll</span>
-            <div id="active-card-pill" class="active-card-pill hidden">
-              Active Heuristic: <span id="active-card-name">None</span>
-            </div>
-          </header>
-
-          <div id="diagram-mount" class="diagram-mount" role="region" aria-label="Mathematical diagram area">
-            <!-- Diagram SVG injected here -->
-            <p id="workspace-placeholder-text" class="workspace-placeholder">
-              Choose a card from the Heuristic Deck during the Plan stage to unlock the blueprint tools.
-            </p>
-          </div>
-        </section>
-
-        <!-- Dialogue History Log (Collapsible) -->
-        <details class="dialogue-history-details">
-          <summary class="history-summary">Previous Words & Steps</summary>
-          <div id="dialogue-history-log" class="history-log" aria-label="Turn history"></div>
-        </details>
-
-        <!-- Look Back Panel (Stage: look_back) -->
-        <section id="look-back-panel" class="look-back-panel hidden" aria-label="Look Back and Reflect">
-          <h3>Look Back: The Master's Examination</h3>
-          <p id="look-back-prompt" class="look-back-prompt"></p>
-          <div id="look-back-options" class="look-back-options"></div>
-        </section>
-
-        <!-- Child Reply Strip & Controls -->
-        <footer class="reply-strip" aria-label="Child response controls">
-          <!-- Chip Suggestions Container -->
-          <div id="chip-container" class="chip-container" role="group" aria-label="Quick response chips"></div>
-
-          <!-- Free-text input row -->
-          <div class="input-row">
-            <input 
-              type="text" 
-              id="child-text-input" 
-              class="input-touch text-field" 
-              maxlength="140" 
-              placeholder="Your thought or question (up to 140 chars)..." 
-              aria-label="Child response text" 
-            />
-            <button id="btn-send-reply" class="btn-touch btn-primary send-btn" aria-label="Send reply">↵ Send</button>
-            <button id="btn-im-stuck" class="btn-touch btn-stuck" aria-label="I'm stuck">I'm stuck</button>
-          </div>
-
-          <!-- Stone Submit Dial (Active during Submit stage) -->
-          <div id="submit-dial-container" class="submit-dial-container hidden">
-            <span class="dial-label">Carve Final Theorem Answer:</span>
-            <input type="number" id="final-answer-input" class="input-touch answer-input" placeholder="Value" />
-            <button id="btn-stone-submit" class="btn-touch btn-stone-dial" aria-label="Submit final answer to stone portal">
-              💎 Submit to Portal
-            </button>
-          </div>
-        </footer>
-      </div>
+    <section id="screen-encounter" class="screen hidden" aria-label="Your adventure">
+      <header class="simple-encounter-header"><a href="#map" class="back-to-map">← Map</a><h1 id="encounter-title">The gate</h1><button id="btn-speech-mode" class="speech-mode" aria-pressed="false">Speech: paced</button></header>
+      <div id="game-notice" class="game-notice hidden" role="status" aria-live="polite"></div>
+      <section class="adventure-stage" aria-label="The story and your next move">
+        <div id="encounter-map-mount"></div>
+        <div id="gate-event" class="map-gate-event"><span id="scene-grubb" aria-hidden="true"></span><strong id="gate-word" aria-hidden="true"></strong><span id="gate-reaction" role="status" aria-live="polite"></span></div>
+        <div class="adventure-dock">
+          <section class="map-conversation" aria-label="Talk it through with Rivet"><div id="rivet-avatar" aria-hidden="true"></div><div id="owl-bubble" class="speech-bubble"><span class="speech-name">RIVET</span><p id="owl-speech-text" class="speech-words" aria-hidden="true"></p><p id="rivet-speech-accessible" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p><button class="speech-control" data-speech="rivet" type="button">Read now</button></div></section>
+          <p id="rivet-thinking" class="rivet-thinking hidden" role="status">Rivet is thinking. You can keep working in My tools.</p>
+          <p id="challenge-goal" class="challenge-goal"></p>
+          <section id="arrival-panel" class="arrival-panel hidden" aria-label="Start exploring"><button id="btn-approach-inscription" class="btn-touch btn-primary">“I’m ready to try.” →</button></section>
+          <section id="conjecture-slate" class="conjecture-slate hidden" aria-label="Tell Grubb your idea"><h3>Have a starting idea?</h3><p class="conjecture-help">Try your idea and explain why, or make a plan with Rivet.</p><div class="conjecture-inputs"><label class="sr-only" for="conjecture-stem">Start your thought</label><select id="conjecture-stem" class="select-touch"><option value="think">I think…</option><option value="notice">I notice…</option><option value="what_if">What if…</option></select><label class="sr-only" for="conjecture-value">Your idea</label><input id="conjecture-value" class="input-touch" placeholder="My idea…" maxlength="140"><label class="sr-only" for="conjecture-reason">Why you think so</label><input id="conjecture-reason" class="input-touch" placeholder="Because… (a few words)" maxlength="140"><div class="conjecture-actions"><button id="btn-conjecture-submit" class="btn-touch btn-primary">“Here’s my hunch.”</button><button id="btn-conjecture-skip" class="btn-touch btn-secondary">“Let’s explore first.”</button></div></div></section>
+          <section id="part-complete-panel" class="part-complete-panel hidden" aria-label="A chamber opens"><h3 id="part-complete-title">A chamber opens.</h3><p id="part-complete-desc">Rivet gathers the tools. There is more to explore inside.</p><button id="btn-next-part" class="btn-touch btn-primary">“Let’s keep going.” →</button></section>
+          <section id="look-back-panel" class="look-back-panel hidden" aria-label="Leave a note for the next Keybreaker"><h3>How did you find your way?</h3><p id="look-back-prompt"></p><div id="look-back-options"></div></section>
+          <footer class="reply-strip" aria-label="Your hero’s words"><div class="hero-speaker"><span id="reply-hero" aria-hidden="true"></span><span><strong id="hero-speaker-name">YOU</strong><small>What do you say?</small></span></div><div id="chip-container" class="chip-container" role="group" aria-label="Choose your hero’s words"></div><div class="input-row"><label class="sr-only" for="child-text-input">Your hero’s words</label><input type="text" id="child-text-input" class="input-touch text-field" maxlength="140" placeholder="I’m thinking…"><button id="btn-send-reply" class="btn-touch btn-primary send-btn" aria-label="Say this">Say it ↵</button></div></footer>
+          <div id="submit-dial-container" class="submit-dial-container hidden"><label for="final-answer-input" class="dial-label">My answer for the gate</label><input type="number" id="final-answer-input" class="input-touch answer-input" placeholder="Value"><button id="btn-stone-submit" class="btn-touch btn-primary">Try the gate →</button></div>
+          <div class="adventure-actions"><button id="btn-im-stuck" class="btn-touch btn-stuck">I'm stuck</button><button id="btn-toggle-deck" class="btn-touch deck-toggle-btn locked" aria-label="Thinking cards">Thinking cards <span id="deck-lock-badge" class="badge">◇</span></button><button id="btn-my-tools" class="btn-touch" aria-expanded="false" aria-controls="tools-drawer">My tools</button></div>
+          <details id="tools-drawer" class="tools-drawer"><summary>My working tools</summary><details id="workspace-details" class="workspace-details"><summary>Try my plan on the diagram</summary><section id="workspace-scroll" class="workspace-scroll blueprint-theme" aria-label="Blueprint workspace"><div id="active-card-pill" class="active-card-pill hidden">On the table: <span id="active-card-name"></span></div><div id="diagram-mount" class="diagram-mount" role="region" aria-label="Interactive blueprint"><p id="workspace-placeholder-text" class="workspace-placeholder">Lemma is sorting the cards.<br>Explore the story and talk it through with Rivet.</p></div><div id="hint-notes"></div><form id="tiny-case-form" class="hidden"><label for="tiny-case-answer">My answer for this smaller puzzle</label><div class="input-row"><input id="tiny-case-answer" class="input-touch" type="number" required><button class="btn-touch btn-primary" type="submit">Try it →</button></div></form></section></details><div id="calculation-mount"></div></details>
+        </div>
+      </section>
     </section>
-
-    <!-- 3. CODEX SCREEN (#codex) -->
-    <section id="screen-codex" class="screen hidden" aria-label="Royal Codex Archive">
-      <header class="codex-header">
-        <a href="#map" class="btn-touch back-btn" aria-label="Return to Map">← Road</a>
-        <h2>The Royal Codex of Theorems</h2>
-      </header>
-      <div id="codex-grid" class="codex-grid">
-        <!-- Rendered dynamically from sealed encounters -->
-      </div>
-    </section>
-
   </main>
-
-  <!-- OVERLAYS -->
-
-  <!-- 4. HEURISTIC DECK OVERLAY -->
-  <aside id="deck-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="The Heuristic Deck">
-    <div class="deck-modal">
-      <header class="deck-modal-header">
-        <h3>The Heuristic Deck</h3>
-        <p class="deck-subtitle">Select a tool to illuminate the problem</p>
-        <button id="btn-close-deck" class="btn-close" aria-label="Close Deck">✕</button>
-      </header>
-      <div id="deck-card-grid" class="deck-card-grid">
-        <!-- 6 Heuristic Cards -->
-      </div>
-    </div>
-  </aside>
-
-  <!-- 5. GOLDEN SEAL OVERLAY -->
-  <aside id="golden-seal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Encounter Complete - Golden Seal Awarded">
-    <div class="seal-modal">
-      <div class="seal-graphic-container">
-        <!-- Pure SVG Golden Seal -->
-        <svg id="golden-seal-svg" viewBox="0 0 200 200" width="180" height="180" class="seal-svg" role="img" aria-label="Golden Seal of the Royal Architect">
-          <defs>
-            <radialGradient id="gold-grad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#fff4b8"/>
-              <stop offset="50%" stop-color="#e5b842"/>
-              <stop offset="100%" stop-color="#996c14"/>
-            </radialGradient>
-            <filter id="seal-shadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#3d2806" flood-opacity="0.4"/>
-            </filter>
-          </defs>
-          <circle cx="100" cy="100" r="88" fill="url(#gold-grad)" filter="url(#seal-shadow)"/>
-          <circle cx="100" cy="100" r="76" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="6,4"/>
-          <circle cx="100" cy="100" r="70" fill="none" stroke="#7a5410" stroke-width="2"/>
-          <!-- Compass Crest -->
-          <path d="M 100 45 L 125 140 L 100 125 L 75 140 Z" fill="#66440c"/>
-          <circle cx="100" cy="45" r="8" fill="#fff"/>
-          <text x="100" y="165" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff" letter-spacing="2">SEALED</text>
-        </svg>
-      </div>
-
-      <h2 id="seal-theorem-title" class="seal-title">Theorem Sealed!</h2>
-      <p id="seal-theorem-name" class="seal-name">The Socks-and-Shoes Rule</p>
-      <p id="seal-theorem-rule" class="seal-rule">To undo a chain of steps, undo the last step first.</p>
-
-      <div class="seal-actions" style="margin-top:20px;">
-        <button id="btn-seal-continue" class="btn-touch btn-primary">Return to the Road</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- PWA & Client Script -->
+  <aside id="deck-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deck-heading"><div class="deck-modal"><header class="deck-modal-header"><div><span class="eyebrow">A SMALL COLLECTION OF BIG IDEAS</span><h2 id="deck-heading">Lemma’s deck.</h2></div><button id="btn-close-deck" class="btn-close" aria-label="Close Deck">×</button></header><div class="still-dialogue lemma-dialogue"><div id="lemma-portrait" class="still-art" aria-hidden="true"></div><div class="speech-bubble"><span class="speech-name">LEMMA</span><p id="lemma-speech-text" class="speech-words" aria-hidden="true"></p><p id="lemma-speech-accessible" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p><button class="speech-control" data-speech="lemma" type="button">Read now</button></div></div><div id="deck-card-grid" class="deck-card-grid"></div></div></aside>
+  <aside id="golden-seal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="seal-theorem-title"><div class="seal-modal"><span class="eyebrow">A WAY TO REMEMBER</span><div id="seal-hero" aria-hidden="true"></div><div class="seal-graphic-container"><svg id="golden-seal-svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Golden Seal"><path fill="#c8963e" d="m60 3 12 9 15 0 6 14 13 7-1 16 9 11-9 12 1 15-14 6-7 13-16-1-11 9-12-9-15 1-6-14-13-7 1-16-9-11 9-12-1-15 14-6 7-13 16 1Z"/><circle cx="60" cy="60" r="36" fill="none" stroke="#62471d" stroke-width="2"/><path d="M46 46h28v28H46zM60 35v50M35 60h50" stroke="#62471d" fill="none" stroke-width="3"/></svg></div><h2 id="seal-theorem-title">The gate is open.</h2><p id="seal-theorem-name" class="seal-name"></p><p id="seal-theorem-rule" class="seal-rule"></p><button id="btn-seal-continue" class="btn-touch btn-primary">Back to the road →</button></div></aside>
   <script type="module" src="app.js"></script>
 </body>
 </html>

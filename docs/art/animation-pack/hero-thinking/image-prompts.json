@@ -1,0 +1,14 @@
+{
+  "tool": "built-in imagegen",
+  "date": "2026-11-09",
+  "reference": "docs/art/keybreakers-cast-concept.png",
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: stylized-concept. Asset type: FIRST FRAME for a short silent Keybreakers character animation, single landscape 16:9 frame, not a sheet. Reference image is the identity and style master: use ONLY the apprentice child hero at its upper left. Preserve exactly the same face, tousled chestnut hair, brass goggles pushed up, teal gold-trimmed long coat, russet scarf, brown shorts and boots, cream shirt, diagonal strap and small leather satchel with blank cards. Preserve detailed crisp clustered pixel illustration, not coarse blocks or smooth 3D. Frame: full body, fixed eye-level three-quarter camera; hero at horizontal center, feet visible with ample room above and all sides, about 60 percent of image height. Background: simple quiet mossy castle courtyard, worn stone ground, blank shadowed stone wall, subdued blue-green and parchment stone palette. Lighting soft and constant, brass accents. Hero stands neutrally with both hands relaxed by sides, lips closed, shoulders relaxed, curious level gaze. No owl or other characters. No seal or medal or celebration. No text, border, logos, digits, symbols, equations, diagrams, readable markings, watermarks. This is a clean animation plate. Keep identity recognizable from reference."
+  },
+  "last": {
+    "file": "last.png",
+    "reference": "first.png",
+    "prompt": "Use case: identity-preserve. Asset type: LAST FRAME paired with the supplied FIRST FRAME. Edit ONLY the hero's right forearm and hand, head angle and eyebrows: lift one hand to rest against the chin in a quiet thinking pose; tilt head very slightly, gaze thoughtful, lips remain closed. Keep the OTHER hand relaxed by the side. Feet, body location, torso height, face identity and proportions, goggles, tousled hair, teal coat and its gold trim, russet scarf, card satchel, camera, framing, light, shadows, pixel-grid and every background pixel unchanged. No new objects, no celebration, no words, numbers, questions, thought symbols or bubbles. Exactly the same image dimensions. Both endpoints must look like adjacent keys from the same locked-camera scene."
+  }
+}

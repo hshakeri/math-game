@@ -1,0 +1,14 @@
+{
+  "clips": 16,
+  "endpoint_files": 32,
+  "new_clips": 10,
+  "new_endpoint_files": 20,
+  "all_pairs_matching_dimensions": true,
+  "rivet_loop_byte_identical": true,
+  "archives": [
+    "docs/art/keybreakers-animation-pack-v2.zip",
+    "docs/art/keybreakers-gatekeepers-and-cards.zip"
+  ],
+  "generation_tool": "built-in imagegen",
+  "video_rendered": false
+}

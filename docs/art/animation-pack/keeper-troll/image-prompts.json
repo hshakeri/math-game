@@ -1,0 +1,37 @@
+{
+  "created": "2026-11-09",
+  "tool": "built-in image_gen.imagegen",
+  "requested_aspect_ratio": "16:9",
+  "native_dimensions": {
+    "width": 1672,
+    "height": 941,
+    "source_files": [
+      "first.png",
+      "last.png"
+    ],
+    "verified_with": "sips -g pixelWidth -g pixelHeight"
+  },
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: illustration-story. Asset type: FIRST endpoint of a three-second one-off arrival introduction for a fantasy game gatekeeper; landscape 16:9. Attached cast sheet is character identity and rendering-style reference. Isolate the exact Toll Troll at the lower left: stocky gray-blue skin, small gentle upward tusks, swept dark hair, pointed ears with brass hoop, kind watchful face, cream work shirt, brown leather apron/vest and straps, muted gold edging, belt, pouch, broad bare-toed feet. He stands alone full body on stone paving before a FULLY CLOSED gate in a quiet mossy courtyard. He holds his same wooden-and-brass abacus at BELLY HEIGHT with both hands, upright and mostly facing the viewer; all beads on every rod are packed together to the same neutral side, no split bead groups and no counting or arithmetic gesture. Hands rest quietly. Head upright in a neutral watchful posture. Fixed front-threequarter orthographic-style camera at character height; full body and all props visible with comfortable safe margins, centered in a landscape 16:9 composition. Simple low-detail courtyard background with closed gate, no signage. Match the exact detailed illustrated 16-bit pixel style of the concept: crisp visible pixel clusters, refined dark outlines, muted parchment/brass/navy/sage palette, friendly age-nine design, neither babyish nor frightening. This is a neutral arrival portrait before any player answer, never a success/failure scene. No other cast, hero, open gate, text, letters, digits, equations, diagrams, puzzle symbols, meaningful bead arrangement, decorative emblems, rewards, particles, motion lines, captions, speech bubbles or audio notation. No border or watermark. Opaque background.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/keybreakers-cast-concept.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-951a3244-e452-4d22-8320-1c0fce8bb241.png"
+  },
+  "last": {
+    "file": "last.png",
+    "prompt": "Use case: precise-object-edit. Asset type: LAST endpoint of a three-second neutral gatekeeper arrival introduction. EDIT this exact first-frame image. Keep the full canvas, fixed camera, perspective, composition, background stonework, moss, lighting, FULLY CLOSED gate, pixel-art style, palette, clothing, body, feet and their locations unchanged. Change only the troll's head angle and hands/abacus pose: he inclines his head slightly toward the viewer with the same neutral friendly face and tilts the same abacus a little forward at belly height as if quietly presenting it. The board stays in the same general place, not raised overhead. Preserve EXACTLY the same abacus rods and bead counts, colors and positions: every row's beads remain fully grouped to the SAME RIGHT SIDE of its rod as in the first image; no bead slides, no split groups, no adding/removing beads, no arithmetic. Preserve fingers and their plausible grip. No other movement, no body repositioning, no change in expression to approval or disapproval, no gate movement. The only action is an introduction before player interaction, independent of answers or outcomes. No hero or additional characters; no words, digits, equations, puzzle clues, emblems, rewards, particles, motion lines, sound notation, borders or watermarks. Single still final pose, no ghosting or motion blur. Preserve landscape 16:9 framing and original dimensions.",
+    "referenced_image_paths": [
+      "/Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/docs/art/animation-pack/keeper-troll/first.png"
+    ],
+    "transparent_background": false,
+    "generated_original": "/Users/hs9hd/.codex/generated_images/01a1bfd6-96d9-71e0-8e20-a3cf9e8c576b/exec-91b54ce0-4f32-446e-93f2-5564a3502b8a.png"
+  },
+  "review": {
+    "visually_inspected": true,
+    "notes": "Selected endpoints preserve the detailed concept identity, full-body framing and quiet closed-gate courtyard. Only the intended neutral introduction pose changes. No audio, rendered text, digits, equations or new puzzle markings.",
+    "runtime_approved": false
+  }
+}

@@ -1,4 +1,5 @@
-# Prompt: Chasm of Reverse Tolls (Node 1)
+# ch1-n1 — pixel art direction
 
-## Direction
-Medieval blueprint drawing of a rocky canyon spanned by floating stone gate arches. Clean iron-gall ink lines on aged parchment cream background with cyan drafting arcs. Muted antique gold accents on mystical rune dials. Absolutely no text or letters in image.
+Chasm of Reverse Tolls: mossy canyon crossing, cut stone gateway and distant hills. Do not illustrate toll arithmetic or render coin counts.
+
+Canonical implementation: `tools/assets/generate.py`; art direction: `tools/assets/style.md`. Locked/open scenes reuse the same integer-grid environment and swap only door tiles. Runtime art contains no text, numbers, puzzle hints or generated-at-play images. Regenerate with `npm run assets`. Parent visual review is required before commit.

@@ -1,0 +1,13 @@
+{
+  "id": "card-odd-even-magpies",
+  "title": "Odd or Even · The Magpies",
+  "proposed_duration_seconds": 3,
+  "loop": false,
+  "motion_prompt": "Use first.png and last.png as exact endpoints. Lock the camera, card, workbench, backdrop, lighting, scale and crisp visible pixel texture. Within the cream cardface, exactly two black-and-white magpies with teal-iridescent feathers gently tilt their heads in opposite directions, inward toward each other, settling into last.png. Keep their separate identities, bodies, tails, feet and shared blank branch fixed. Do not swap birds, add birds, suggest a count or form a pattern. No new props, text, digits, runes, math, diagrams, praise, sparkle, morphing, sound, music or lip sync.",
+  "trigger_restrictions": {
+    "allow": "Only explicit inspection or selection of the Odd or Even card, independent of answer correctness.",
+    "stop": "Play once for that explicit card interaction and hold the last frame; stop when the card closes or another card is chosen.",
+    "forbid": "Never automatically choose a strategy, react to an answer, add counting or pattern cues, or play as a reward."
+  },
+  "duration_note": "Proposed creative specification; not a measured clip length."
+}

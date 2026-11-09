@@ -1,0 +1,14 @@
+{
+  "tool": "built-in imagegen",
+  "date": "2026-11-09",
+  "reference": "docs/art/keybreakers-cast-concept.png",
+  "first": {
+    "file": "first.png",
+    "prompt": "Use case: stylized-concept. Asset type: FIRST FRAME for a short silent Keybreakers Golden Seal reward animation. Use ONLY the apprentice child hero at upper left of supplied cast reference, preserving exact face, chestnut tousled hair, goggles pushed up, teal gold-trimmed coat, russet scarf, brown shorts and boots, card satchel and 16-bit pixel illustration texture. Single landscape 16:9 image, fullbody hero centered at about 60 percent frame height, fixed eye-level three-quarter camera, quiet mossy castle courtyard with an already OPEN doorway in the background and empty sunlit path visible. Hero stands at rest with feet planted, mouth closed, small content expression; right hand holds one plain round antique-gold Seal at waist height in front of torso, left hand relaxed. Seal is a physical unmarked gold disc, no symbols, letters, digits or numerals. Warm muted afternoon light with blue-green shadows, rich parchment and brass tones. No extra characters, text, interface, sparkles, confetti, equations, fantasy particles, logos or border. Entire hero and Seal clearly visible, with room above to raise hand. This is a reusable animation plate."
+  },
+  "last": {
+    "file": "last.png",
+    "reference": "first.png",
+    "prompt": "Use case: identity-preserve. Asset type: LAST FRAME for the same Golden Seal reward animation, edit the supplied FIRST FRAME only. Preserve exact character identity, face structure, wardrobe, hair, goggles, card satchel, framing, camera, lighting, background, open doorway and image dimensions. After one small joyful hop the hero has landed again on the EXACT same floor position. Both feet planted as initially. Right arm now raises the SAME single plain gold Seal up beside and slightly above the head; face has a small satisfied CLOSED-MOUTH smile. Left hand rests lightly at the satchel strap. Scarf settles close to its original pose. No jumping airborne at this endpoint, no bowing, no thumbs up, no new props or duplicate Seal, no confetti, no magic particles, no text or math. Maintain crisp detailed pixel clusters and locked background. This celebration is reserved for earning the Golden Seal."
+  }
+}

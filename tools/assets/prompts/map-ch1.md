@@ -1,4 +1,5 @@
-# Prompt: Chapter 1 World Map
+# map-ch1 — pixel art direction
 
-## Direction
-Cartographic architectural parchment map depicting the Outer Road winding through 4 landmarks. Detailed compass rose, contour elevations in blueprint cyan, ornate border. No text in image.
+The outer road: winding path through the hills toward the Castle of Theorems. No words or numeric node labels in the art; the UI owns those labels.
+
+Canonical implementation: `tools/assets/generate.py`; art direction: `tools/assets/style.md`. Locked/open scenes reuse the same integer-grid environment and swap only door tiles. Runtime art contains no text, numbers, puzzle hints or generated-at-play images. Regenerate with `npm run assets`. Parent visual review is required before commit.

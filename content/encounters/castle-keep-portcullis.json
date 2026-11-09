@@ -48,17 +48,17 @@
       ],
       "ladder": {
         "l0": [
-          "What is special about a prime rune: in how many ways can it be made by multiplying?",
-          "Which guardian’s rune shows up in both clues?",
-          "What are we asked for at the end, a product or a sum?"
+          "The guardians have handed us clues, not their runes. What kind of number is a prime rune, and which guardian is named in both clues?",
+          "Before we touch a dial, let's write down what prime means. What is special about the ways a prime rune can be made by multiplying?",
+          "My notebook has a space for what the portcullis wants. At the end of this puzzle, are we being asked for a product or a sum?"
         ],
         "l1": [
-          "Is there a Deck card about something the clues share?",
-          "If one rune sits inside both products, what must it be a factor of?",
-          "Could you break each clue number into prime pieces and compare the pieces?"
+          "Lemma has brought the Deck up to the arch. Which card might help us find something shared between the clue numbers written there?",
+          "Keep both clues in view on the blueprint. If a rune sits inside both products, what must it be a factor of?",
+          "We can inspect the clues like parts on a workbench. Could you break each clue number into prime pieces and compare the pieces?"
         ],
         "l2": {
-          "text": "Kimmy stands in both clues, so Kimmy’s rune divides both 34 and 85. Break each of those into prime factors and look for the factor they share. Which prime appears in both lists?",
+          "text": "Kimmy stands in both clues, so Kimmy's rune divides both 34 and 85. Break each clue into prime pieces on the blueprint. Which prime appears on both dials?",
           "diagram": {
             "component": "factor-tree",
             "params": {
@@ -72,7 +72,7 @@
           "l3": "Split 21 into primes and 77 into primes. The prime in both lists is the shared rune."
         },
         "l3": {
-          "text": "Split 34 into a pair of primes and 85 into a pair of primes. Circle the prime that appears in both pairs: that is Kimmy. The remaining primes are Jimmy and Timmy. Add all three.",
+          "text": "Find the prime factor shared by 34 and 85 for Kimmy, then the remaining prime factors for Jimmy and Timmy. What do all three runes give when combined?",
           "diagram": {
             "component": "factor-tree",
             "params": {

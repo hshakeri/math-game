@@ -1,0 +1,13 @@
+{
+  "id": "card-shared-cats",
+  "title": "Find What Is Shared · The Twin Cats",
+  "proposed_duration_seconds": 4,
+  "loop": false,
+  "motion_prompt": "Use first.png and last.png as exact endpoints. Fix the camera, card, workbench, mossy backdrop, lighting, scale and crisp pixel texture. Animate only the twin-cat illustration inside the cream cardface: each sibling turns its head a little toward the other while only the tip of their one shared S-shaped tail curls toward the middle. Preserve exactly two separate bodies and one continuous tail, with the tail base, bodies, paws and seated positions fixed. Settle at last.png. No extra tail, duplicate body or limbs, new props, text, digits, runes, math, diagrams, praise, sparkle, morphing, sound, music or lip sync.",
+  "trigger_restrictions": {
+    "allow": "Only explicit inspection or selection of the Find What Is Shared card, independent of answer correctness.",
+    "stop": "Play once per explicit card interaction, hold the last frame, and stop when the card closes or another card is chosen.",
+    "forbid": "Never automatically choose a strategy, imply an answer is correct, create comparison or counting cues, or play as a reward."
+  },
+  "duration_note": "Proposed creative specification; not a measured clip length."
+}

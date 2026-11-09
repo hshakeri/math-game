@@ -17,6 +17,17 @@ import { createSession, transition, getClientSafeView, LADDER_RUNGS } from './en
 import { getClientSafeEncounter } from './engine/clientView.js';
 import { logEvent, readSessionEvents, ensureSessionsDir } from './engine/telemetry.js';
 import { generateTurn, getEncounter } from './tutor/index.js';
+import { DEFAULT_MODEL as AGY_MODEL, cancelAllAgyCalls } from './tutor/agy.js';
+import { DEFAULT_MODEL as GEMINI_MODEL } from './tutor/gemini.js';
+import { DEFAULT_MODEL as CLAUDE_MODEL } from './tutor/claude.js';
+
+// Diagnostics belong only on the PIN-protected parent stream.
+function tutorConfiguration(adapter) {
+  const model = adapter === 'agy' ? process.env.AGY_MODEL || AGY_MODEL
+    : adapter === 'gemini' ? process.env.GEMINI_MODEL || GEMINI_MODEL
+    : adapter === 'claude' ? process.env.ANTHROPIC_MODEL || CLAUDE_MODEL : null;
+  return { adapter, model };
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -431,6 +442,7 @@ export function createServer(options = {}) {
           type: 'session.start',
           sessionId: session.sessionId,
           encounterId: encounter.id,
+          tutor: tutorConfiguration(tutorAdapter),
           timestamp: new Date().toISOString()
         });
         const startMsg = `event: session.start\ndata: ${startPayload}\n\n`;
@@ -571,6 +583,7 @@ export function createServer(options = {}) {
               })),
               childMessage: action.text || action.reason || (action.value !== undefined ? String(action.value) : ''),
               childAction: action.type,
+              previousSpeech: nextSession.lastTutorUtterance || '',
               chosenCard: nextSession.activeCard,
               sessionId
             };
@@ -580,11 +593,18 @@ export function createServer(options = {}) {
             });
 
             speech = turnRes.utterance || turnRes.speech || null;
+            sessionRecord.lastTutorStatus = {
+              ...tutorConfiguration(sessionRecord.tutorAdapter),
+              source: turnRes.adapter,
+              fallback: Boolean(turnRes.fallback),
+              latencyMs: turnRes.latencyMs
+            };
             if (speech) {
               nextSession.lastTutorUtterance = speech;
               broadcastToSession(sessionRecord, 'tutor.say', {
                 speech,
-                source: turnRes.adapter
+                source: turnRes.adapter,
+                tutor: sessionRecord.lastTutorStatus
               });
             }
           } catch (tutorErr) {
@@ -716,7 +736,10 @@ export function createServer(options = {}) {
           'Access-Control-Allow-Origin': '*'
         });
 
-        res.write(`event: connected\ndata: ${JSON.stringify({ status: 'connected', sessionId: sessionId || null })}\n\n`);
+        res.write(`event: connected\ndata: ${JSON.stringify({
+          status: 'connected', sessionId: sessionId || null,
+          tutor: sessionRecord?.lastTutorStatus || tutorConfiguration(sessionRecord?.tutorAdapter || process.env.TUTOR_ADAPTER || 'scripted')
+        })}\n\n`);
         activeSseResponses.add(res);
 
         // If no explicit session requested, register with globalParentSubscribers
@@ -988,6 +1011,7 @@ export async function startServer(port = (process.env.PORT ? Number(process.env.
  */
 export async function closeServer(server) {
   if (!server) return;
+  cancelAllAgyCalls();
 
   if (server._activeSseResponses) {
     for (const sseRes of server._activeSseResponses) {
@@ -1019,8 +1043,16 @@ export async function closeServer(server) {
 // Auto-run if executed directly as entrypoint: node server/index.js
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-  startServer(port).then(({ url, port }) => {
-    console.log(`🏰 Castle of Theorems server listening at ${url} (port ${port})`);
+  startServer(port).then(({ server, url, port }) => {
+    let stopping = false;
+    const stop = async () => {
+      if (stopping) return;
+      stopping = true;
+      try { await closeServer(server); } finally { process.exit(0); }
+    };
+    process.once('SIGINT', stop);
+    process.once('SIGTERM', stop);
+    console.log(`🏰 Keybreakers server listening at ${url} (port ${port})`);
     console.log(`🦉 Tutor adapter: ${process.env.TUTOR_ADAPTER || 'scripted'}`);
     console.log(`👨‍👩‍👧 Parent dashboard: ${url}/parent (PIN: ${process.env.PARENT_PIN ? 'configured' : 'default 1234'})`);
   }).catch(err => {

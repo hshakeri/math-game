@@ -1,0 +1,37 @@
+▶ Challenger M5 Security & Adversarial Exploit Suite
+  ▶ 1. Leak Gate Evasion Stress Across All 4 Encounters
+    ✔ 1.1 strips all zero-width characters (ZWS, ZWNJ, ZWJ, BOM, soft hyphen, word joiner) across digits, words, and compounds (2.964542ms)
+    ✔ 1.2 strips markdown delimiters (*, **, _, `, ~) and normalizes variable spaces in numbers (0.674583ms)
+    ✔ 1.3 normalizes all typographic dashes, fullwidth digits, and Roman numerals (0.278708ms)
+    ✔ 1.4 verifies lowercase Cyrillic homoglyphs are caught by current normalizeText (0.065958ms)
+    ✔ 1.5 blocks uppercase Cyrillic homoglyphs across all 4 encounters (0.110083ms)
+    ✔ 1.6 blocks past-tense inflections doubled and halved at rungs l0 and l1 (5.361041ms)
+    ✔ 1.7 blocks evaluative praise statements without exclamation marks (0.146ms)
+  ✔ 1. Leak Gate Evasion Stress Across All 4 Encounters (9.902125ms)
+  ▶ 2. Simpler Problem Answers (24, 5, 7) & Look Back Checks Blocked 100%
+    ✔ 2.1 blocks simpler problem answers across all 4 encounters in generateTurn (1.545208ms)
+    ✔ 2.2 blocks Look Back check targets across all 4 encounters in generateTurn (0.549958ms)
+    ✔ 2.3 preserves simpler problem statement numbers in hintText at rung l4 without false positives (0.24025ms)
+  ✔ 2. Simpler Problem Answers (24, 5, 7) & Look Back Checks Blocked 100% (2.463417ms)
+  ▶ 3. Denial of Service Resilience
+    ✔ 3.1 handles malformed Host headers gracefully with HTTP 400 (15.376792ms)
+    ✔ 3.2 resists HTTP request splitting and pipelined abuse (7.614792ms)
+    ✔ 3.3 aborts streaming body payloads exceeding 1MB (1GB header DoS attempt) (7.195208ms)
+  ✔ 3. Denial of Service Resilience (30.368333ms)
+  ▶ 4. Stored XSS Immunity in Parent SSE Stream
+    ✔ 4.1 sanitizes stored XSS injection in live child actions and delivers pure text nodes (14.865417ms)
+  ✔ 4. Stored XSS Immunity in Parent SSE Stream (14.949667ms)
+  ▶ 5. Timing-Safe PIN Comparison Under High Concurrency
+    ✔ 5.1 verifies PIN correctness and rejects invalid inputs under 1,000 concurrent operations (2.369541ms)
+    ✔ 5.2 microbenchmarks constant-time PIN execution with negligible variance across mismatch positions (13.042584ms)
+    ✔ 5.3 handles 50 concurrent authenticated parent requests against server without auth leakage (31.934709ms)
+  ✔ 5. Timing-Safe PIN Comparison Under High Concurrency (47.463375ms)
+✔ Challenger M5 Security & Adversarial Exploit Suite (121.479959ms)
+ℹ tests 17
+ℹ suites 6
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 266.510458

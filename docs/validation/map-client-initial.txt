@@ -1,0 +1,317 @@
+▶ E2E Tier 1: 46 Isolated Feature Coverage Tests
+  ▶ 1. Environment, Specification & Architecture (F1–F3, F45, F46)
+    ✔ Feature 1: Repo & Environment Setup — zero dependencies declared (0.571125ms)
+    ✔ Feature 2: Verbatim SPEC.md — authoritative spec exists and intact (2.935375ms)
+    ✔ Feature 3: Encounter Schema — content/schema.json is valid Draft-07 schema (3.498541ms)
+    ✔ Feature 45: Forensic Integrity Audit — verified zero cheat tokens or hardcoded tables (0.142709ms)
+    ✔ Feature 46: Victory Gate & Release — clean release readiness (0.064542ms)
+  ✔ 1. Environment, Specification & Architecture (F1–F3, F45, F46) (7.559917ms)
+  ▶ 2. Content Assets & Validation (F4–F8, F38, F39)
+    ✔ Feature 4: Encounter 1 (Reverse Tolls) JSON schema compliance (0.247834ms)
+    ✔ Feature 5: Encounter 2 (Dark Vault) JSON schema compliance (0.210584ms)
+    ✔ Feature 6: Encounter 3 (Five Shields) JSON schema compliance (0.7135ms)
+    ✔ Feature 7: Encounter 4 (Castle Keep) JSON schema compliance (0.125917ms)
+    ✔ Feature 8: Content Validator — validate.js exists and validates cleanly (0.063791ms)
+    ✔ Feature 38: Asset Manifest & Approval Gate — all assets verified approved (3.943333ms)
+    ✔ Feature 39: Procedural Asset Generator — generate.py produces standard scene SVGs (0.06825ms)
+  ✔ 2. Content Assets & Validation (F4–F8, F38, F39) (5.608833ms)
+  ▶ 3. Pure Engine Mechanics (F9–F12)
+    ✔ Feature 9: Mechanics Inverse Chain — gate reversal calculation (0.21375ms)
+    ✔ Feature 10: Mechanics Goblin Bins — pigeonhole distribution (0.167208ms)
+    ✔ Feature 11: Mechanics Seam Grid — perimeter unit deduction (0.146209ms)
+    ✔ Feature 12: Mechanics Factor Dials — prime code unlocking (0.233291ms)
+  ✔ 3. Pure Engine Mechanics (F9–F12) (0.811667ms)
+  ▶ 4. State Machine & ZPD Logic (F13–F16)
+    ✔ Feature 13: State Machine — transitions arrive to understand (0.553459ms)
+    ✔ Feature 14: Conjecture Logic — correct justified conjecture shortcuts to Look Back (0.193875ms)
+    ✔ Feature 15: ZPD Hint Ladder — fades on progress (-1 floor l1) and escalates on misses (+1) (0.115417ms)
+    ✔ Feature 16: Look Back & Waiver — parent waiver completes node in Look Back (0.092375ms)
+  ✔ 4. State Machine & ZPD Logic (F13–F16) (0.999333ms)
+  ▶ 5. Socratic Information Diet & Fallback (F17–F18, F22–F26)
+    ✔ Feature 17: Synchronous Leak Gate — screens compliant probe in < 5ms (6.779625ms)
+    ✔ Feature 18: Scripted Probes & Fallback — authored probe returns for any state and rung (0.098458ms)
+    ✔ Feature 22: Tutor Adapter Interface — generateTurn returns compliant structure (0.770208ms)
+    ✔ Feature 23: Rivet System Prompt — prompt file exists and enforces diet (0.08525ms)
+    ✔ Feature 24 & 25: REST Adapters — gemini.js and claude.js exist with official URLs (0.083958ms)
+    ✔ Feature 26: Tutor Retry & Fallback — gate failure retries once and falls back gracefully (0.567041ms)
+  ✔ 5. Socratic Information Diet & Fallback (F17–F18, F22–F26) (8.467209ms)
+  ▶ 6. Client-Safe View & Telemetry (F19–F21)
+    ✔ Feature 19: Client-Safe View Filter — strips secrets, answers, and future hints (0.258791ms)
+    ✔ Feature 20: Telemetry Logger — writes valid events to session JSONL (25.124708ms)
+    ✔ Feature 21: Scripted Mode Playability — API end-to-end playability in scripted mode (11.239125ms)
+  ✔ 6. Client-Safe View & Telemetry (F19–F21) (36.73425ms)
+  ▶ 7. Server, Client PWA & Diagrams (F27–F34)
+    ✔ Feature 27: HTTP & SSE Server — serves static files and handles 404 (5.392291ms)
+    ✔ Feature 28: PWA Client Shell — client files exist (0.08775ms)
+    ✔ Feature 29: Heuristic Deck Overlay — 6 cards registered in client (0.107375ms)
+    ✔ Feature 30: Rivet timed speech is wired to the client and can be read instantly (0.5885ms)
+    ✔ Features 31–34: Pure SVG Diagram Modules exist (0.077208ms)
+  ✔ 7. Server, Client PWA & Diagrams (F27–F34) (6.342375ms)
+  ▶ 8. Parent Dashboard & UI Ergonomics (F35–F37)
+    ✔ Feature 35: Parent Dashboard — protected by 4-digit PIN authentication (2.528291ms)
+    ✔ Feature 36: UI Constraints — touch targets >= 56px and no timers or streaks (2.700167ms)
+    ✔ Feature 37: Golden Seal & Chime — Web Audio API chime implemented (0.161125ms)
+  ✔ 8. Parent Dashboard & UI Ergonomics (F35–F37) (5.463417ms)
+  ▶ 9. Evaluation Harness & Personas (F40–F42)
+    ✔ Feature 40: Simulated Personas — 6 student personas exist (0.075708ms)
+    ✔ Feature 41: Evaluation Runner — eval/run.js exists (0.029375ms)
+    ✔ Feature 42: CI Evaluation Script — eval:ci exits 0 when API keys absent (0.077083ms)
+  ✔ 9. Evaluation Harness & Personas (F40–F42) (0.223542ms)
+✔ E2E Tier 1: 46 Isolated Feature Coverage Tests (78.054ms)
+✔ Grubb never evaluates tentative speech, conjectures, step successes or hint escalation (0.388042ms)
+✔ Hero names and child notes are escaped before rendering (0.1045ms)
+✔ One in-flight action cannot be sent twice and stale responses do not replace another route (0.210333ms)
+✔ Failed actions retain the view and show a recoverable notice (0.110958ms)
+✔ Seal Continue completes the engine before catalog refresh and navigation (0.360125ms)
+✔ Denied local storage does not prevent game or sound controls from initializing (0.114416ms)
+✔ Plan speech chips reach the engine as speech and open the creature deck (0.083125ms)
+▶ Keybreakers workspace availability without revealing higher hints
+  ✔ ch1-n1-reverse-tolls exposes usable tools immediately after a card at l0 (2.311ms)
+  ✔ ch1-n2-dark-vault exposes usable tools immediately after a card at l0 (0.269959ms)
+  ✔ ch1-n3-five-shields exposes usable tools immediately after a card at l0 (0.258375ms)
+  ✔ ch1-n4-castle-keep exposes usable tools immediately after a card at l0 (0.268458ms)
+  ✔ uses only public mechanic givens for each workspace, including all Vault targets (0.399084ms)
+  ✔ continues to expose authored hint diagrams only when their rung is reached (0.104666ms)
+✔ Keybreakers workspace availability without revealing higher hints (4.059417ms)
+▶ Workspace values are supplied by the child
+  ✔ Vault a does not display a hidden maximum or prefill the final grab (0.467125ms)
+  ✔ Vault b does not display a hidden maximum or prefill the final grab (0.15425ms)
+  ✔ Vault c does not display a hidden maximum or prefill the final grab (0.137625ms)
+  ✔ Castle Keep factor inputs start unanswered and submit only child-selected numbers (0.59325ms)
+✔ Workspace values are supplied by the child (1.458958ms)
+▶ Explicit tiny-case requests and multi-part shortcuts
+  ✔ shows the requested tiny-case statement at l0 without exposing its answer or higher hint text (0.124542ms)
+  ✔ keeps an earned tiny worked step after returning to the workspace, only for that part (0.153166ms)
+  ✔ a first conjecture opens only the current Vault chamber (0.12475ms)
+  ✔ a second conjecture opens only the current Vault chamber (0.280542ms)
+  ✔ withholds whole-node rewards even from a stale intermediate look-back completion flag (0.032167ms)
+  ✔ still requires final-part Look Back before the Vault Golden Seal (0.088792ms)
+✔ Explicit tiny-case requests and multi-part shortcuts (0.876584ms)
+✖ one action response with speech in both API fields produces one Rivet line (1.749625ms)
+✖ identical scripted speech on separate successful turns is spoken once per turn (0.364167ms)
+✖ starting an encounter cancels old lines before the new network request resolves (0.284ms)
+✖ leaving the encounter clears every speech without firing old completion callbacks (0.463ms)
+✖ a new Vault part cancels prior speech and starts only that part’s lines (0.230417ms)
+✖ speech pacing never keeps reply controls busy or blocks the next child action (0.243375ms)
+✖ a modal completes covered speech and makes new covered lines instant without hidden timers (0.208625ms)
+✖ the Seal replaces the Deck and closing an already hidden Deck keeps the background inert (0.306333ms)
+✖ starting an encounter dismisses a stale modal before its request resolves (0.19725ms)
+✖ a delayed completion catalog refresh cannot navigate away from a newer encounter (0.263917ms)
+✖ repeated idle reaction renders do not replay or infer a gate outcome from tentative actions (0.319708ms)
+ℹ tests 74
+ℹ suites 13
+ℹ pass 63
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 207.767875
+
+✖ failing tests:
+
+test at test/still-speech-client.test.js:116:1
+✖ one action response with speech in both API fields produces one Rivet line (1.749625ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:117:44)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.start (node:internal/test_runner/test:1177:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:127:1
+✖ identical scripted speech on separate successful turns is spoken once per turn (0.364167ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:128:38)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:140:1
+✖ starting an encounter cancels old lines before the new network request resolves (0.284ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:141:44)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:165:1
+✖ leaving the encounter clears every speech without firing old completion callbacks (0.463ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:166:54)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:187:1
+✖ a new Vault part cancels prior speech and starts only that part’s lines (0.230417ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:188:44)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:204:1
+✖ speech pacing never keeps reply controls busy or blocks the next child action (0.243375ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:205:37)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:228:1
+✖ a modal completes covered speech and makes new covered lines instant without hidden timers (0.208625ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:229:43)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:255:1
+✖ the Seal replaces the Deck and closing an already hidden Deck keeps the background inert (0.306333ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:256:37)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:272:1
+✖ starting an encounter dismisses a stale modal before its request resolves (0.19725ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:273:30)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:288:1
+✖ a delayed completion catalog refresh cannot navigate away from a newer encounter (0.263917ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:289:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/still-speech-client.test.js:324:1
+✖ repeated idle reaction renders do not replay or infer a gate outcome from tentative actions (0.319708ms)
+  AssertionError [ERR_ASSERTION]: keeper needs its live text element
+      at harness (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:87:12)
+      at TestContext.<anonymous> (file:///Users/hs9hd/Library/CloudStorage/Box-Box/Teaching/math-game/test/still-speech-client.test.js:325:48)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
