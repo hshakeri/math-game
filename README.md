@@ -8,6 +8,8 @@ There are **no timers, no scores, no streaks, and no leaderboards**—ever.
 
 Each challenge opens with one note box for an idea, working, or a question. There is no readiness click or separate answer-and-reason form. Enter adds a line; Send note or Ctrl/Command+Enter sends it to Rivet.
 
+You speak as the boy Keybreaker; Rivet is your owl guide. Story buttons change the pictured speaker and the named speech bubble. In the Dark Vault, The chest introduces the puzzle, The rules explains how to play, and This torch shows the current goal. Find the smallest number that always works, keep drawn crystals out, and start each torch with a full chest.
+
 **Presentation:** one cloud-edged map, a boy Keybreaker at the start, and four challenge landmarks. Each encounter brings the story and dialogue into one scene. Lemma’s creature deck, an optional calculator, calculation tape and scratchpad support the child’s own work. Speech bubbles unfold silently, with Read now / Read again and a saved instant-speech setting. Words stay available and never hold up play. The open conversation history keeps messages from the current play visible. Starting again from the map clears the conversation and working tools; reloading resumes the current play. Children can state an answer in chat and explain how they found it; the game checks it deterministically, credits any complete toll-route verification already supplied, and asks for a separate final check only when it is still needed. The series title is provisional; see [name screen](docs/NAME-CHECK.md). [Cast concept](docs/art/keybreakers-cast-concept.png) · [Pixel style bible](tools/assets/style.md).
 
 ---

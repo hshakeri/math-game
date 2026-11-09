@@ -320,7 +320,7 @@ The concept board and full built-in imagegen prompt are saved under `docs/art/`.
 
 ## 9. UI and UX
 
-The client is a PWA built around one cloud-edged world map and one coherent encounter scene. Story places on the encounter map reveal one caption at a time; Rivet’s dialogue and the hero’s replies share the scene below. Calculation tools and the Blueprint fold away until needed. Nothing on screen counts down, ranks, or flashes.
+The client is a PWA built around one cloud-edged world map and one coherent encounter scene. Story buttons select one pictured speaker and named speech bubble at a time; Reverse Tolls retains its road and highlights the selected place. Rivet’s dialogue and the hero’s replies share the scene below. Calculation tools and the Blueprint fold away until needed. Nothing on screen counts down, ranks, or flashes.
 
 | Screen | Route | What is on it | Notes |
 | --- | --- | --- | --- |
@@ -332,7 +332,9 @@ The client is a PWA built around one cloud-edged world map and one coherent enco
 **Interaction rules.**
 
 - Touch targets at least 56 px with 12 px spacing; single taps and simple drags only, no double-tap, no long-press, no multi-touch.
-- The reply strip opens with one multiline field labeled Your note, capped at 2,000 characters to match the dialogue ledger. There is no readiness button, sentence-stem selector, separate reason field, or required choice between guessing and exploring. Send note or Ctrl/Command+Enter submits; Enter adds a line. A failed send preserves the complete draft. Later stages may offer optional tap-to-send chips from `chips.*` alongside the same note box; opening stages show no chips.
+- The reply strip opens with one multiline field labeled Your note to Rivet, capped at 2,000 characters to match the dialogue ledger. There is no readiness button, sentence-stem selector, separate reason field, or required choice between guessing and exploring. Send note or Ctrl/Command+Enter submits; Enter adds a line. A failed send preserves the complete draft. Later stages may offer optional tap-to-send chips from `chips.*` alongside the same note box; opening stages show no chips.
+- Speaker roles are visible: the child speaks as the boy Keybreaker through Your note to Rivet; Rivet is the owl guide who replies and asks follow-up questions. Story bubbles identify their speaker and role. Dark Vault has exactly three story beats: The chest (Alchemist), The rules (Rivet), and This torch (neutral Grubb reading the current challenge). Reading changes the picture and bubble only; it never submits a reply, advances the puzzle, or creates an outcome reaction.
+- A selected Vault challenge replaces its duplicate question below the scene. The story frame clears for Look Back and completion so the previous puzzle question does not compete with the final task. A new part restores the story with its current goal.
 - Rivet is the tutor. Character pictures remain still, including its monocle. The boy sprite and Seal-only celebration pose remain still too. Grubb's sprite changes to a smirk only on an explicit rejected final submission and to a fume only when the server opens the whole node. “CLANK” and “whirr” are silent text, never sound effects.
 - Speech bubbles for Rivet and Lemma use a short opening pause followed by silent character reveal. Story captions change only when a child taps a place or Next; Grubb’s gate outcome is immediate status text. `client/timed-speech.js` specifies the default pause and approximately 40 characters per second; the opening Rivet line uses the same controller. “Read now” finishes a line; “Read again” replays it. Words remain until replaced, and never expire or advance play. The saved “Speech: instant” preference and reduced-motion settings remove pacing. Timing never disables gameplay, starts a countdown, or evaluates an answer. Screen readers receive each full line rather than character updates. Navigation and part changes cancel stale callbacks; hidden tabs and modal transitions finish any pending text without continuing presentation in the background.
 - The open Our conversation panel follows the active controls and retains child and Rivet messages for the current play. Entering a challenge from the map starts a new session with empty conversation and working tools. A page reload may resume only that tab's current server session. If the session expired or the server restarted, play starts fresh without importing archived dialogue.
@@ -383,7 +385,11 @@ Four encounters, one heuristic each, every number below checked by hand; the age
 
 ### Node 2 · Alchemist's Dark Vault
 
-**Inscription.** In the pitch-dark vault sits a chest with 12 ruby crystals, 12 sapphire crystals and 12 emerald crystals, all mixed together. A mechanical claw grabs crystals without looking. Set the claw's number so that it is certain, no matter how unlucky you are, to grab what each torch needs.
+**Inscription.** The vault is too dark to see into the chest. Inside are 12 ruby crystals, 12 sapphire crystals and 12 emerald crystals, all mixed up. The claw picks without looking.
+
+Each torch starts with a full chest. The claw picks one crystal at a time. Do not put any crystals back until that torch is finished. Choose the smallest number of grabs that will always meet the torch’s goal, even with the worst luck.
+
+The authored paragraph boundary separates The chest from The rules. A third story beat, This torch, uses the active part’s question. Each part asks for the smallest number that always meets its target; the mathematics below is unchanged.
 
 **Parts.** a, Torch of Pairs: at least 2 crystals of the same colour → 4 (the goblin can place one per colour, 3, then the next must repeat). b, Torch of Four: at least 4 of the same colour → 10 (3 per colour is 9 without a club of four; the next completes one). c, Torch of Difference: at least 2 crystals of different colours → 13 (the goblin can hand over all 12 of one colour; the next differs). Givens: 12 in the inscription, plus 2 in a, 4 in b, 2 in c. Forbidden: a {3, 4}; b {3, 9, 10}; c {12, 13}. The c/12 collision is accepted: every c-rung text says "every crystal of one colour" rather than the count.
 
@@ -453,20 +459,20 @@ The shape every encounter file takes, shown as a JS literal for readability (the
 
 ```javascript
 {
-  id: 'ch1-n2-dark-vault', chapter: 1, node: 2, contentVersion: 1,
+  id: 'ch1-n2-dark-vault', chapter: 1, node: 2, contentVersion: 2,
   title: 'The Alchemist’s Dark Vault',
   scene: { locked: 'ch1-n2-locked', unlocked: 'ch1-n2-unlocked' },
   narrative: {
     arrival: 'The vault door grinds shut behind you. Somewhere ahead a chest clicks open, but you cannot see a thing. A brass claw waits for its number.',
     sealed: 'Three torches blaze. In their light the goblin bows, beaten at its own game, and the way to the courtyard opens.'
   },
-  inscription: 'In the pitch-dark vault sits a chest with 12 ruby crystals, 12 sapphire crystals and 12 emerald crystals, all mixed together. A mechanical claw grabs crystals without looking. Set the claw’s number so that it is certain, no matter how unlucky you are, to grab what each torch needs.',
+  inscription: 'The vault is too dark to see into the chest. Inside are 12 ruby crystals, 12 sapphire crystals and 12 emerald crystals, all mixed up. The claw picks without looking.\n\nEach torch starts with a full chest. The claw picks one crystal at a time. Do not put any crystals back until that torch is finished. Choose the smallest number of grabs that will always meet the torch’s goal, even with the worst luck.',
   cards: ['worst-case', 'tiny-case'],
   givens: [12],
   parts: [
     {
       id: 'a',
-      prompt: 'Torch of Pairs: the claw must be certain to grab at least 2 crystals of the same colour. Set its number.',
+      prompt: 'Torch of Pairs: What is the smallest number of grabs that will always give you at least 2 crystals of the same colour?',
       answer: { type: 'integer', value: 4 },
       intermediates: [{ id: 'one-per-bin', value: 3, label: 'most crystals with no pair' }],
       forbidden: [3, 4],

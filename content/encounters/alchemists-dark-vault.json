@@ -2,7 +2,7 @@
   "id": "ch1-n2-dark-vault",
   "chapter": 1,
   "node": 2,
-  "contentVersion": 1,
+  "contentVersion": 2,
   "title": "The Alchemist’s Dark Vault",
   "scene": {
     "locked": "ch1-n2-locked",
@@ -12,13 +12,13 @@
     "arrival": "The vault door grinds shut behind you. Somewhere ahead a chest clicks open, but you cannot see a thing. A brass claw waits for its number.",
     "sealed": "Three torches blaze. In their light the goblin bows, beaten at its own game, and the way to the courtyard opens."
   },
-  "inscription": "In the pitch-dark vault sits a chest with 12 ruby crystals, 12 sapphire crystals and 12 emerald crystals, all mixed together. A mechanical claw grabs crystals without looking. Set the claw’s number so that it is certain, no matter how unlucky you are, to grab what each torch needs.",
+  "inscription": "The vault is too dark to see into the chest. Inside are 12 ruby crystals, 12 sapphire crystals and 12 emerald crystals, all mixed up. The claw picks without looking.\n\nEach torch starts with a full chest. The claw picks one crystal at a time. Do not put any crystals back until that torch is finished. Choose the smallest number of grabs that will always meet the torch’s goal, even with the worst luck.",
   "cards": ["worst-case", "tiny-case"],
   "givens": [12],
   "parts": [
     {
       "id": "a",
-      "prompt": "Torch of Pairs: the claw must be certain to grab at least 2 crystals of the same colour. Set its number.",
+      "prompt": "Torch of Pairs: What is the smallest number of grabs that will always give you at least 2 crystals of the same colour?",
       "answer": { "type": "integer", "value": 4 },
       "intermediates": [
         { "id": "one-per-bin", "value": 3, "label": "most crystals with no pair" }
@@ -111,7 +111,7 @@
     },
     {
       "id": "b",
-      "prompt": "Torch of Four: the claw must be certain to grab at least 4 crystals of the same colour. Set its number.",
+      "prompt": "Torch of Four: What is the smallest number of grabs that will always give you at least 4 crystals of the same colour?",
       "answer": { "type": "integer", "value": 10 },
       "intermediates": [
         { "id": "three-per-bin", "value": 9, "label": "most crystals without club of four" }
@@ -204,7 +204,7 @@
     },
     {
       "id": "c",
-      "prompt": "Torch of Difference: the claw must be certain to grab at least 2 crystals of different colours. Set its number.",
+      "prompt": "Torch of Difference: What is the smallest number of grabs that will always give you at least 2 crystals of different colours?",
       "answer": { "type": "integer", "value": 13 },
       "intermediates": [
         { "id": "all-of-one-colour", "value": 12, "label": "all crystals of one colour" }

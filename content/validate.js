@@ -369,6 +369,12 @@ export async function validateEncounter(encounter, options = {}) {
     checkString(encounter.narrative.sealed, 'narrative.sealed', { min: 40, max: 300 });
   }
   checkString(encounter.inscription, 'inscription', { min: 40, max: 600, checkPraise: false });
+  if (encounter.id === 'ch1-n2-dark-vault' && typeof encounter.inscription === 'string') {
+    const paragraphs = encounter.inscription.split(/\r?\n\s*\r?\n/).map(text => text.trim());
+    if (paragraphs.length !== 2 || paragraphs.some(text => !text)) {
+      addError('inscription', 'Dark Vault must have exactly two public story paragraphs: the chest, then the draw rules.');
+    }
+  }
 
   // 5. Parts validation
   if (Array.isArray(encounter.parts)) {

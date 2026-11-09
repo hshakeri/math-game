@@ -28,6 +28,7 @@ function pageDocument(html) {
     const element = {
       ...listeners(), tagName: tagName.toUpperCase(), attributes,
       id: attributes.id || '', value: attributes.value || '', textContent: '',
+      get dataset() { return Object.fromEntries(Object.entries(attributes).filter(([name]) => name.startsWith('data-')).map(([name, value]) => [name.slice(5).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()), value])); },
       ownerDocument: document, children: [], parentElement: null,
       disabled: 'disabled' in attributes, hidden: 'hidden' in attributes, open: 'open' in attributes,
       style: {}, inert: false,
@@ -46,6 +47,7 @@ function pageDocument(html) {
       appendChild(child) { child.parentElement = this; this.children.push(child); return child; },
       replaceChildren(...children) { this.children = []; children.forEach(child => this.appendChild(child)); },
       contains(target) { return target === this || this.children.some(child => child.contains(target)); },
+      closest(selector) { for (let current = this; current; current = current.parentElement) if (matches(current, selector)) return current; return null; },
       querySelector(selector) { return this.querySelectorAll(selector)[0] || null; },
       querySelectorAll(selector) {
         const found = [];
@@ -214,7 +216,10 @@ test('opening a challenge immediately offers one multiline note without a readin
   window.game.updateView(noteView({ state: 'conjecture' }));
   assert.equal(visible(input), true, 'The same note stays available during the internal conjecture phase');
   assert.equal(document.getElementById('chip-container').children.length, 0);
-  assert.match(markup, /<label[^>]*for="child-text-input"[^>]*>Your note<\/label>/);
+  assert.match(markup, /<label[^>]*for="child-text-input"[^>]*>Your note to Rivet<\/label>/);
+  assert.equal(document.getElementById('hero-speaker-name').textContent, 'YOU · KEYBREAKER');
+  assert.match(document.getElementById('reply-hero').innerHTML, /hero-1-idle\.svg/);
+  assert.match(markup, /RIVET · YOUR OWL GUIDE/);
   assert.match(markup, />Send note<\/button>/);
 });
 
@@ -267,6 +272,56 @@ test('the opening stuck button sends the actual help request instead of a readin
   document.getElementById('btn-im-stuck').dispatch('click');
   await new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(calls[1].body.action, { type: 'stuck' });
+});
+
+test('story selections swap art and named speech locally, preserve focus, and clear on final phases', async t => {
+  const { document, window, calls, input } = await openNote(t);
+  const game = window.game;
+  const first = noteView({
+    encounterId: 'ch1-n2-dark-vault', partPrompt: 'Which smallest count meets this torch’s goal?',
+    story: { kind: 'dark-vault', beats: [
+      { id: 'chest', text: 'The chest is dark and its crystals are mixed.' },
+      { id: 'rules', text: 'The drawn crystals stay out. Each torch starts with a full chest.' },
+      { id: 'goal', text: 'Which smallest count meets this torch’s goal?' }
+    ] }
+  });
+  game.updateView(first);
+  const mount = document.getElementById('encounter-map-mount');
+  const goal = document.getElementById('challenge-goal');
+  const beforeCalls = calls.length, history = [...game.history], session = game.activeSessionId;
+  input.value = 'My unfinished note stays here.';
+  for (const [index, art, speaker] of [[1, 'rivet', 'Rivet'], [2, 'grubb-neutral', 'Grubb'], [0, 'keeper-alchemist', 'The Alchemist']]) {
+    const button = mount.querySelector(`[data-story-stop="${index}"]`);
+    mount.dispatch('click', { target: button });
+    assert.equal(game.storyStop, index);
+    assert.match(mount.innerHTML, new RegExp(`/assets/illustrations/${art}\\.png`));
+    assert.ok(mount.innerHTML.includes(`<strong>${speaker}</strong>`));
+    assert.ok(document.activeElement === mount.querySelector(`[data-story-stop="${index}"]`), 'Focus follows the replaced story control');
+    assert.equal(goal.classList.contains('hidden'), index === 2, 'The selected torch bubble must not duplicate the goal paragraph');
+  }
+  const next = mount.querySelector('[data-story-next]');
+  mount.dispatch('click', { target: next });
+  assert.equal(game.storyStop, 1);
+  assert.ok(document.activeElement === mount.querySelector('[data-story-next]'));
+  assert.equal(calls.length, beforeCalls, 'Reading must not send a model/game action');
+  assert.equal(game.activeSessionId, session);
+  assert.equal(game.currentView, first);
+  assert.deepEqual(game.history, history);
+  assert.equal(input.value, 'My unfinished note stays here.');
+
+  const nextPart = { ...first, currentPartId: 'b', partPrompt: 'The next torch question?', story: { ...first.story, beats: first.story.beats.map(beat => beat.id === 'goal' ? { ...beat, text: 'The next torch question?' } : beat) } };
+  game.updateView(nextPart);
+  assert.equal(game.storyStop, 0);
+  assert.match(mount.innerHTML, /keeper-alchemist\.png/);
+  game.showGoldenSeal = () => { game.sealShown = true; };
+  for (const state of ['look_back', 'sealed', 'map']) {
+    game.updateView(nextPart);
+    const button = mount.querySelector('[data-story-stop="2"]');
+    mount.dispatch('click', { target: button });
+    game.updateView({ ...nextPart, state, sealed: state !== 'look_back', lookBackOptions: [{ kind: 'verify', prompt: 'A final reflection question?', responseType: 'integer' }] });
+    assert.equal(mount.classList.contains('hidden'), true, state);
+    assert.equal(mount.innerHTML, '', 'A former torch question must not remain above the final check or Seal');
+  }
 });
 
 for (const failure of ['HTTP failure', 'network failure']) {

@@ -1,0 +1,43 @@
+{
+  "observedAt": "2026-11-09T16:13:12.846Z",
+  "base": "http://localhost:8091",
+  "source": "content/encounters/alchemists-dark-vault.json",
+  "scope": "Local HTTP plus the real renderer; scripted tutoring only; not a browser visual playtest.",
+  "results": [
+    {
+      "part": "a",
+      "storyBeats": 3,
+      "currentGoalMatches": true,
+      "distinctPictures": 3
+    },
+    {
+      "part": "b",
+      "storyBeats": 3,
+      "currentGoalMatches": true,
+      "distinctPictures": 3
+    },
+    {
+      "part": "c",
+      "storyBeats": 3,
+      "currentGoalMatches": true,
+      "distinctPictures": 3
+    }
+  ],
+  "assets": [
+    {
+      "id": "keeper-alchemist",
+      "status": 200
+    },
+    {
+      "id": "rivet",
+      "status": 200
+    },
+    {
+      "id": "grubb-neutral",
+      "status": 200
+    }
+  ],
+  "completedThroughFinalCheck": true,
+  "allTutorCallsScripted": true,
+  "updatedPageAndRoleLabelsServed": true
+}

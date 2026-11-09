@@ -12,6 +12,14 @@ const encounters = encounterNames.map(name => JSON.parse(readFileSync(
 )));
 const tolls = encounters[0];
 const arrivalView = encounter => getClientSafeSessionView(createSession(encounter), encounter);
+const vaultStory = {
+  encounterId: 'ch1-n2-dark-vault', currentPartId: 'a',
+  story: { kind: 'dark-vault', beats: [
+    { id: 'chest', text: 'The chest is dark and its crystals are mixed.' },
+    { id: 'rules', text: 'Choose the smallest guaranteed count. Drawn crystals stay out. Each torch starts with a new full chest.' },
+    { id: 'goal', text: 'What is the smallest count for this torch?' }
+  ] }
+};
 
 function stopButtons(html) {
   return html.match(/<button\b(?=[^>]*\bdata-story-stop=)[^>]*>/g) || [];
@@ -90,7 +98,7 @@ describe('Comic story exposes only public forward givens', () => {
   });
 
   it('does not add toll instructions or invented clues to other encounters', () => {
-    for (const encounter of encounters.slice(1)) {
+    for (const encounter of encounters.slice(2)) {
       const view = arrivalView(encounter);
       assert.equal(view.story, null);
       assert.equal(getClientSafeEncounter(encounter).story, null);
@@ -103,6 +111,46 @@ describe('Comic story exposes only public forward givens', () => {
 });
 
 describe('Comic language, safe markup and reading controls', () => {
+  it('pairs the three Vault beats with distinct neutral illustrations and named speakers', () => {
+    const stops = storyStops(vaultStory);
+    assert.deepEqual(stops.map(stop => stop.name), ['The chest', 'The rules', 'This torch']);
+    assert.deepEqual(stops.map(stop => stop.words), vaultStory.story.beats.map(beat => beat.text));
+    const scenes = [
+      ['keeper-alchemist', 'The Alchemist', 'Keeper'],
+      ['rivet', 'Rivet', 'Owl guide'],
+      ['grubb-neutral', 'Grubb', 'Goblin challenger']
+    ];
+    scenes.forEach(([art, speaker, role], index) => {
+      const html = renderEncounterMap(vaultStory, index);
+      assert.equal(selectedStop(html), index);
+      assert.match(html, new RegExp(`/assets/illustrations/${art}\\.png`));
+      assert.match(html, new RegExp(`<strong>${speaker}</strong>`));
+      assert.ok(html.includes(`<span>${role}</span>`));
+      assert.ok(html.includes(`<p>${escapeHTML(stops[index].words)}</p>`));
+      assert.equal((html.match(/class="story-caption"/g) || []).length, 1);
+      assert.doesNotMatch(html, /grubb-(?:smirk|fume)|CLANK|clunk/);
+    });
+  });
+
+  it('uses fixed presentation assets and escapes each public Vault beat', () => {
+    const malicious = structuredClone(vaultStory);
+    malicious.story.beats[1].text = 'A "rule" & <script>not markup</script>.';
+    malicious.story.beats[1].art = 'https://example.invalid/private.png';
+    malicious.story.beats[1].speaker = '<img src=x onerror=alert(1)>';
+    const html = renderEncounterMap(malicious, 1);
+    assert.match(html, /A &quot;rule&quot; &amp; &lt;script&gt;not markup&lt;\/script&gt;/);
+    assert.match(html, /\/assets\/illustrations\/rivet\.png/);
+    assert.doesNotMatch(html, /https:\/\/example|<script>|<img src=x/);
+  });
+
+  it('marks the selected toll landmark visually and names its narrator', () => {
+    const html = renderEncounterMap(arrivalView(tolls), 2);
+    assert.match(html, /class="story-landmark story-landmark-selected"/);
+    assert.match(html, /<strong>The Toll Troll<\/strong>/);
+    assert.match(html, /<span>Keeper<\/span>/);
+    assert.equal((html.match(/story-landmark-selected/g) || []).length, 1);
+  });
+
   it('uses the fixed boy and his journey without a name or avatar questionnaire', () => {
     const view = arrivalView(tolls);
     const words = storyStops(view).map(stop => stop.words).join(' ');

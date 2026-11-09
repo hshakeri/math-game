@@ -174,7 +174,7 @@ export class CastleGame {
       this.renderStoryMap();
       // Restore the activating map control after replacing its scene markup.
       const selector = next ? '[data-story-next]' : `[data-story-stop="${this.storyStop}"]`;
-      document.querySelector(`#encounter-map-mount ${selector}`)?.focus({ preventScroll: true });
+      document.getElementById('encounter-map-mount')?.querySelector(selector)?.focus({ preventScroll: true });
     });
     const tools = document.getElementById('tools-drawer');
     document.getElementById('btn-my-tools')?.addEventListener('click', () => {
@@ -516,7 +516,24 @@ export class CastleGame {
 
   renderStoryMap() {
     const mount = document.getElementById('encounter-map-mount');
-    if (mount && this.currentView) mount.innerHTML = renderEncounterMap(this.currentView, this.storyStop);
+    if (mount && this.currentView) {
+      const finishedReading = ['look_back', 'sealed', 'map'].includes(this.currentView.state || this.currentView.phase);
+      mount.classList.toggle('hidden', finishedReading);
+      mount.innerHTML = finishedReading ? '' : renderEncounterMap(this.currentView, this.storyStop);
+    }
+    this.renderChallengeGoal();
+  }
+
+  renderChallengeGoal() {
+    const goal = document.getElementById('challenge-goal');
+    const view = this.currentView;
+    if (!goal || !view) return;
+    const reflectionOrFinished = ['look_back', 'sealed', 'map'].includes(view.state || view.phase);
+    const torchQuestionVisible = view.story?.kind === 'dark-vault' && storyStops(view)[this.storyStop]?.id === 'goal';
+    const hidden = reflectionOrFinished || torchQuestionVisible;
+    goal.classList.toggle('hidden', hidden);
+    goal.textContent = hidden ? '' : view.story?.kind === 'toll-road'
+      ? 'How many Star-Coins were in his pouch at the beginning?' : view.partPrompt || view.prompt || '';
   }
 
   updateView(view, { speak = true } = {}) {
@@ -538,16 +555,11 @@ export class CastleGame {
       this.renderHistory();
     }
     const phase = view.state || view.phase;
-    if (newScene) this.renderStoryMap();
+    if (newScene || phase !== (previousView?.state || previousView?.phase)) this.renderStoryMap();
     const titleEl = document.getElementById('encounter-title');
     if (titleEl) titleEl.textContent = view.story?.kind === 'toll-road' ? 'The three toll gates' : view.title || 'The gate';
     const reflectionOrFinished = ['look_back', 'sealed', 'map'].includes(phase);
-    const goal = document.getElementById('challenge-goal');
-    if (goal) {
-      goal.classList.toggle('hidden', reflectionOrFinished);
-      goal.textContent = reflectionOrFinished ? '' : view.story?.kind === 'toll-road'
-        ? 'How many Star-Coins were in his pouch at the beginning?' : view.partPrompt || view.prompt || '';
-    }
+    this.renderChallengeGoal();
     document.querySelector('.map-conversation')?.classList.toggle('hidden', reflectionOrFinished);
 
     // 2. Deck Button lock status (Unlocked only in 'plan' and forward)
@@ -913,7 +925,7 @@ export class CastleGame {
     const hero = document.getElementById('reply-hero');
     if (hero) hero.innerHTML = sprite('hero', { variant: 1 });
     const label = document.getElementById('hero-speaker-name');
-    if (label) label.textContent = 'YOU';
+    if (label) label.textContent = 'YOU · KEYBREAKER';
     const rivet = document.getElementById('rivet-avatar');
     if (rivet) rivet.innerHTML = sprite('rivet');
   }

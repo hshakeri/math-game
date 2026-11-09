@@ -1,0 +1,13 @@
+{
+  "baseline": "09b1f7d5211df439f79056270c11ae5decf41c60",
+  "source": "content/encounters/alchemists-dark-vault.json",
+  "authorizedChanges": [
+    "contentVersion",
+    "inscription",
+    "parts[].prompt"
+  ],
+  "otherEncountersUnchanged": true,
+  "mathHintsAndChecksUnchanged": true,
+  "designPillarsUnchanged": true,
+  "protectedContentSha256": "9a58cdeb15e3f95a934607023508ebd089c2bf677732909202a949a429f7a602"
+}

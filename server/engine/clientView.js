@@ -30,7 +30,22 @@ export function getRungName(rungIndex) {
 
 // A comic can show the inscription's forward rules before workspace tools unlock.
 // Copy only these public givens, never the mechanic object or solution values.
-function getStoryGivens(part) {
+function getStoryGivens(part, encounter) {
+  if (encounter?.id === 'ch1-n2-dark-vault') {
+    if (typeof encounter.inscription !== 'string' || typeof part?.prompt !== 'string') return null;
+    const paragraphs = encounter.inscription.split(/\r?\n\s*\r?\n/).map(text => text.trim());
+    // These are authored paragraph boundaries, never inferred sentence stops.
+    // The final beat always comes from this part's public torch question.
+    if (paragraphs.length !== 2 || paragraphs.some(text => !text)) return null;
+    return {
+      kind: 'dark-vault',
+      beats: [
+        { id: 'chest', text: paragraphs[0] },
+        { id: 'rules', text: paragraphs[1] },
+        { id: 'goal', text: part.prompt }
+      ]
+    };
+  }
   const mechanic = part?.mechanic;
   return mechanic?.kind === 'inverse-chain' ? {
     kind: 'toll-road',
@@ -64,7 +79,7 @@ export function getClientSafeEncounter(encounter) {
       arrival: encounter.narrative.arrival
     },
     inscription: encounter.inscription,
-    story: getStoryGivens(encounter.parts?.[0]),
+    story: getStoryGivens(encounter.parts?.[0], encounter),
     cards: [...(encounter.cards || [])],
     givens: [...(encounter.givens || [])],
     parts: encounter.parts.map(part => ({
@@ -234,7 +249,7 @@ export function getClientSafeSessionView(session, encounter) {
     phase,
     state: phase,
     currentPartId: currentPart.id,
-    story: getStoryGivens(currentPart),
+    story: getStoryGivens(currentPart, encounter),
     prompt: currentPart.prompt,
     partPrompt: currentPart.prompt,
     availableCards: encounter.cards,

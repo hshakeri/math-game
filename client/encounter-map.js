@@ -3,17 +3,36 @@ import { escapeHTML, CAST } from './story.js';
 import { sprite } from './pixel-art.js';
 import { illustration, KEEPER_ILLUSTRATIONS } from './illustrations.js';
 
+function narrator(view, kind) {
+  if (kind === 'rivet') return { speaker: 'Rivet', role: 'Owl guide', art: 'rivet' };
+  if (kind === 'grubb') return { speaker: 'Grubb', role: 'Goblin challenger', art: 'grubb-neutral' };
+  return { speaker: CAST[view.encounterId]?.name || 'The gatekeeper', role: 'Keeper', art: KEEPER_ILLUSTRATIONS[view.encounterId] };
+}
+
 export function storyStops(view) {
+  if (view.story?.kind === 'dark-vault') {
+    const beats = Array.isArray(view.story.beats) ? view.story.beats : [];
+    return [
+      ['chest', 'The chest', 'keeper'],
+      ['rules', 'The rules', 'rivet'],
+      ['goal', 'This torch', 'grubb']
+    ].map(([id, name, speaker]) => ({
+      id, name, words: beats.find(beat => beat.id === id)?.text || '', ...narrator(view, speaker)
+    }));
+  }
   if (view.story?.kind === 'toll-road') {
     const gates = view.story.gates || [];
     return [
-      { name: 'The beginning', icon: 'start', words: 'A boy sets out for the castle with a pouch of Star-Coins. How many coins did he start with?' },
-      ...gates.map((gate, i) => ({ name: `Gate ${i + 1}`, icon: 'gate', words: `His coins ${gate.mul === 2 ? 'double' : `become ${gate.mul} times as many`}. Then he pays ${gate.sub} Star-Coins.`, rule: `× ${gate.mul} → − ${gate.sub}` })),
-      { name: 'The castle', icon: 'castle', words: `He reaches the castle with exactly ${view.story.end} Star-Coins.`, rule: `${view.story.end} coins left` }
+      { name: 'The beginning', icon: 'start', words: 'A boy sets out for the castle with a pouch of Star-Coins. How many coins did he start with?', ...narrator(view, 'rivet') },
+      ...gates.map((gate, i) => ({ name: `Gate ${i + 1}`, icon: 'gate', words: `His coins ${gate.mul === 2 ? 'double' : `become ${gate.mul} times as many`}. Then he pays ${gate.sub} Star-Coins.`, rule: `× ${gate.mul} → − ${gate.sub}`, ...narrator(view, 'keeper') })),
+      { name: 'The castle', icon: 'castle', words: `He reaches the castle with exactly ${view.story.end} Star-Coins.`, rule: `${view.story.end} coins left`, ...narrator(view, 'rivet') }
     ];
   }
   const sentences = String(view.inscription || '').split(/(?<=[.!?])\s+(?=[A-Z])/).filter(Boolean);
-  return sentences.map((words, i) => ({ name: i === 0 ? 'The story' : i === sentences.length - 1 ? 'Your challenge' : `Clue ${i}`, words }));
+  return sentences.map((words, i) => ({
+    name: i === 0 ? 'The story' : i === sentences.length - 1 ? 'Your challenge' : `Clue ${i}`,
+    words, ...narrator(view, ['keeper', 'rivet', 'grubb'][i % 3])
+  }));
 }
 
 const road = `<svg class="story-landscape" viewBox="0 0 1100 420" preserveAspectRatio="none" aria-hidden="true">
@@ -40,19 +59,23 @@ export function renderEncounterMap(view, selected = 0) {
   const stops = storyStops(view);
   const active = Math.max(0, Math.min(Number.isFinite(selected) ? Math.trunc(selected) : 0, stops.length - 1));
   const tolls = view.story?.kind === 'toll-road';
-  const keeper = CAST[view.encounterId];
+  const current = stops[active] || { name: 'The story', words: view.inscription || '', ...narrator(view, 'keeper') };
   const positions = [[8,70],[28,36],[49,62],[70,30],[91,42]];
   const nodes = stops.map((stop, i) => {
     const [x,y] = tolls ? positions[i] || [10 + i * 80 / Math.max(1, stops.length - 1), 50]
       : [100 * (i + .5) / Math.max(1, stops.length), 82];
-    return `<button class="story-stop ${i === active ? 'is-current' : ''}" type="button" data-story-stop="${i}" aria-pressed="${i === active}" aria-label="${escapeHTML(stop.name)}: ${escapeHTML(stop.words)}" style="--story-x:${x}%;--story-y:${y}%">
-      ${tolls ? `<span class="story-landmark">${landmark(stop.icon)}</span>` : '<span class="story-dot" aria-hidden="true">◆</span>'}<strong>${escapeHTML(stop.name)}</strong>${stop.rule ? `<span class="story-rule">${escapeHTML(stop.rule)}</span>` : ''}</button>`;
+    return `<button class="story-stop ${i === active ? 'is-current' : ''}" type="button" data-story-stop="${i}" aria-pressed="${i === active}" aria-controls="story-active-caption" aria-label="${escapeHTML(stop.name)} — ${escapeHTML(stop.speaker)}, ${escapeHTML(stop.role)}: ${escapeHTML(stop.words)}" style="--story-x:${x}%;--story-y:${y}%">
+      ${tolls ? `<span class="story-landmark${i === active ? ' story-landmark-selected' : ''}">${landmark(stop.icon)}</span>` : ''}<strong>${escapeHTML(stop.name)}</strong>${stop.rule ? `<span class="story-rule">${escapeHTML(stop.rule)}</span>` : ''}</button>`;
   }).join('');
-  const scene = tolls ? road : illustration(KEEPER_ILLUSTRATIONS[view.encounterId], { priority: true });
+  const scene = tolls ? road : illustration(current.art, { priority: true });
+  const controls = `<div class="story-stops" aria-label="Explore the story">${nodes}</div>`;
   return `<div class="comic-map ${tolls ? 'comic-map-tolls' : 'comic-map-keeper'}">
-    <div class="story-map-art">${scene}${tolls ? `<span class="map-keeper" aria-hidden="true">${sprite('troll')}</span>` : ''}</div>
-    <div class="story-stops" aria-label="Explore the story">${nodes}</div>
-    <div class="story-caption" aria-live="polite" aria-atomic="true"><span class="eyebrow">${escapeHTML(stops[active]?.name || keeper?.name || 'The story')}</span><p>${escapeHTML(stops[active]?.words || view.inscription)}</p></div>
+    <div class="story-frame">
+      <div class="story-map-art" data-story-art="${escapeHTML(tolls ? 'toll-road' : current.art)}">${scene}${tolls ? `<span class="map-keeper" aria-hidden="true">${sprite('troll')}</span>` : ''}</div>
+      ${tolls ? controls : ''}
+      <div id="story-active-caption" class="story-caption" aria-live="polite" aria-atomic="true"><span class="story-speaker"><strong>${escapeHTML(current.speaker)}</strong><span>${escapeHTML(current.role)}</span></span><p>${escapeHTML(current.words)}</p></div>
+    </div>
+    ${tolls ? '' : controls}
     <div class="story-reading-controls"><button type="button" class="story-next" data-story-next>${active < stops.length - 1 ? 'Next part of the story →' : 'Read the story again ↺'}</button><span>Tap a place to read it again.</span></div>
   </div>`;
 }
