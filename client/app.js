@@ -18,7 +18,7 @@ import { renderWorldMap } from './world-map.js';
 import { renderEncounterMap, storyStops } from './encounter-map.js';
 import { mountCalculationTools } from './calculation-tools.js';
 
-// Display only. Saved dialogue is never sent back as model context.
+// Display only. The current server session owns the conversation ledger.
 function historyEntries(entries) {
   if (!Array.isArray(entries)) return [];
   return entries.flatMap(entry => {
@@ -125,8 +125,6 @@ export class CastleGame {
     this.busy = false;
     this.requestEpoch = 0;
     this.history = [];
-    this.historyPrefix = [];
-    this.historyStorageKey = null;
     this.lastSpoken = '';
     this.lookBackKey = '';
     this.hero = { name: '', variant: 1 }; // One boy Keybreaker; no setup step.
@@ -250,13 +248,13 @@ export class CastleGame {
   }
 
   initRouter() {
-    const handleRoute = () => {
+    const handleRoute = (resume = false) => {
       const hash = window.location.hash || '#map';
       if (hash.startsWith('#encounter')) {
         this.showScreen('screen-encounter');
         const urlParams = new URLSearchParams(hash.includes('?') ? hash.split('?')[1] : '');
         const encId = urlParams.get('id') || 'ch1-n1-reverse-tolls';
-        if (encId) this.startEncounter(encId);
+        if (encId) this.startEncounter(encId, { resume });
 
       } else {
         this.showScreen('screen-map');
@@ -264,8 +262,10 @@ export class CastleGame {
       }
     };
 
-    window.addEventListener('hashchange', handleRoute);
-    handleRoute();
+    // A page reload may resume its current play. Entering from the map, browser
+    // history, or another challenge always starts a new conversation.
+    window.addEventListener('hashchange', () => handleRoute());
+    handleRoute(true);
   }
 
   showScreen(screenId) {
@@ -301,7 +301,7 @@ export class CastleGame {
     }
   }
 
-  async startEncounter(encounterId) {
+  async startEncounter(encounterId, { resume = false } = {}) {
     const epoch = ++this.requestEpoch;
     this.setBusy(false);
     this.cancelSpeech({ clear: true });
@@ -312,8 +312,6 @@ export class CastleGame {
     this.lastSpoken = '';
     this.lookBackKey = '';
     this.history = [];
-    this.historyPrefix = [];
-    this.historyStorageKey = null;
     this.renderHistory();
     this.currentView = null;
     this.activeSessionId = null;
@@ -322,36 +320,19 @@ export class CastleGame {
     try {
       let data = null;
       let savedId = null;
-      let savedHistory = {};
-      const historyKey = sessionId => `keybreakers_dialogue_${encounterId}_${sessionId}`;
-      try { savedId = sessionStorage.getItem(`keybreakers_session_${encounterId}`); } catch {}
-      try { savedHistory = savedId ? JSON.parse(localStorage.getItem(historyKey(savedId)) || '{}') || {} : {}; } catch {}
-      let prefix = savedHistory.sessionId === savedId ? historyEntries(savedHistory.prefix) : [];
+      if (resume) {
+        try { savedId = sessionStorage.getItem(`keybreakers_session_${encounterId}`); } catch {}
+      }
       if (savedId) {
         const restored = await fetch(`/api/session/${encodeURIComponent(savedId)}/state`);
         if (restored.ok) {
           const candidate = await restored.json();
-          if (candidate.view?.encounterId === encounterId && !candidate.view.completed) data = { ...candidate, sessionId: savedId };
+          if (candidate.view?.encounterId === encounterId) data = { ...candidate, sessionId: savedId };
         }
       }
       if (!data) {
-        prefix = savedHistory.sessionId === savedId ? historyEntries(savedHistory.entries) : [];
-        if (savedId) {
-          // Recover previously delivered words even after a local server restart.
-          // This endpoint exposes display text only, never model/engine internals.
-          try {
-            const response = await fetch(`/api/session/${encodeURIComponent(savedId)}/dialogue`);
-            if (response.ok) {
-              const previous = await response.json();
-              if (previous.encounterId === encounterId && previous.dialogue?.length) {
-                prefix = [
-                  ...(savedHistory.sessionId === savedId ? historyEntries(savedHistory.prefix) : []),
-                  ...historyEntries(previous.dialogue)
-                ].slice(-200);
-              }
-            }
-          } catch {}
-        }
+        // An expired session (including a restarted server) is a new play.
+        // Archived dialogue never becomes part of a fresh conversation.
         if (epoch !== this.requestEpoch) return;
         const res = await fetch('/api/session/start', {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ encounterId })
@@ -361,11 +342,10 @@ export class CastleGame {
       }
       if (epoch !== this.requestEpoch) return;
       this.activeSessionId = data.sessionId;
-      this.historyStorageKey = historyKey(data.sessionId);
-      this.historyPrefix = prefix;
-      this.history = Array.isArray(data.view?.dialogue) ? prefix
-        : savedHistory.sessionId === data.sessionId ? historyEntries(savedHistory.entries) : prefix;
-      this.renderHistory();
+      for (const id of ['child-text-input', 'conjecture-value', 'conjecture-reason', 'final-answer-input', 'tiny-case-answer']) {
+        const input = document.getElementById(id);
+        if (input) input.value = '';
+      }
       try { sessionStorage.setItem(`keybreakers_session_${encounterId}`, data.sessionId); } catch {}
       this.updateView(data.view || data);
       this.renderReaction(data.view || data, []);
@@ -397,8 +377,9 @@ export class CastleGame {
       this.renderReaction(data.view || data, data.events || []);
       // One response carries the same utterance in both places. A new child turn
       // may legitimately receive the same scripted sentence as the previous turn.
-      if (data.speech) this.speak(data.speech, { repeat: true, record: !serverHistory });
-      else if (data.view?.lastTutorUtterance) this.speak(data.view.lastTutorUtterance, { record: !serverHistory });
+      const finished = ['sealed', 'map'].includes(this.currentView?.state || this.currentView?.phase);
+      if (!finished && data.speech) this.speak(data.speech, { repeat: true, record: !serverHistory });
+      else if (!finished && data.view?.lastTutorUtterance) this.speak(data.view.lastTutorUtterance, { record: !serverHistory });
       if (action.type === 'lookback' && (data.view?.sealed || data.view?.completed)) {
         try { localStorage.setItem(`keybreakers_note_${this.currentView.encounterId}`, String(action.value)); } catch {}
       }
@@ -535,11 +516,6 @@ export class CastleGame {
       log.innerHTML = this.history.map(h => `<p class="history-${h.who === 'You' ? 'child' : 'tutor'}"><strong>${escapeHTML(h.who)}</strong>${escapeHTML(h.words)}</p>`).join('');
       if (atEnd) log.scrollTop = log.scrollHeight;
     }
-    try {
-      if (this.historyStorageKey && this.activeSessionId) localStorage.setItem(this.historyStorageKey, JSON.stringify({
-        sessionId: this.activeSessionId, prefix: this.historyPrefix, entries: this.history
-      }));
-    } catch {}
   }
 
   renderReaction(view, events) {
@@ -569,11 +545,11 @@ export class CastleGame {
       this.reactionKey = '';
       this.lastSpoken = '';
       this.storyStop = 0;
-      this.calculationTools?.setStorageKey(`keybreakers_work_${sceneKey}`);
+      this.calculationTools?.setStorageKey(`keybreakers_work_${this.activeSessionId}:${sceneKey}`);
     }
     this.currentView = view;
     if (Array.isArray(view.dialogue)) {
-      this.history = [...this.historyPrefix, ...historyEntries(view.dialogue)].slice(-200);
+      this.history = historyEntries(view.dialogue);
       this.renderHistory();
     }
     const phase = view.state || view.phase;
@@ -602,10 +578,12 @@ export class CastleGame {
     }
 
     // 3. Owl Utterance
-    if (speak && view.lastTutorUtterance) {
+    if (['sealed', 'map'].includes(phase)) {
+      this.cancelSpeech({ clear: true });
+    } else if (speak && view.lastTutorUtterance) {
       this.speak(view.lastTutorUtterance, { record: !Array.isArray(view.dialogue) });
     } else if (speak && phase === 'arrive') {
-      this.speak('Let’s explore the story. Tap the places on the map, then tell me what we are trying to find.', { delay: 450 });
+      this.speak('Let’s explore the story. Tap the places on the map, then tell me what we are trying to find.', { delay: 450, record: !Array.isArray(view.dialogue) });
     }
 
     // 4. Arrival Panel visibility
@@ -699,7 +677,7 @@ export class CastleGame {
     if (lbPanel) {
       if (phase === 'look_back' && view.lookBackOptions) {
         lbPanel.classList.remove('hidden');
-        this.renderLookBack(view.lookBackOptions);
+        this.renderLookBack(view.lookBackOptions, view.activeLookBackKind);
       } else {
         lbPanel.classList.add('hidden');
       }
@@ -853,60 +831,86 @@ export class CastleGame {
     });
   }
 
-  renderLookBack(options) {
+  renderLookBack(options, activeKind) {
     const container = document.getElementById('look-back-options');
-    if (!container) return;
-    const key = JSON.stringify(options);
+    if (!container || !Array.isArray(options) || !options.length) return;
+    const selected = options.find(option => option.kind === activeKind)
+      || options.find(option => option.kind === 'verify') || options[0];
+    const key = JSON.stringify([options, selected.kind]);
     if (key === this.lookBackKey) return;
     this.lookBackKey = key;
     container.innerHTML = '';
-    options.forEach((opt, idx) => {
-      const card = document.createElement('div');
-      card.className = 'lookback-card';
-      card.style.display = 'block';
-      card.style.textAlign = 'left';
-      card.style.padding = '12px';
-      card.style.marginBottom = '12px';
+    const labels = { verify: 'Check my route', 'second-method': 'Try another way', perturb: 'Change the story' };
+    const label = document.createElement('label');
+    label.className = 'lookback-selector';
+    label.textContent = 'My final check';
+    const select = document.createElement('select');
+    select.className = 'select-touch';
+    select.setAttribute('aria-label', 'Choose a final check');
+    options.forEach(option => {
+      const item = document.createElement('option');
+      item.value = option.kind;
+      item.textContent = labels[option.kind] || 'Check my idea';
+      select.appendChild(item);
+    });
+    select.value = selected.kind;
+    select.addEventListener('change', async () => {
+      select.disabled = true;
+      try {
+        const accepted = await this.handleAction({ type: 'lookback_select', kind: select.value });
+        if (!accepted) select.value = selected.kind;
+        else if (this.currentView?.activeLookBackKind) select.value = this.currentView.activeLookBackKind;
+      } catch {
+        select.value = selected.kind;
+      } finally {
+        select.disabled = false;
+      }
+    });
+    label.appendChild(select);
+    container.appendChild(label);
 
-      const title = document.createElement('strong');
-      title.textContent = ['Explain your way through', 'Try another way', 'Change the story'][idx] || 'Leave your note';
-      const promptP = document.createElement('p');
-      promptP.style.margin = '6px 0 10px 0';
-      promptP.textContent = opt.prompt;
-
+    const card = document.createElement('div');
+    card.className = 'lookback-card';
+    const prompt = document.createElement('p');
+    prompt.textContent = selected.prompt;
+    card.appendChild(prompt);
+    if (selected.responseType === 'choice' && Array.isArray(selected.choices)) {
+      const choices = document.createElement('div');
+      choices.className = 'lookback-choices';
+      choices.setAttribute('role', 'group');
+      choices.setAttribute('aria-label', selected.prompt);
+      selected.choices.forEach((text, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn-touch btn-secondary';
+        button.textContent = text;
+        button.addEventListener('click', () => this.handleAction({ type: 'lookback', kind: selected.kind, value: index }));
+        choices.appendChild(button);
+      });
+      card.appendChild(choices);
+    } else {
       const form = document.createElement('form');
-      form.style.display = 'flex';
-      form.style.gap = '8px';
-
       const input = document.createElement('input');
       input.type = 'text';
+      input.inputMode = 'numeric';
       input.className = 'input-touch';
-      input.placeholder = 'Here is how I see it…';
-      input.setAttribute('aria-label', opt.prompt);
+      input.placeholder = 'Final number…';
+      input.setAttribute('aria-label', `Final number: ${selected.prompt}`);
       input.maxLength = 140;
-      input.style.flex = '1';
-
       const submitBtn = document.createElement('button');
       submitBtn.type = 'submit';
       submitBtn.className = 'btn-touch btn-primary';
-      submitBtn.textContent = 'Leave my note';
-
+      submitBtn.textContent = 'Check my result';
       form.appendChild(input);
       form.appendChild(submitBtn);
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const val = input.value.trim();
-        if (val) {
-          this.handleAction({ type: 'lookback', kind: opt.kind, index: idx, value: val });
-        }
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const value = input.value.trim();
+        if (value) this.handleAction({ type: 'lookback', kind: selected.kind, value });
       });
-
-      card.appendChild(title);
-      card.appendChild(promptP);
       card.appendChild(form);
-      container.appendChild(card);
-    });
+    }
+    container.appendChild(card);
   }
 
   renderMap() {

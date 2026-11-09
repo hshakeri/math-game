@@ -287,16 +287,45 @@ export async function generateTurn(ctx, options = {}) {
     throw new Error('No safe scripted tutor probe is available');
   };
 
-  // This is an input-completeness cue, emitted before any answer check. Keep it
-  // local: a model never receives the pending candidate or a correctness signal.
-  if (ctx.conversationCue === 'reason') {
-    const speech = screenScripted('I have your proposed answer on the slate, and my monocle is waiting beside it; what in your working makes you think that answer fits the inscription?');
+  const deliverLocal = utterance => {
+    const speech = screenScripted(utterance);
     const latencyMs = Date.now() - t0;
     if (activeSessionId) {
       logEventSync(activeSessionId, 'tutor.call', { encounterId, partId, state, rung, adapter: 'scripted', fallback: false, retries: 0, latencyMs });
       logEventSync(activeSessionId, 'tutor.say', { speech, source: 'scripted' });
     }
     return { speech, utterance: speech, adapter: 'scripted', fallback: false, retries: 0, latencyMs };
+  };
+
+  // This is an input-completeness cue, emitted before any answer check. Keep it
+  // local: a model never receives the pending candidate or a correctness signal.
+  if (ctx.conversationCue === 'reason') {
+    return deliverLocal('I have your proposed answer on the slate, and my monocle is waiting beside it; what in your working makes you think that answer fits the inscription?');
+  }
+
+  // Look Back is one selected, engine-checked task. Model-generated follow-up
+  // questions cannot change that task or turn a finished solution into a loop.
+  if (state === 'look_back') {
+    const reflection = encounter?.lookBack?.find(option => option.kind === ctx.reflectionKind)
+      || encounter?.lookBack?.find(option => option.kind === 'verify') || encounter?.lookBack?.[0];
+    const choice = reflection?.check?.type === 'choice';
+    const tollVerify = encounterId === 'ch1-n1-reverse-tolls' && reflection?.kind === 'verify';
+    if (ctx.conversationCue === 'reflection_format') {
+      if (tollVerify) return deliverLocal('The starting-number explanation is already in our conversation. For this final check, enter only the pouch total you get at the castle door. What total does your forward check give?');
+      return deliverLocal(choice
+        ? 'I have kept your note on the page. The selected final check uses the statements shown below; you can choose a statement or send its words here. Which statement will you use?'
+        : 'I have kept your note on the page. The selected final check takes a number in the reply box; you can send that number here too. What result do you get for the task shown below?');
+    }
+    if (ctx.conversationCue === 'reflection_retry') {
+      return deliverLocal(choice
+        ? 'The final check is still open, and your working stays on the page. Read the selected task and its statements again. Which statement would you use to explain what the task asks?'
+        : 'The final check is still open, and your working stays on the page. Read the selected task again and check the result you entered. What number will you send for that task?');
+    }
+    const exactPrompt = 'Your earlier explanation stays on the page. There is one final check for the Seal. ' + (reflection?.prompt || '');
+    if (reflection?.prompt && checkUtterance(exactPrompt, leakGateContext).allowed) return deliverLocal(exactPrompt);
+    return deliverLocal(choice
+      ? 'Your earlier explanation stays on the page. There is one final check for the Seal: read the selected task below and choose the statement that explains it. Which statement will you use?'
+      : 'Your earlier explanation stays on the page. There is one final check for the Seal: use the selected task below and send its result here. What number does that task ask you to find?');
   }
 
   // Helper for scripted fallback

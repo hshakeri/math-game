@@ -56,6 +56,119 @@ test('a numeric chat answer followed by its reason continues to Look Back', asyn
   assert.equal(explained.view.sealed, false, 'The earned Look Back is still required');
 });
 
+test('a typed answer to the active Look Back check earns the Seal instead of another probe', async t => {
+  const act = await conversation(t);
+  await act({ type: 'arrive' });
+  const solved = await act({ type: 'say', text: 'The answer is 6 because I undid each toll and checked the journey.' });
+  assert.equal(solved.state, 'look_back');
+  const reflected = await act({ type: 'say', text: '13' });
+  assert.equal(reflected.state, 'sealed');
+  assert.equal(reflected.view.sealed, true);
+  assert.equal(reflected.events.some(event => event.type === 'node.sealed'), true);
+  assert.equal(reflected.speech, null, 'No further tutor question follows the Seal');
+});
+
+test('a pasted symbolic equation in the Look Back form gets result-format guidance', async t => {
+  const act = await conversation(t);
+  await act({ type: 'arrive' });
+  const algebra = 'The journey gives 2*(2*(2*x-5)-3)-9=13; I undid each toll, so x is 6.';
+  const solved = await act({ type: 'conjecture', value: algebra });
+  assert.equal(solved.state, 'look_back');
+  assert.match(solved.speech, /What does he hold at the castle door/);
+  const repeated = await act({ type: 'lookback', kind: 'verify', value: algebra });
+  assert.equal(repeated.state, 'look_back');
+  assert.ok(repeated.events.some(event => event.type === 'lookback.input_requested'));
+  assert.match(repeated.speech, /result|number/);
+  assert.notEqual(repeated.speech, solved.speech);
+  assert.equal(repeated.view.sealed, false);
+  const again = await act({ type: 'lookback', kind: 'verify', value: algebra });
+  assert.equal(again.state, 'look_back');
+  assert.ok(again.events.some(event => event.type === 'lookback.input_requested'));
+  const finished = await act({ type: 'say', text: '13' });
+  assert.equal(finished.state, 'sealed');
+  assert.equal(finished.speech, null);
+  assert.equal(finished.events.filter(event => event.type === 'node.sealed').length, 1);
+  const duplicate = await act({ type: 'say', text: '13' });
+  assert.equal(duplicate.events.some(event => event.type === 'node.sealed'), false);
+  assert.equal(duplicate.speech, null);
+});
+
+test('Look Back keeps a selected task and checks only that task', async t => {
+  const act = await conversation(t);
+  await act({ type: 'arrive' });
+  const solved = await act({ type: 'conjecture', value: 6, reason: 'I reversed each toll.' });
+  assert.equal(solved.view.activeLookBackKind, 'verify');
+  const wrongTask = await act({ type: 'say', text: '45' });
+  assert.equal(wrongTask.state, 'look_back');
+  assert.equal(wrongTask.view.activeLookBackKind, 'verify');
+  assert.ok(wrongTask.events.some(event => event.type === 'lookback.retry'));
+  assert.match(wrongTask.speech, /still open/);
+  const selected = await act({ type: 'lookback_select', kind: 'second-method' });
+  assert.equal(selected.view.activeLookBackKind, 'second-method');
+  const finished = await act({ type: 'say', text: 'The answer is 45' });
+  assert.equal(finished.state, 'sealed');
+});
+
+test('an invalid explicit reflection kind cannot fall back and earn a Seal', async t => {
+  const act = await conversation(t);
+  await act({ type: 'arrive' });
+  await act({ type: 'conjecture', value: 6, reason: 'I reversed each toll.' });
+  const result = await act({ type: 'lookback', kind: 'not-a-task', value: 13 });
+  assert.equal(result.state, 'look_back');
+  assert.equal(result.view.activeLookBackKind, 'verify');
+  assert.ok(result.events.some(event => event.type === 'lookback.input_requested'));
+});
+
+test('equation results are never extracted or evaluated as a reflection answer', async t => {
+  const act = await conversation(t);
+  await act({ type: 'arrive' });
+  await act({ type: 'conjecture', value: 6, reason: 'I reversed each toll.' });
+  for (const value of ['2+2=13', '2*(2*(2*6-5)-3)-9=13', 'x=13 or x=6', 'x is 6', '13?', '', 'true']) {
+    const result = await act({ type: 'lookback', kind: 'verify', value });
+    assert.equal(result.state, 'look_back', value);
+    assert.ok(result.events.some(event => event.type === 'lookback.input_requested'), value);
+  }
+});
+
+test('choice reflections expose all labels but no answer key and accept an exact label', async t => {
+  const act = await conversation(t, 'ch1-n4-castle-keep');
+  await act({ type: 'arrive' });
+  const solved = await act({ type: 'conjecture', value: 24, reason: 'I used the shared factor.' });
+  assert.equal(solved.view.activeLookBackKind, 'verify');
+  const task = solved.view.lookBackOptions.find(option => option.kind === 'verify');
+  assert.equal(task.responseType, 'choice');
+  assert.equal(task.choices.length, 3);
+  assert.equal('correct' in task, false);
+  assert.equal('check' in task, false);
+  const unsupported = await act({ type: 'say', text: 'I know which guardian it is.' });
+  assert.ok(unsupported.events.some(event => event.type === 'lookback.input_requested'));
+  assert.match(unsupported.speech, /statement/);
+  const wrong = await act({ type: 'say', text: task.choices[1] });
+  assert.equal(wrong.state, 'look_back');
+  assert.ok(wrong.events.some(event => event.type === 'lookback.retry'));
+  const finished = await act({ type: 'say', text: task.choices[0] });
+  assert.equal(finished.state, 'sealed');
+  assert.equal(finished.speech, null);
+});
+
+test('all reflection guidance stays local and passes the current leak gate', async () => {
+  let calls = 0;
+  for (const id of ['ch1-n1-reverse-tolls', 'ch1-n2-dark-vault', 'ch1-n3-five-shields', 'ch1-n4-castle-keep']) {
+    const encounter = getEncounter(id);
+    const part = encounter.parts.at(-1);
+    for (const option of encounter.lookBack) {
+      for (const conversationCue of [undefined, 'reflection_format', 'reflection_retry']) {
+        const ctx = { encounterId: id, partId: part.id, state: 'look_back', rung: 'l0', reflectionKind: option.kind, conversationCue };
+        const result = await generateTurn(ctx, { adapter: 'gemini', fetchFn: async () => { calls++; throw Error('Must not call model'); } });
+        assert.equal(result.adapter, 'scripted');
+        assert.equal(result.fallback, false);
+        assert.equal(checkUtterance(result.speech, buildLeakGateContext(encounter, part, ctx)).allowed, true);
+      }
+    }
+  }
+  assert.equal(calls, 0);
+});
+
 test('integer claim parsing recognizes declarations without solving arithmetic', () => {
   for (const [text, value] of [['6', 6], ['six', 6], ['zero', 0], ['-4', -4], ['twenty-four', 24], ['The answer is 6.', 6], ['x = 6', 6], ['I think x is 6', 6], ['I believe the answer is six', 6], ['I get x = 6', 6]]) {
     assert.deepEqual(parseIntegerClaim(text), { value, reason: '' }, text);

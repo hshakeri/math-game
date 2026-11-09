@@ -339,11 +339,18 @@ describe('Milestone M2 Empirical Challenger: Adversarial Stress & Wire Audit', (
               ]
             };
 
-            await generateTurn(ctx, {
+            const turn = await generateTurn(ctx, {
               adapter: 'claude',
               apiKey: 'sk-ant-test',
               fetchFn: mockFetch
             });
+
+            if (state === 'look_back') {
+              assert.equal(outgoingBodyRaw, '', 'The selected final check must stay local');
+              assert.equal(turn.adapter, 'scripted');
+              assert.equal(turn.fallback, false);
+              return;
+            }
 
             assert.ok(outgoingBodyRaw.length > 0, 'Must have generated a wire request');
             const parsedBody = JSON.parse(outgoingBodyRaw);
@@ -401,11 +408,18 @@ describe('Milestone M2 Empirical Challenger: Adversarial Stress & Wire Audit', (
               ]
             };
 
-            await generateTurn(ctx, {
+            const turn = await generateTurn(ctx, {
               adapter: 'gemini',
               apiKey: 'test-goog-key',
               fetchFn: mockFetch
             });
+
+            if (state === 'look_back') {
+              assert.equal(outgoingBodyRaw, '', 'The selected final check must stay local');
+              assert.equal(turn.adapter, 'scripted');
+              assert.equal(turn.fallback, false);
+              return;
+            }
 
             assert.ok(outgoingBodyRaw.length > 0, 'Must have generated a wire request');
             const parsedBody = JSON.parse(outgoingBodyRaw);

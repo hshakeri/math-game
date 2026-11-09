@@ -7,7 +7,7 @@
  * higher hint ladder texts, and solution trees.
  */
 
-import { hasMoreParts } from './stateMachine.js';
+import { hasMoreParts, getActiveLookBack } from './stateMachine.js';
 import { displayDialogue } from '../tutor/dialogue.js';
 
 export class SecurityLeakError extends Error {
@@ -252,8 +252,11 @@ export function getClientSafeSessionView(session, encounter) {
     conjecturesRemaining: Math.max(0, 2 - (session.conjecturesCount ?? session.conjectures ?? 0)),
     lastTutorUtterance: session.lastTutorUtterance || null,
     dialogue: displayDialogue(session.dialogue),
+    activeLookBackKind: phase === 'look_back' ? getActiveLookBack(session, encounter)?.kind || null : null,
     lookBackOptions: phase === 'look_back'
-      ? encounter.lookBack.map(lb => ({ kind: lb.kind, prompt: lb.prompt }))
+      ? encounter.lookBack.map(lb => ({ kind: lb.kind, prompt: lb.prompt,
+        responseType: lb.check?.type,
+        ...(lb.check?.type === 'choice' ? { choices: [...lb.check.options] } : {}) }))
       : null,
     sealed: isEncounterSealed,
     partSealed: isPartSealed,

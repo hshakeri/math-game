@@ -1,0 +1,19 @@
+{
+  "observedAt": "2026-11-09T13:39:40.961Z",
+  "scope": "Loopback HTTP on the updated game. Synthetic solution replay explicitly uses the scripted adapter; no solution fixture was sent to a model.",
+  "fixtureSource": "test/conversation-answers.test.js",
+  "clientLifecycleSource": "test/still-speech-client.test.js",
+  "selectedTask": "verify",
+  "afterAnswer": "look_back",
+  "repeatedEquationEvents": [
+    "lookback.input_requested",
+    "lookback.input_requested"
+  ],
+  "afterFinalCheck": "sealed",
+  "sealEvents": 1,
+  "postSealSpeech": null,
+  "duplicateSealEvents": 0,
+  "newPlayDialogueEntries": 0,
+  "newPlayHasDifferentSession": true,
+  "updatedPageServed": true
+}

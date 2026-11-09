@@ -578,7 +578,7 @@ export function createServer(options = {}) {
         // Generate tutor turn if appropriate
         let speech = null;
         const nonTutorActions = ['parent_override', 'parent_scribe'];
-        if (!nextSession.completed && !nonTutorActions.includes(action.type)) {
+        if (!nextSession.completed && nextSession.state !== 'sealed' && !nonTutorActions.includes(action.type)) {
           try {
             const currentPart = sessionRecord.encounter.parts.find(part => part.id === nextSession.currentPartId);
             const historyGate = buildLeakGateContext(sessionRecord.encounter, currentPart, {
@@ -595,7 +595,10 @@ export function createServer(options = {}) {
               childAction: action.type,
               previousSpeech: nextSession.lastTutorUtterance || '',
               chosenCard: nextSession.activeCard,
-              conversationCue: events.some(event => event.type === 'conversation.reason_requested') ? 'reason' : undefined,
+              reflectionKind: nextSession.activeLookBackKind,
+              conversationCue: events.some(event => event.type === 'conversation.reason_requested') ? 'reason'
+                : events.some(event => event.type === 'lookback.input_requested') ? 'reflection_format'
+                : events.some(event => event.type === 'lookback.retry') ? 'reflection_retry' : undefined,
               sessionId
             };
 

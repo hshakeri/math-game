@@ -12,7 +12,7 @@ import * as goblinBins from './mechanics/goblin-bins.js';
 import * as seamGrid from './mechanics/seam-grid.js';
 import * as factorDials from './mechanics/factor-dials.js';
 import { getClientSafeSessionView } from './clientView.js';
-import { parseIntegerClaim, isReasonReply } from './conversationAnswer.js';
+import { parseIntegerClaim, isReasonReply, parseReflectionReply } from './conversationAnswer.js';
 
 export const MECHANICS = {
   'inverse-chain': inverseChain,
@@ -81,6 +81,12 @@ export function getPart(encounter, partId) {
   return encounter.parts.find(p => p.id === partId) || encounter.parts[0];
 }
 
+export function getActiveLookBack(session, encounter) {
+  return encounter.lookBack?.find(option => option.kind === session.activeLookBackKind)
+    || encounter.lookBack?.find(option => option.kind === 'verify')
+    || encounter.lookBack?.[0];
+}
+
 /**
  * 1. createSession(encounter, options)
  * Initializes a new deterministic session.
@@ -132,6 +138,7 @@ export function createSession(encounter, options = {}) {
     simplerProblemState: null,
     simplerProblemL3Unlocked: false,
     lookBackCompleted: false,
+    activeLookBackKind: null,
     parentWaiver: Boolean(options.parentWaiver || options.chapterWaiverUsed),
     chapterWaiverUsed: Boolean(options.chapterWaiverUsed || options.parentWaiver),
     parentFlag: false,
@@ -167,6 +174,7 @@ export function transition(session, action, encounter) {
   };
 
   function syncAliases() {
+    if (next.state === 'look_back') next.activeLookBackKind = getActiveLookBack(next, encounter)?.kind || null;
     next.phase = next.state;
     next.conjecturesCount = next.conjectures;
     next.chapterWaiverUsed = Boolean(next.chapterWaiverUsed || next.parentWaiver);
@@ -636,13 +644,30 @@ export function transition(session, action, encounter) {
   // STATE: LOOK_BACK
   // =========================================================================
   if (next.state === 'look_back') {
-    if (action.type === 'lookback') {
-      const option = (action.kind && encounter.lookBack.find(o => o.kind === action.kind))
-        ?? (typeof action.index === 'number' && encounter.lookBack[action.index])
-        ?? encounter.lookBack[0];
-      const kind = action.kind ?? option?.kind;
-      appendHistory('child', 'lookback', { kind, index: action.index, value: action.value });
-      const isRight = option && checkAnswer(action.value, option.check);
+    if (action.type === 'lookback_select') {
+      const option = encounter.lookBack.find(option => option.kind === action.kind);
+      if (option) {
+        next.activeLookBackKind = option.kind;
+        recordEvent('lookback.selected', { kind: option.kind });
+      }
+      syncAliases();
+      return { session: next, events };
+    }
+    if (action.type === 'lookback' || action.type === 'say') {
+      const option = action.kind ? encounter.lookBack.find(option => option.kind === action.kind)
+        : typeof action.index === 'number' ? encounter.lookBack[action.index]
+        : getActiveLookBack(next, encounter);
+      const kind = option?.kind || getActiveLookBack(next, encounter)?.kind;
+      if (option) next.activeLookBackKind = kind;
+      const input = action.type === 'say' ? action.text : action.value;
+      appendHistory('child', action.type, action.type === 'say' ? { text: input } : { kind, index: action.index, value: input });
+      const reply = option && parseReflectionReply(input, option.check);
+      if (!reply) {
+        recordEvent('lookback.input_requested', { kind });
+        syncAliases();
+        return { session: next, events };
+      }
+      const isRight = checkAnswer(reply.value, option.check);
 
       if (isRight) {
         // T17: Look back -> Sealed
@@ -697,6 +722,7 @@ export function transition(session, action, encounter) {
         next.simplerProblemState = null;
         next.simplerProblemL3Unlocked = false;
         next.lookBackCompleted = false;
+        next.activeLookBackKind = null;
 
         const mechanic = MECHANICS[nextPart.mechanic.kind];
         next.mechanicState = mechanic.init(nextPart.mechanic);

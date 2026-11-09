@@ -52,6 +52,8 @@ export const MANDATORY_EVENT_TYPES = new Set([
   'child.say',
   'simpler_problem.wrong',
   'lookback.retry',
+  'lookback.selected',
+  'lookback.input_requested',
   'hint.override'
 ]);
 

@@ -156,7 +156,7 @@ test('all explanation follow-ups pass the full gate at every encounter, part and
 });
 
 test('single-probe phases get fresh follow-ups and a faded rung never repeats the higher hint', async () => {
-  for (const [state, rung] of [['conjecture', 'l0'], ['carry_out', 'l2'], ['simpler_problem', 'l4'], ['look_back', 'l0']]) {
+  for (const [state, rung] of [['conjecture', 'l0'], ['carry_out', 'l2'], ['simpler_problem', 'l4']]) {
     const ctx = { ...base, state, rung };
     const first = await generateTurn(ctx, { adapter: 'scripted' });
     const second = await generateTurn({ ...ctx, previousSpeech: first.speech }, { adapter: 'scripted' });

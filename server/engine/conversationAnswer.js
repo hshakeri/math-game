@@ -59,3 +59,23 @@ export function isReasonReply(text) {
     !/[?]/.test(text) && !/\b(?:don't|do not|cannot|can't|can not|unable|unsure|uncertain|changed my mind|change my mind|not sure|nothing|all known|maybe|either|want|help|hint|repeat|forget|cancel|wait)\b/i.test(text) &&
     !/\b(?:answer|x)\s*(?:is|equals|=|:)/i.test(text) && !ALTERNATIVES.test(text) && !REPLACEMENT.test(text);
 }
+
+/** Match the selected authored reflection's input shape, without evaluating math. */
+export function parseReflectionReply(input, check) {
+  if (check?.type === 'integer') {
+    // An x declaration restates the starting answer, not the selected final
+    // task's result. Never extract a reflection result from that algebra.
+    if (typeof input === 'string' && /\bx\b/i.test(input)) return null;
+    const claim = parseIntegerClaim(input);
+    return claim ? { value: claim.value } : null;
+  }
+  if (check?.type === 'choice' && Array.isArray(check.options)) {
+    const normalize = text => typeof text === 'string' ? text.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!]$/, '') : '';
+    const text = normalize(input);
+    const index = text ? check.options.findIndex(option => normalize(option) === text) : -1;
+    if (index >= 0) return { value: index };
+    const numeric = typeof input === 'number' ? input : /^\d+$/.test(text) ? Number(text) : null;
+    return Number.isInteger(numeric) && numeric >= 0 && numeric < check.options.length ? { value: numeric } : null;
+  }
+  return null;
+}

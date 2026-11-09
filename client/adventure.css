@@ -125,3 +125,10 @@
 .adventure-dock .history-log p { padding:10px 14px; border-radius:8px; overflow-wrap:anywhere; text-align:left }
 .adventure-dock .history-child { margin-left:30px; border:1px solid var(--parchment-border); background:var(--parchment-bg) }
 .adventure-dock .history-tutor { margin-right:30px; border-left:3px solid var(--gold-dark) }
+.adventure-dock .dialogue-history-details { margin-top:24px }
+.lookback-selector { display:flex; align-items:center; gap:12px; flex-wrap:wrap; font-size:15px; margin:18px 0 10px }
+.lookback-selector select { flex:1; min-width:180px }
+.lookback-choices { display:grid; gap:10px }
+.lookback-choices .btn-touch { white-space:normal; text-align:left; justify-content:flex-start }
+.adventure-dock .lookback-card { margin:10px 0; border-left:3px solid var(--gold-dark); border-radius:0 }
+#look-back-prompt { font-size:17px; color:var(--ink-secondary); margin:8px 0 }
