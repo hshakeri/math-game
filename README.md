@@ -6,7 +6,7 @@
 
 There are **no timers, no scores, no streaks, and no leaderboards**—ever.
 
-**Presentation:** one cloud-edged map, a boy Keybreaker at the start, and four challenge landmarks. Each encounter brings the story and dialogue into one scene. Lemma’s creature deck, an optional calculator, calculation tape and scratchpad support the child’s own work. Speech bubbles unfold silently, with Read now / Read again and a saved instant-speech setting. Words stay available and never hold up play. The series title is provisional; see [name screen](docs/NAME-CHECK.md). [Cast concept](docs/art/keybreakers-cast-concept.png) · [Pixel style bible](tools/assets/style.md).
+**Presentation:** one cloud-edged map, a boy Keybreaker at the start, and four challenge landmarks. Each encounter brings the story and dialogue into one scene. Lemma’s creature deck, an optional calculator, calculation tape and scratchpad support the child’s own work. Speech bubbles unfold silently, with Read now / Read again and a saved instant-speech setting. Words stay available and never hold up play. The open conversation history keeps earlier messages visible. Children can state an answer in chat and explain how they found it; the game checks it deterministically. The series title is provisional; see [name screen](docs/NAME-CHECK.md). [Cast concept](docs/art/keybreakers-cast-concept.png) · [Pixel style bible](tools/assets/style.md).
 
 ---
 

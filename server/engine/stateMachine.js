@@ -12,6 +12,7 @@ import * as goblinBins from './mechanics/goblin-bins.js';
 import * as seamGrid from './mechanics/seam-grid.js';
 import * as factorDials from './mechanics/factor-dials.js';
 import { getClientSafeSessionView } from './clientView.js';
+import { parseIntegerClaim, isReasonReply } from './conversationAnswer.js';
 
 export const MECHANICS = {
   'inverse-chain': inverseChain,
@@ -105,6 +106,7 @@ export function createSession(encounter, options = {}) {
     currentPartId: initialPart.id,
     state: 'arrive',
     phase: 'arrive',
+    dialogue: [],
     history: [
       {
         turnId: 0,
@@ -123,6 +125,7 @@ export function createSession(encounter, options = {}) {
     conjectures: 0,
     conjecturesCount: 0,
     attempts: 0,
+    pendingConversationAnswer: null,
     shortcut: false,
     misconceptionTag: null,
     mechanicState: initialMechanicState,
@@ -156,6 +159,7 @@ export function transition(session, action, encounter) {
   let next = {
     ...session,
     history: [...(session.history || [])],
+    dialogue: [...(session.dialogue || [])],
     simplerProblemState: session.simplerProblemState
       ? { ...session.simplerProblemState }
       : null,
@@ -213,6 +217,67 @@ export function transition(session, action, encounter) {
     return { session: next, events };
   }
 
+  // Chat is another way to enter an answer, never a request for a model to
+  // judge it. Retain only a child's literal claim until they supply a reason.
+  const conversationStates = ['conjecture', 'understand', 'plan', 'carry_out'];
+  if (!conversationStates.includes(next.state) || !['say', 'conjecture'].includes(action.type)) {
+    next.pendingConversationAnswer = null;
+  }
+  if (action.type === 'conjecture' && part.answer.type === 'integer') {
+    const claim = parseIntegerClaim(action.value);
+    next.pendingConversationAnswer = null;
+    if (claim) {
+      const suppliedReason = action.reason ?? action.justification ?? '';
+      action = { ...action, value: claim.value, reason: suppliedReason && suppliedReason !== action.value ? suppliedReason : claim.reason };
+    }
+  }
+  if (action.type === 'say' && conversationStates.includes(next.state) && part.answer.type === 'integer') {
+    const text = typeof action.text === 'string' ? action.text : '';
+    let claim = parseIntegerClaim(text);
+    const pending = next.pendingConversationAnswer;
+    if (!claim && pending?.partId === next.currentPartId && isReasonReply(text)) {
+      claim = { value: pending.value, reason: text };
+    }
+    if (claim) {
+      if (countWords(claim.reason) < 3) {
+        next.pendingConversationAnswer = { partId: next.currentPartId, value: claim.value };
+        appendHistory('child', 'say', { text });
+        recordEvent('conversation.reason_requested');
+        syncAliases();
+        return { session: next, events };
+      }
+      next.pendingConversationAnswer = null;
+      if (['conjecture', 'understand'].includes(next.state) && next.conjectures < 2) {
+        // Reuse the existing two-conjecture window and its misconception rules.
+        action = { type: 'conjecture', value: claim.value, reason: claim.reason, conversationText: text };
+      } else {
+        const from = next.state;
+        const shortcut = from === 'plan' && next.conjectures < 2;
+        appendHistory('child', 'say', { text });
+        const isRight = checkAnswer(claim.value, part.answer);
+        if (!shortcut) next.attempts += 1;
+        if (isRight) {
+          next.state = hasMoreParts(next, encounter) ? 'sealed' : 'look_back';
+          next.shortcut = shortcut;
+          recordEvent('engine.transition', { from: shortcut ? from : 'submit', to: next.state, shortcut, attempts: next.attempts });
+          if (shortcut) recordEvent('shortcut', { shortcut: true, words: countWords(claim.reason) });
+        } else {
+          if (shortcut) next.conjectures += 1;
+          recordEvent('engine.transition', { from: shortcut ? from : 'submit', to: from, correct: false, attempts: next.attempts });
+          if (next.attempts >= 3) {
+            next.parentFlag = true;
+            recordEvent('parent.flag', { reason: 'three_failed_submits', l3Offered: true });
+          }
+        }
+        syncAliases();
+        return { session: next, events };
+      }
+    } else if (pending) {
+      // Questions, uncertainty, and help requests never justify an old claim.
+      next.pendingConversationAnswer = null;
+    }
+  }
+
   // =========================================================================
   // STATE: ARRIVE
   // =========================================================================
@@ -247,7 +312,7 @@ export function transition(session, action, encounter) {
       const stem = action.stem;
       const value = action.value;
       const reason = action.reason ?? action.justification ?? '';
-      appendHistory('child', 'conjecture', { stem, value, reason });
+      appendHistory('child', action.conversationText ? 'say' : 'conjecture', action.conversationText ? { text: action.conversationText } : { stem, value, reason });
       const isRight = checkAnswer(value, part.answer);
       const wordCount = countWords(reason);
 
@@ -262,6 +327,7 @@ export function transition(session, action, encounter) {
           return { session: next, events };
         } else {
           // T03: Conjecture -> Conjecture (Skeptic prompt)
+          next.pendingConversationAnswer = { partId: next.currentPartId, value };
           recordEvent('conjecture.skeptic_prompt', { prompt: 'Convince me in one sentence.' });
           syncAliases();
           return { session: next, events };
@@ -302,7 +368,7 @@ export function transition(session, action, encounter) {
       const stem = action.stem;
       const value = action.value;
       const reason = action.reason ?? action.justification ?? '';
-      appendHistory('child', 'conjecture', { stem, value, reason });
+      appendHistory('child', action.conversationText ? 'say' : 'conjecture', action.conversationText ? { text: action.conversationText } : { stem, value, reason });
       const isRight = checkAnswer(value, part.answer);
       const wordCount = countWords(reason);
 
@@ -317,6 +383,7 @@ export function transition(session, action, encounter) {
           return { session: next, events };
         } else {
           // T03: Right answer with < 3 words -> Skeptic prompt
+          next.pendingConversationAnswer = { partId: next.currentPartId, value };
           recordEvent('conjecture.skeptic_prompt', { prompt: 'Convince me in one sentence.' });
           syncAliases();
           return { session: next, events };

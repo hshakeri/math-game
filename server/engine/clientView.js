@@ -8,6 +8,7 @@
  */
 
 import { hasMoreParts } from './stateMachine.js';
+import { displayDialogue } from '../tutor/dialogue.js';
 
 export class SecurityLeakError extends Error {
   constructor(message, details = {}) {
@@ -250,6 +251,7 @@ export function getClientSafeSessionView(session, encounter) {
     },
     conjecturesRemaining: Math.max(0, 2 - (session.conjecturesCount ?? session.conjectures ?? 0)),
     lastTutorUtterance: session.lastTutorUtterance || null,
+    dialogue: displayDialogue(session.dialogue),
     lookBackOptions: phase === 'look_back'
       ? encounter.lookBack.map(lb => ({ kind: lb.kind, prompt: lb.prompt }))
       : null,

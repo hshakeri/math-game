@@ -414,3 +414,66 @@ test('selecting a different card exposes its workspace while repeated same-card 
   game.updateView({ ...selected, activeCard: 'draw-it' });
   assert.ok(drawers.every(drawer => drawer.open === true), 'Choosing a different card exposes the changed workspace');
 });
+
+test('server dialogue restores both speakers without duplicating the latest paced reply', async t => {
+  const { game, document } = harness(t);
+  const dialogue = [{ who: 'child', text: '<img src=x> My route.' }, { who: 'tutor', text: 'Which part would you try next?' }];
+  globalThis.fetch = async () => response({ view: view({ dialogue, lastTutorUtterance: dialogue[1].text }), speech: dialogue[1].text });
+  await game.handleAction({ type: 'say', text: dialogue[0].text });
+  assert.deepEqual(game.history, [{ who: 'You', words: dialogue[0].text }, { who: 'Rivet', words: dialogue[1].text }]);
+  const log = document.getElementById('dialogue-history-log');
+  assert.match(log.innerHTML, /&lt;img src=x&gt;/);
+  assert.equal((log.innerHTML.match(/Which part would you try next/g) || []).length, 1);
+  game.updateView(view({ dialogue, lastTutorUtterance: dialogue[1].text }));
+  assert.equal(game.history.length, 2, 'Refreshing the same view must not duplicate the log');
+});
+
+test('a restarted server recovers display history and keeps it with the new session', async t => {
+  const { game, document } = harness(t);
+  const previous = new Map(['localStorage', 'sessionStorage'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  const local = new Map(), session = new Map([['keybreakers_session_ch1-n1-reverse-tolls', 'old-session']]);
+  for (const [name, values] of [['localStorage', local], ['sessionStorage', session]]) {
+    Object.defineProperty(globalThis, name, { configurable: true, value: { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value) } });
+  }
+  t.after(() => { for (const [key, descriptor] of previous) { if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key]; } });
+  const oldDialogue = [{ who: 'child', text: 'My earlier working stays here.' }, { who: 'tutor', text: 'How could you check that route?' }];
+  const requests = [];
+  globalThis.fetch = async url => {
+    requests.push(url);
+    if (url.endsWith('/old-session/state')) return { ok: false, status: 404 };
+    if (url.endsWith('/old-session/dialogue')) return response({ encounterId: 'ch1-n1-reverse-tolls', dialogue: oldDialogue });
+    return response({ sessionId: 'new-session', view: view({ state: 'arrive', dialogue: [] }) });
+  };
+  await game.startEncounter('ch1-n1-reverse-tolls');
+  assert.equal(game.activeSessionId, 'new-session');
+  assert.ok(requests.includes('/api/session/old-session/dialogue'));
+  assert.match(document.getElementById('dialogue-history-log').innerHTML, /My earlier working stays here/);
+  const newDialogue = [{ who: 'tutor', text: 'Which place shall we explore?' }];
+  game.updateView(view({ dialogue: newDialogue, lastTutorUtterance: newDialogue[0].text }));
+  assert.equal(game.history.length, 3);
+  const cached = JSON.parse(local.get('keybreakers_dialogue_ch1-n1-reverse-tolls_new-session'));
+  assert.equal(cached.sessionId, 'new-session');
+  assert.equal(cached.prefix.length, 2);
+  assert.equal(cached.entries.length, 3);
+  globalThis.fetch = async () => response({ view: view({ dialogue: newDialogue, lastTutorUtterance: newDialogue[0].text }) });
+  await game.startEncounter('ch1-n1-reverse-tolls');
+  assert.equal(game.history.length, 3, 'Page restoration must preserve the older prefix without duplicating it');
+});
+
+test('different tabs keep their own dialogue prefix when restoring the same encounter', async t => {
+  const { game } = harness(t);
+  const previous = new Map(['localStorage', 'sessionStorage'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  const prefix = [{ who: 'You', words: 'An older part of this tab’s conversation.' }];
+  const local = new Map([
+    ['keybreakers_dialogue_ch1-n1-reverse-tolls_session-a', JSON.stringify({ sessionId: 'session-a', prefix, entries: prefix })],
+    ['keybreakers_dialogue_ch1-n1-reverse-tolls_session-b', JSON.stringify({ sessionId: 'session-b', prefix: [{ who: 'You', words: 'Different tab.' }], entries: [] })]
+  ]);
+  Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: { getItem: key => local.get(key) ?? null, setItem: (key, value) => local.set(key, value) } });
+  Object.defineProperty(globalThis, 'sessionStorage', { configurable: true, value: { getItem: () => 'session-a', setItem() {} } });
+  t.after(() => { for (const [key, descriptor] of previous) { if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key]; } });
+  const dialogue = [{ who: 'child', text: 'My current thought in this tab.' }];
+  globalThis.fetch = async () => response({ view: view({ dialogue }) });
+  await game.startEncounter('ch1-n1-reverse-tolls');
+  assert.deepEqual(game.history, [...prefix, { who: 'You', words: dialogue[0].text }]);
+  assert.equal(local.has('keybreakers_dialogue_ch1-n1-reverse-tolls_session-b'), true);
+});

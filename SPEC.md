@@ -105,6 +105,8 @@ Each part of an encounter runs the machine below once; Look Back runs after the 
 
 **Idle.** No child action for 90 s (never shown as a timer): one scripted l0 question, then silence; the parent dashboard shows an idle flag. **Scribe mode** replaces the child's free-text field with the parent's keyboard; everything else is unchanged.
 
+**Answers in conversation.** An explicit integer conclusion in the child's words (for example, an answer declaration or a final x declaration) is another input to the existing deterministic checker. The parser identifies syntax; it never evaluates arithmetic or searches for a matching solution. A bare chat number first receives the same neutral request for reasoning regardless of its value. A later explanation may complete that claim; uncertainty, retraction, alternatives and replacement language cannot justify a stale claim. Conjecture limits, part boundaries and Look Back still apply. The model receives original child words, never the parser's pending candidate or a correctness flag.
+
 ## 5. Content model
 
 An encounter is one JSON file that carries everything the engine needs and nothing the client may see: the solution tree, the misconception table and the hint ladder live beside the problem text, and `content/validate.js` refuses any file that breaks the rules below. Types are given in TypeScript notation for precision; the runtime is plain JSON and plain JS.
@@ -191,7 +193,7 @@ The model phrases one probe per turn from a context the engine assembles; it nev
 
 **Visibility matrix.** What the engine puts in the model's context, by state and rung. "Pool" means the authored probe strings for that rung, which the model may paraphrase or choose among.
 
-| State / rung | Problem text | Child's last 6 utterances | Probe pool | Authored hint text | Diagram id | Step verdicts | Correctness of child's idea | Answer or intermediates |
+| State / rung | Problem text | Recent permitted dialogue | Probe pool | Authored hint text | Diagram id | Step verdicts | Correctness of child's idea | Answer or intermediates |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Conjecture (skeptic prompt) | yes | yes | skeptic pool | no | no | no | no | no |
 | Understand, l0 | yes | yes | l0 pool + misconception probe | no | no | no | no | no |
@@ -201,6 +203,8 @@ The model phrases one probe per turn from a context the engine assembles; it nev
 | Simpler problem, l4 | simpler statement only | yes | l4 bridge pool | `l4.l3` only after two wrong tries | optional | right / wrong | no | no |
 | Carry out, l3 | yes | yes | — | `l3.text` verbatim | yes | right / wrong per step | no | no |
 | Look back | yes | yes | option prompts | the option's prompt | optional | — | solved = true | the child's own final answer only |
+
+**Conversation memory.** Keep a separate ledger of explicit child words and delivered tutor lines. Model memory contains at most six plain `{who, text}` entries from the current part and rung; re-screen every earlier tutor line through the current leak gate. Never use engine action history, transitions, step verdicts or parent events as conversational text. The visible conversation can retain already-delivered older lines, but archived display history is never sent back to a model.
 
 **Request** (engine → adapter), one object per turn, shown as a JS literal:
 
@@ -325,6 +329,7 @@ The client is a PWA built around one cloud-edged world map and one coherent enco
 - Reply strip offers two to four chips per probe (from `chips.*`, order shuffled, the best answer never first) plus a free-text field capped at 140 characters. Chips are tap-to-send; free text sends on Enter or the arrow.
 - Rivet is the tutor. Character pictures remain still, including its monocle. The boy sprite and Seal-only celebration pose remain still too. Grubb's sprite changes to a smirk only on an explicit rejected final submission and to a fume only when the server opens the whole node. “CLANK” and “whirr” are silent text, never sound effects.
 - Speech bubbles for Rivet and Lemma use a short opening pause followed by silent character reveal. Story captions change only when a child taps a place or Next; Grubb’s gate outcome is immediate status text. `client/timed-speech.js` specifies the default pause and approximately 40 characters per second; the opening Rivet line uses the same controller. “Read now” finishes a line; “Read again” replays it. Words remain until replaced, and never expire or advance play. The saved “Speech: instant” preference and reduced-motion settings remove pacing. Timing never disables gameplay, starts a countdown, or evaluates an answer. Screen readers receive each full line rather than character updates. Navigation and part changes cancel stale callbacks; hidden tabs and modal transitions finish any pending text without continuing presentation in the background.
+- The open Our conversation panel retains child and Rivet messages. Refresh restores the server ledger and device-local history scoped to the session. After a local server restart, a display-only saved-dialogue endpoint can recover delivered words; this does not replay engine state.
 - One tutor utterance per child action, never two in a row; a 90 s idle produces at most one scripted probe.
 - "I'm stuck" is always visible and never shamed; its label does not change with use.
 - A requested Tiny Case exposes its authored statement and a separate blank answer control. Workspace tools are available immediately after a card is chosen, using public givens only. New cards, hints and Tiny Cases open their containing tool drawers; routine replies preserve the child’s choice to close them.

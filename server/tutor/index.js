@@ -123,12 +123,47 @@ export function buildAllowedContent(encounter, part, state, rung) {
     }
   } else if (state === 'simpler_problem') {
     pool = [ladder.l4?.statement || "Try this tiny version of the problem first."];
-    hintText = ladder.l4?.l3 || null;
+    // The engine leaves this state after both failed attempts and reveals the
+    // worked step directly in the client-safe view. It is not yet earned here.
+    hintText = null;
   } else if (state === 'look_back') {
     pool = (encounter?.lookBack || []).map(opt => opt.prompt);
   }
 
   return { pool, hintText, cardNames };
+}
+
+/** Shared current-permission context for both new output and prior tutor lines. */
+export function buildLeakGateContext(encounter, part, { state, rung, inscription, allowedContent } = {}) {
+  allowedContent ||= buildAllowedContent(encounter, part, state, rung);
+  const givensList = encounter?.givens || [];
+  const lookBackChecks = (encounter?.lookBack || [])
+    .map(lb => lb.check?.value)
+    .filter(v => typeof v === 'number' && !givensList.includes(v));
+
+  const simplerProblemAnswers = (encounter?.parts || [])
+    .map(p => p?.ladder?.l4?.answer?.value)
+    .filter(v => typeof v === 'number' && !givensList.includes(v));
+
+  const expandedForbidden = Array.from(new Set([
+    ...(part?.forbidden || []),
+    ...simplerProblemAnswers,
+    ...lookBackChecks
+  ]));
+
+  const combinedHintText = [
+    allowedContent.hintText,
+    (state === 'simpler_problem' || rung === 'l4') ? part?.ladder?.l4?.statement : ''
+  ].filter(Boolean).join(' ');
+
+  return {
+    rung,
+    forbidden: expandedForbidden,
+    givens: givensList,
+    inscription: inscription || encounter?.inscription || '',
+    hintText: combinedHintText,
+    targetAnswer: part?.answer?.value !== undefined ? part.answer.value : undefined
+  };
 }
 
 /**
@@ -231,35 +266,9 @@ export async function generateTurn(ctx, options = {}) {
     }
   };
 
-  // Leak gate context for screening candidate output
-  const givensList = encounter?.givens || [];
-  const lookBackChecks = (encounter?.lookBack || [])
-    .map(lb => lb.check?.value)
-    .filter(v => typeof v === 'number' && !givensList.includes(v));
-
-  const simplerProblemAnswers = (encounter?.parts || [])
-    .map(p => p?.ladder?.l4?.answer?.value)
-    .filter(v => typeof v === 'number' && !givensList.includes(v));
-
-  const expandedForbidden = Array.from(new Set([
-    ...(part?.forbidden || []),
-    ...simplerProblemAnswers,
-    ...lookBackChecks
-  ]));
-
-  const combinedHintText = [
-    allowedContent.hintText,
-    (state === 'simpler_problem' || rung === 'l4') ? part?.ladder?.l4?.statement : ''
-  ].filter(Boolean).join(' ');
-
-  const leakGateContext = options.leakContext || {
-    rung,
-    forbidden: expandedForbidden,
-    givens: givensList,
-    inscription: ctx.inscription || encounter?.inscription || '',
-    hintText: combinedHintText,
-    targetAnswer: part?.answer?.value !== undefined ? part.answer.value : undefined
-  };
+  const leakGateContext = options.leakContext || buildLeakGateContext(encounter, part, {
+    state, rung, inscription: ctx.inscription, allowedContent
+  });
 
   const adapterType = options.adapter || ctx.adapter || process.env.TUTOR_ADAPTER || 'scripted';
   const timeoutMs = options.timeoutMs ?? (adapterType === 'agy' ? agyAdapter.configuredTimeoutMs() : 4000);
@@ -277,6 +286,18 @@ export async function generateTurn(ctx, options = {}) {
     if (checkUtterance(followUp, leakGateContext).allowed) return followUp;
     throw new Error('No safe scripted tutor probe is available');
   };
+
+  // This is an input-completeness cue, emitted before any answer check. Keep it
+  // local: a model never receives the pending candidate or a correctness signal.
+  if (ctx.conversationCue === 'reason') {
+    const speech = screenScripted('I have your proposed answer on the slate, and my monocle is waiting beside it; what in your working makes you think that answer fits the inscription?');
+    const latencyMs = Date.now() - t0;
+    if (activeSessionId) {
+      logEventSync(activeSessionId, 'tutor.call', { encounterId, partId, state, rung, adapter: 'scripted', fallback: false, retries: 0, latencyMs });
+      logEventSync(activeSessionId, 'tutor.say', { speech, source: 'scripted' });
+    }
+    return { speech, utterance: speech, adapter: 'scripted', fallback: false, retries: 0, latencyMs };
+  }
 
   // Helper for scripted fallback
   const deliverScriptedFallback = (retries, reason) => {

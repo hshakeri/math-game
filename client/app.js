@@ -18,6 +18,18 @@ import { renderWorldMap } from './world-map.js';
 import { renderEncounterMap, storyStops } from './encounter-map.js';
 import { mountCalculationTools } from './calculation-tools.js';
 
+// Display only. Saved dialogue is never sent back as model context.
+function historyEntries(entries) {
+  if (!Array.isArray(entries)) return [];
+  return entries.flatMap(entry => {
+    const who = ['child', 'You'].includes(entry?.who) ? 'You'
+      : ['tutor', 'Rivet'].includes(entry?.who) ? 'Rivet' : null;
+    const words = entry?.text ?? entry?.words;
+    return who && typeof words === 'string' && words.trim()
+      ? [{ who, words: words.slice(0, 2000) }] : [];
+  }).slice(-200);
+}
+
 // 1. Audio Synthesizer (Pure Web Audio API — No External Sound Files!)
 export class SoundSynth {
   constructor() {
@@ -113,6 +125,8 @@ export class CastleGame {
     this.busy = false;
     this.requestEpoch = 0;
     this.history = [];
+    this.historyPrefix = [];
+    this.historyStorageKey = null;
     this.lastSpoken = '';
     this.lookBackKey = '';
     this.hero = { name: '', variant: 1 }; // One boy Keybreaker; no setup step.
@@ -298,6 +312,9 @@ export class CastleGame {
     this.lastSpoken = '';
     this.lookBackKey = '';
     this.history = [];
+    this.historyPrefix = [];
+    this.historyStorageKey = null;
+    this.renderHistory();
     this.currentView = null;
     this.activeSessionId = null;
     this.setBusy(true);
@@ -305,7 +322,11 @@ export class CastleGame {
     try {
       let data = null;
       let savedId = null;
+      let savedHistory = {};
+      const historyKey = sessionId => `keybreakers_dialogue_${encounterId}_${sessionId}`;
       try { savedId = sessionStorage.getItem(`keybreakers_session_${encounterId}`); } catch {}
+      try { savedHistory = savedId ? JSON.parse(localStorage.getItem(historyKey(savedId)) || '{}') || {} : {}; } catch {}
+      let prefix = savedHistory.sessionId === savedId ? historyEntries(savedHistory.prefix) : [];
       if (savedId) {
         const restored = await fetch(`/api/session/${encodeURIComponent(savedId)}/state`);
         if (restored.ok) {
@@ -314,6 +335,24 @@ export class CastleGame {
         }
       }
       if (!data) {
+        prefix = savedHistory.sessionId === savedId ? historyEntries(savedHistory.entries) : [];
+        if (savedId) {
+          // Recover previously delivered words even after a local server restart.
+          // This endpoint exposes display text only, never model/engine internals.
+          try {
+            const response = await fetch(`/api/session/${encodeURIComponent(savedId)}/dialogue`);
+            if (response.ok) {
+              const previous = await response.json();
+              if (previous.encounterId === encounterId && previous.dialogue?.length) {
+                prefix = [
+                  ...(savedHistory.sessionId === savedId ? historyEntries(savedHistory.prefix) : []),
+                  ...historyEntries(previous.dialogue)
+                ].slice(-200);
+              }
+            }
+          } catch {}
+        }
+        if (epoch !== this.requestEpoch) return;
         const res = await fetch('/api/session/start', {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ encounterId })
         });
@@ -322,6 +361,11 @@ export class CastleGame {
       }
       if (epoch !== this.requestEpoch) return;
       this.activeSessionId = data.sessionId;
+      this.historyStorageKey = historyKey(data.sessionId);
+      this.historyPrefix = prefix;
+      this.history = Array.isArray(data.view?.dialogue) ? prefix
+        : savedHistory.sessionId === data.sessionId ? historyEntries(savedHistory.entries) : prefix;
+      this.renderHistory();
       try { sessionStorage.setItem(`keybreakers_session_${encounterId}`, data.sessionId); } catch {}
       this.updateView(data.view || data);
       this.renderReaction(data.view || data, []);
@@ -345,14 +389,16 @@ export class CastleGame {
       if (!res.ok) throw new Error('That message did not reach Rivet. Your work is here; try again.');
       const data = await res.json();
       if (epoch !== this.requestEpoch || sessionId !== this.activeSessionId) return false;
-      const words = action.text || (action.type === 'conjecture' ? `I think ${action.value}, because ${action.reason}` : '');
-      if (words) this.appendHistory(this.hero.name || 'You', words);
+      const serverHistory = Array.isArray(data.view?.dialogue);
+      const words = action.text || action.chip || (action.type === 'conjecture' ? `I think ${action.value}, because ${action.reason}`
+        : ['submit', 'simpler_submit'].includes(action.type) ? `My answer: ${action.value}` : '');
+      if (words && !serverHistory) this.appendHistory('You', words);
       this.updateView(data.view || data, { speak: false });
       this.renderReaction(data.view || data, data.events || []);
       // One response carries the same utterance in both places. A new child turn
       // may legitimately receive the same scripted sentence as the previous turn.
-      if (data.speech) this.speak(data.speech, { repeat: true });
-      else if (data.view?.lastTutorUtterance) this.speak(data.view.lastTutorUtterance);
+      if (data.speech) this.speak(data.speech, { repeat: true, record: !serverHistory });
+      else if (data.view?.lastTutorUtterance) this.speak(data.view.lastTutorUtterance, { record: !serverHistory });
       if (action.type === 'lookback' && (data.view?.sealed || data.view?.completed)) {
         try { localStorage.setItem(`keybreakers_note_${this.currentView.encounterId}`, String(action.value)); } catch {}
       }
@@ -470,17 +516,30 @@ export class CastleGame {
     }
   }
 
-  speak(text, { repeat = false, delay = 450 } = {}) {
+  speak(text, { repeat = false, delay = 450, record = true } = {}) {
     if (!text || (!repeat && text === this.lastSpoken)) return;
     this.lastSpoken = text;
-    this.appendHistory('Rivet', text);
+    if (record) this.appendHistory('Rivet', text);
     this.playSpeech('rivet', text, { delay, repeat: true });
   }
 
   appendHistory(who, words) {
-    this.history.push({ who, words });
+    this.history = historyEntries([...this.history, { who, words }]);
+    this.renderHistory();
+  }
+
+  renderHistory() {
     const log = document.getElementById('dialogue-history-log');
-    if (log) log.innerHTML = this.history.map(h => `<p><strong>${escapeHTML(h.who)}</strong>${escapeHTML(h.words)}</p>`).join('');
+    if (log) {
+      const atEnd = log.scrollHeight - log.scrollTop - log.clientHeight < 40;
+      log.innerHTML = this.history.map(h => `<p class="history-${h.who === 'You' ? 'child' : 'tutor'}"><strong>${escapeHTML(h.who)}</strong>${escapeHTML(h.words)}</p>`).join('');
+      if (atEnd) log.scrollTop = log.scrollHeight;
+    }
+    try {
+      if (this.historyStorageKey && this.activeSessionId) localStorage.setItem(this.historyStorageKey, JSON.stringify({
+        sessionId: this.activeSessionId, prefix: this.historyPrefix, entries: this.history
+      }));
+    } catch {}
   }
 
   renderReaction(view, events) {
@@ -513,6 +572,10 @@ export class CastleGame {
       this.calculationTools?.setStorageKey(`keybreakers_work_${sceneKey}`);
     }
     this.currentView = view;
+    if (Array.isArray(view.dialogue)) {
+      this.history = [...this.historyPrefix, ...historyEntries(view.dialogue)].slice(-200);
+      this.renderHistory();
+    }
     const phase = view.state || view.phase;
     if (newScene) this.renderStoryMap();
     const titleEl = document.getElementById('encounter-title');
@@ -540,7 +603,7 @@ export class CastleGame {
 
     // 3. Owl Utterance
     if (speak && view.lastTutorUtterance) {
-      this.speak(view.lastTutorUtterance);
+      this.speak(view.lastTutorUtterance, { record: !Array.isArray(view.dialogue) });
     } else if (speak && phase === 'arrive') {
       this.speak('Let’s explore the story. Tap the places on the map, then tell me what we are trying to find.', { delay: 450 });
     }

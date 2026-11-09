@@ -119,3 +119,9 @@
 }
 
 .rivet-thinking { color:var(--ink-secondary); font-size:16px; text-align:center; margin:0 0 12px }
+
+.adventure-dock .dialogue-history-details { max-width:880px; margin:0 auto 18px; padding-top:0; border-color:var(--parchment-border); font-size:17px }
+.adventure-dock .history-log { max-height:280px; overflow-y:auto; overscroll-behavior:contain; padding:0 12px 8px; line-height:1.6 }
+.adventure-dock .history-log p { padding:10px 14px; border-radius:8px; overflow-wrap:anywhere; text-align:left }
+.adventure-dock .history-child { margin-left:30px; border:1px solid var(--parchment-border); background:var(--parchment-bg) }
+.adventure-dock .history-tutor { margin-right:30px; border-left:3px solid var(--gold-dark) }

@@ -1,0 +1,23 @@
+{
+  "observedAt": "2026-11-09T13:22:23.031Z",
+  "scope": "Loopback HTTP; synthetic answer checks use the scripted adapter. Historical text is inspected locally and omitted from this report.",
+  "fixtureSource": "test/conversation-answers.test.js",
+  "historicalSource": "data/sessions/bbd7135e-b84a-4518-ada5-8de9403edb99.jsonl (local, gitignored)",
+  "recoveredHistory": {
+    "entries": 7,
+    "roles": [
+      "tutor",
+      "child"
+    ],
+    "projection": [
+      "who",
+      "text"
+    ]
+  },
+  "answerPhase": "understand",
+  "explainedPhase": "look_back",
+  "reflectionRequired": true,
+  "stateRetainsDialogue": true,
+  "historyPanelServed": true,
+  "versionedEntryServed": true
+}

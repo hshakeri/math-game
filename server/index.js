@@ -16,7 +16,8 @@ import crypto from 'node:crypto';
 import { createSession, transition, getClientSafeView, LADDER_RUNGS } from './engine/stateMachine.js';
 import { getClientSafeEncounter } from './engine/clientView.js';
 import { logEvent, readSessionEvents, ensureSessionsDir } from './engine/telemetry.js';
-import { generateTurn, getEncounter } from './tutor/index.js';
+import { generateTurn, getEncounter, buildAllowedContent, buildLeakGateContext } from './tutor/index.js';
+import { appendDialogue, childDialogueText, displayDialogue, modelDialogue, historicalDialogue } from './tutor/dialogue.js';
 import { DEFAULT_MODEL as AGY_MODEL, cancelAllAgyCalls } from './tutor/agy.js';
 import { DEFAULT_MODEL as GEMINI_MODEL } from './tutor/gemini.js';
 import { DEFAULT_MODEL as CLAUDE_MODEL } from './tutor/claude.js';
@@ -536,7 +537,11 @@ export function createServer(options = {}) {
         }
 
         // Deterministic transition
-        const { session: nextSession, events } = transition(sessionRecord.session, action, sessionRecord.encounter);
+        const inputSession = {
+          ...sessionRecord.session,
+          dialogue: appendDialogue(sessionRecord.session, 'child', childDialogueText(action))
+        };
+        const { session: nextSession, events } = transition(inputSession, action, sessionRecord.encounter);
         sessionRecord.session = nextSession;
         sessionRecord.updatedAt = Date.now();
 
@@ -575,19 +580,22 @@ export function createServer(options = {}) {
         const nonTutorActions = ['parent_override', 'parent_scribe'];
         if (!nextSession.completed && !nonTutorActions.includes(action.type)) {
           try {
+            const currentPart = sessionRecord.encounter.parts.find(part => part.id === nextSession.currentPartId);
+            const historyGate = buildLeakGateContext(sessionRecord.encounter, currentPart, {
+              state: nextSession.state, rung: nextSession.hintRung,
+              allowedContent: buildAllowedContent(sessionRecord.encounter, currentPart, nextSession.state, nextSession.hintRung)
+            });
             const tutorCtx = {
               encounterId: sessionRecord.encounter.id,
               partId: nextSession.currentPartId,
               state: nextSession.state,
               hintRung: nextSession.hintRung,
-              publicHistory: (nextSession.history || []).map(h => ({
-                who: h.who,
-                text: h.payload?.text || h.payload?.reason || h.action
-              })),
+              publicHistory: modelDialogue(nextSession, historyGate),
               childMessage: action.text || action.reason || (action.value !== undefined ? String(action.value) : ''),
               childAction: action.type,
               previousSpeech: nextSession.lastTutorUtterance || '',
               chosenCard: nextSession.activeCard,
+              conversationCue: events.some(event => event.type === 'conversation.reason_requested') ? 'reason' : undefined,
               sessionId
             };
 
@@ -604,6 +612,7 @@ export function createServer(options = {}) {
             };
             if (speech) {
               nextSession.lastTutorUtterance = speech;
+              nextSession.dialogue = appendDialogue(nextSession, 'tutor', speech);
               broadcastToSession(sessionRecord, 'tutor.say', {
                 speech,
                 source: turnRes.adapter,
@@ -628,6 +637,35 @@ export function createServer(options = {}) {
       }
 
       // =======================================================================
+      // Display-only saved dialogue. It never restores or replays game state.
+      const dialogueMatch = pathname.match(/^\/api\/session\/([^/]+)\/dialogue$/);
+      if (req.method === 'GET' && dialogueMatch) {
+        const sessionId = dialogueMatch[1];
+        if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(sessionId)) {
+          return sendJson(res, 400, { ok: false, error: 'Invalid session ID' });
+        }
+        const active = sessionStore.get(sessionId);
+        if (active?.session.dialogue?.length) {
+          return sendJson(res, 200, { ok: true, encounterId: active.encounter.id, dialogue: displayDialogue(active.session.dialogue) });
+        }
+        let events;
+        try { events = readSessionEvents(sessionId, SESSIONS_DIR); }
+        catch { return sendJson(res, 500, { ok: false, error: 'Saved dialogue could not be read' }); }
+        const encounterId = active?.encounter.id || events.find(event => event.type === 'session.start')?.encounterId;
+        const encounter = getEncounterById(encounterId);
+        if (!encounter) return sendJson(res, 404, { ok: false, error: 'Saved dialogue not found' });
+        const dialogue = historicalDialogue(events, encounter.id, call => {
+          const part = encounter.parts.find(item => item.id === call.partId);
+          if (!part || !LADDER_RUNGS.includes(call.rung)
+              || !['arrive', 'conjecture', 'understand', 'plan', 'carry_out', 'simpler_problem', 'look_back', 'sealed', 'map'].includes(call.state)) return null;
+          return buildLeakGateContext(encounter, part, {
+            state: call.state, rung: call.rung,
+            allowedContent: buildAllowedContent(encounter, part, call.state, call.rung)
+          });
+        });
+        return sendJson(res, 200, { ok: true, encounterId: encounter.id, dialogue });
+      }
+
       // 3. GET /api/session/:id/state
       // =======================================================================
       const stateMatch = pathname.match(/^\/api\/session\/([^/]+)\/state$/);

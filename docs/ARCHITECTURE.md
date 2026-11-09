@@ -14,6 +14,10 @@ This document maps **every folder, file, module contract, HTTP/SSE endpoint, dia
 
 `client/calculation-tools.js` supplies arithmetic, a calculation tape and scratchpad independently of the game engine. It uses child-entered operands, no `eval`, no auto-filled solutions, and local storage scoped by encounter/part. The controller mounts it once, so normal tutor replies do not destroy working. A newly selected card, revealed hint or Tiny Case opens both ancestor tool drawers; repeated state views respect manual closure.
 
+Conversation repair: `server/engine/conversationAnswer.js` parses explicit integer claims without doing arithmetic. The engine keeps pending claims server-side, requests a neutral explanation before checking bare chat claims, and routes justified claims through the existing deterministic progression and Look Back. The router handles the input-completeness cue locally. It also withholds the Tiny Case worked step until the engine has earned it.
+
+`server/tutor/dialogue.js` owns the bounded dialogue ledger and two distinct projections: child-visible delivered words, and current-part/current-rung model memory whose prior tutor lines are re-gated. `buildLeakGateContext` is shared with normal output screening. Session views include `dialogue: [{who,text}]`; `GET /api/session/:id/dialogue` provides display-only recovery from the active ledger or scoped telemetry, with no engine-state restoration. The client saves its older display prefix per session, so tabs cannot overwrite one another's conversation prefix. Ordinary replies and refreshes do not duplicate the current tutor line.
+
 Original module inventory follows; current test evidence is in `docs/validation/`.
 
 ## 1. Complete Directory & File Map
