@@ -14,7 +14,7 @@ export function render(spec, mode = 'hint', state = null) {
   const completed = Boolean(state?.completed);
 
   let svg = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" role="img"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 370" role="img"
      aria-label="Chasm of Reverse Tolls Bridge Diagram" class="diagram-svg reverse-tolls-svg">
   <defs>
     <filter id="glow-gold" x="-20%" y="-20%" width="140%" height="140%">
@@ -27,7 +27,7 @@ export function render(spec, mode = 'hint', state = null) {
   </defs>
 
   <!-- Background Chasm & Stone Bridge -->
-  <rect width="800" height="360" rx="12" fill="#1c2631" />
+  <rect width="800" height="370" rx="12" fill="#1c2631" />
   <path d="M 40 240 Q 400 280 760 240" stroke="#3d5166" stroke-width="12" fill="none" stroke-linecap="round" />
   <path d="M 40 246 Q 400 286 760 246" stroke="#233140" stroke-width="4" fill="none" />
 
@@ -63,63 +63,63 @@ export function render(spec, mode = 'hint', state = null) {
 
     svg += `
   <g class="toll-gate gate-${idx} ${isActive ? 'active-gate' : ''}" transform="translate(${cx}, 100)" ${filterAttr}>
-    <rect x="-55" y="-40" width="110" height="120" rx="10" fill="#233140" stroke="${strokeColor}" stroke-width="${isActive ? 4 : 2}" />
+    <rect x="-60" y="-40" width="120" height="125" rx="10" fill="#233140" stroke="${strokeColor}" stroke-width="${isActive ? 4 : 2}" />
     <text x="0" y="-18" fill="#f8fafc" font-size="15" font-weight="bold" text-anchor="middle">Gate ${idx + 1}</text>
-    <text x="0" y="5" fill="#aed6f1" font-size="13" text-anchor="middle">Forward: ×${gate.mul}, −${gate.sub}</text>
+    <text x="0" y="5" fill="#aed6f1" font-size="14" text-anchor="middle">Forward: ×${gate.mul}, −${gate.sub}</text>
     
     <!-- Coin Bag Counter / Slot -->
-    <rect x="-35" y="20" width="70" height="44" rx="8" fill="#1c2631" stroke="${strokeColor}" stroke-width="2" />
+    <rect x="-40" y="18" width="80" height="46" rx="8" fill="#1c2631" stroke="${strokeColor}" stroke-width="2" />
     <text x="0" y="48" fill="${isPast ? '#2ecc71' : '#f8fafc'}" font-size="20" font-weight="bold" text-anchor="middle">
       ${displayedVal}
     </text>
-    <text x="0" y="76" fill="#cbd5e1" font-size="11" text-anchor="middle">coins before gate</text>
+    <text x="0" y="78" fill="#cbd5e1" font-size="14" text-anchor="middle">coins before gate</text>
   </g>`;
 
     // Interactive Controls Overlay for Active Gate in Workspace Mode
     if (isActive && isWorkspace && !completed) {
       if (!orderVerified) {
-        // Order selection chips
+        // Order selection chips (touch targets >= 44px)
         svg += `
   <g class="interactive-order-controls" transform="translate(${cx}, 235)">
     <g class="btn-order-correct" data-action="order" data-gate="${idx}" data-val="add,div" cursor="pointer">
-      <rect x="-95" y="0" width="190" height="38" rx="8" fill="#c8963e" />
-      <text x="0" y="24" fill="#1c2631" font-size="13" font-weight="bold" text-anchor="middle">+ Add ${gate.sub}, then ÷ ${gate.mul}</text>
+      <rect x="-105" y="0" width="210" height="44" rx="8" fill="#c8963e" />
+      <text x="0" y="27" fill="#1c2631" font-size="14" font-weight="bold" text-anchor="middle">+ Add ${gate.sub}, then ÷ ${gate.mul}</text>
     </g>
-    <g class="btn-order-wrong" data-action="order" data-gate="${idx}" data-val="div,add" transform="translate(0, 44)" cursor="pointer">
-      <rect x="-95" y="0" width="190" height="38" rx="8" fill="#233140" stroke="#5dade2" stroke-width="1.5" />
-      <text x="0" y="24" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">÷ ${gate.mul}, then + Add ${gate.sub}</text>
+    <g class="btn-order-wrong" data-action="order" data-gate="${idx}" data-val="div,add" transform="translate(0, 50)" cursor="pointer">
+      <rect x="-105" y="0" width="210" height="44" rx="8" fill="#233140" stroke="#5dade2" stroke-width="1.5" />
+      <text x="0" y="27" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">÷ ${gate.mul}, then + Add ${gate.sub}</text>
     </g>
   </g>`;
       } else {
-        // Value stepper controls
+        // Value stepper controls (touch targets >= 44px)
         svg += `
-  <g class="interactive-value-controls" transform="translate(${cx}, 245)">
-    <rect x="-80" y="0" width="160" height="52" rx="8" fill="#1c2631" stroke="#c8963e" stroke-width="2" />
+  <g class="interactive-value-controls" transform="translate(${cx}, 240)">
+    <rect x="-85" y="0" width="170" height="54" rx="8" fill="#1c2631" stroke="#c8963e" stroke-width="2" />
     <g class="btn-step-minus" data-action="val-delta" data-delta="-1" cursor="pointer">
-      <rect x="-70" y="8" width="36" height="36" rx="6" fill="#233140" />
-      <text x="-52" y="32" fill="#fff" font-size="22" font-weight="bold" text-anchor="middle">−</text>
+      <rect x="-78" y="5" width="44" height="44" rx="6" fill="#233140" />
+      <text x="-56" y="33" fill="#fff" font-size="22" font-weight="bold" text-anchor="middle">−</text>
     </g>
-    <text x="0" y="33" fill="#f8fafc" font-size="18" font-weight="bold" text-anchor="middle" id="gate-input-val">10</text>
+    <text x="0" y="34" fill="#f8fafc" font-size="18" font-weight="bold" text-anchor="middle" id="gate-input-val">10</text>
     <g class="btn-step-plus" data-action="val-delta" data-delta="1" cursor="pointer">
-      <rect x="34" y="8" width="36" height="36" rx="6" fill="#233140" />
-      <text x="52" y="32" fill="#fff" font-size="22" font-weight="bold" text-anchor="middle">+</text>
+      <rect x="34" y="5" width="44" height="44" rx="6" fill="#233140" />
+      <text x="56" y="33" fill="#fff" font-size="22" font-weight="bold" text-anchor="middle">+</text>
     </g>
-    <g class="btn-submit-val" data-action="submit-val" data-gate="${idx}" transform="translate(0, 60)" cursor="pointer">
-      <rect x="-70" y="0" width="140" height="36" rx="6" fill="#27ae60" />
-      <text x="0" y="23" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">Confirm Coins</text>
+    <g class="btn-submit-val" data-action="submit-val" data-gate="${idx}" transform="translate(0, 62)" cursor="pointer">
+      <rect x="-75" y="0" width="150" height="44" rx="6" fill="#27ae60" />
+      <text x="0" y="27" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">Confirm Coins</text>
     </g>
   </g>`;
       }
     }
   });
 
-  // Start Platform (Left: Traveler's Start)
-  const finalStartVal = completed ? (state?.currentValue ?? 6) : '?';
+  // Start Platform (Left: Traveler's Start) - strictly dynamic fallback
+  const finalStartVal = completed ? (state?.currentValue ?? '?') : '?';
   svg += `
   <g class="traveler-start" transform="translate(60, 100)">
     <circle cx="0" cy="20" r="32" fill="#233140" stroke="${completed ? '#27ae60' : '#5dade2'}" stroke-width="3" />
-    <text x="0" y="15" fill="#aed6f1" font-size="11" text-anchor="middle">START</text>
-    <text x="0" y="32" fill="${completed ? '#2ecc71' : '#f8fafc'}" font-size="20" font-weight="bold" text-anchor="middle">${finalStartVal}</text>
+    <text x="0" y="15" fill="#aed6f1" font-size="14" text-anchor="middle">START</text>
+    <text x="0" y="34" fill="${completed ? '#2ecc71' : '#f8fafc'}" font-size="20" font-weight="bold" text-anchor="middle">${finalStartVal}</text>
   </g>
 </svg>`;
 

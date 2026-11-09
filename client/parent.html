@@ -42,12 +42,19 @@
   <div class="container">
     <header>
       <h1>Parent Dashboard & Observer</h1>
-      <span id="conn-status" style="color:var(--warn);">Connecting...</span>
+      <div style="text-align:right;">
+        <span id="conn-status" style="color:var(--warn);">Connecting...</span>
+        <div id="session-badge" style="font-size:0.8rem; color:#bdc3c7; margin-top:2px;">Session: None</div>
+      </div>
     </header>
 
     <!-- Telemetry Insights (STRICTLY ISOLATED FROM CHILD CLIENT) -->
     <div class="card">
       <div class="controls-grid">
+        <div>
+          <label>Active Session</label>
+          <div id="stat-session" style="font-size:0.95rem; font-weight:bold; font-family:monospace; color:#4a90e2; word-break:break-all;">--</div>
+        </div>
         <div>
           <label>Current Phase / State</label>
           <div id="stat-state" style="font-size:1.2rem; font-weight:bold;">--</div>

@@ -28,32 +28,10 @@ export class SoundSynth {
     }
   }
 
-  // Gentle typewriter click/pip (~800Hz, 12ms decay, 0.015 volume)
-  playTypewriterPip() {
-    if (!this.soundEnabled) return;
-    try {
-      this.ensureContext();
-      if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      const now = this.ctx.currentTime;
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800 + Math.random() * 80, now);
-
-      gain.gain.setValueAtTime(0.015, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.012);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.012);
-    } catch (_) {}
-  }
-
-  // Soothing Golden Seal Chime (E5, G#5, B5, E6 Major Triad Arpeggio + Low-Pass Filter)
-  playSealChime() {
+  // Celestial harmonic bell chime upon earning the Golden Seal
+  // Major triad arpeggio (E5, G#5, B5, E6) + 2400Hz Low-Pass Filter
+  // SPEC §9 line 329: "No sound in v1 except an optional single chime on Seal; no music."
+  playGoldenSealChime() {
     if (!this.soundEnabled) return;
     try {
       this.ensureContext();
@@ -97,6 +75,11 @@ export class SoundSynth {
     } catch (_) {}
   }
 
+  // Alias for backward compatibility
+  playSealChime() {
+    this.playGoldenSealChime();
+  }
+
   toggleSound() {
     this.soundEnabled = !this.soundEnabled;
     if (typeof localStorage !== 'undefined') {
@@ -125,15 +108,12 @@ export class Typewriter {
     if (this.el) this.el.textContent = '';
     if (this.intervalId) clearInterval(this.intervalId);
 
-    // ~40 characters per second = 25 ms interval
+    // ~40 characters per second = 25 ms interval (Silent typing per SPEC §9 line 329)
     this.intervalId = setInterval(() => {
       if (this.currentIndex < this.targetText.length) {
         const char = this.targetText[this.currentIndex];
         if (this.el) this.el.textContent += char;
         this.currentIndex++;
-        if (char.trim() && this.currentIndex % 2 === 0) {
-          this.synth.playTypewriterPip();
-        }
       } else {
         this.complete();
       }
@@ -193,12 +173,19 @@ export class CastleGame {
       });
     }
 
-    // Audio Toggle
+    // Seal Chime Audio Toggle
     const audioBtn = document.getElementById('btn-audio-toggle');
     if (audioBtn) {
+      const updateAudioBtn = (enabled) => {
+        audioBtn.textContent = enabled ? '🔔' : '🔕';
+        audioBtn.setAttribute('aria-label', enabled ? 'Golden Seal chime enabled' : 'Golden Seal chime muted');
+        audioBtn.setAttribute('title', enabled ? 'Seal chime enabled (tap to mute)' : 'Seal chime muted (tap to enable)');
+      };
+      updateAudioBtn(this.synth.soundEnabled);
+
       audioBtn.addEventListener('click', () => {
         const enabled = this.synth.toggleSound();
-        audioBtn.textContent = enabled ? '🔊' : '🔇';
+        updateAudioBtn(enabled);
       });
     }
 
@@ -521,7 +508,7 @@ export class CastleGame {
 
   showGoldenSeal(codex) {
     this.sealShown = true;
-    this.synth.playSealChime();
+    this.synth.playGoldenSealChime();
     if (codex) {
       const nameEl = document.getElementById('seal-theorem-name');
       const ruleEl = document.getElementById('seal-theorem-rule');

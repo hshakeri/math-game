@@ -61,7 +61,7 @@ html, body {
 }
 
 /* Touch Target Invariant (SPEC §9: >= 56px touch target, >= 12px spacing) */
-.btn-touch, .select-touch, .input-touch, .chip, .deck-card, .map-node {
+.btn-touch, .select-touch, .input-touch, .chip, .deck-card, .map-node, .nav-btn, .btn-icon, .btn-close {
   min-height: var(--touch-min-target);
   min-width: var(--touch-min-target);
   font-size: var(--font-base);
@@ -77,7 +77,7 @@ html, body {
               border-color var(--anim-duration) var(--anim-ease);
 }
 
-.btn-touch:active, .chip:active, .deck-card:active {
+.btn-touch:active, .chip:active, .deck-card:active, .btn-icon:active, .btn-close:active, .nav-btn:active {
   transform: scale(0.96);
 }
 
@@ -126,16 +126,19 @@ html, body {
   color: var(--ink-primary);
   background: var(--parchment-card);
   border: 2px solid var(--parchment-border);
-  padding: 8px 16px;
-  border-radius: 10px;
+  padding: 10px 20px;
+  border-radius: 12px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--font-base);
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  justify-content: center;
+  min-height: var(--touch-min-target);
+  min-width: var(--touch-min-target);
+  margin: 0;
 }
 
-.nav-btn:hover {
+.nav-btn:hover, .nav-btn:focus {
   border-color: var(--gold-accent);
 }
 
@@ -255,9 +258,20 @@ html, body {
 .btn-icon {
   background: transparent;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 0;
+  min-width: var(--touch-min-target);
+  min-height: var(--touch-min-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  touch-action: manipulation;
+}
+
+.btn-icon:hover, .btn-icon:focus {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .inscription-content {
@@ -484,7 +498,7 @@ html, body {
 .look-back-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--touch-spacing);
 }
 
 /* 7. Reply Strip & Child Input */
@@ -638,13 +652,24 @@ html, body {
 
 .btn-close {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 12px;
+  right: 12px;
   background: transparent;
   border: none;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   cursor: pointer;
   color: var(--ink-secondary);
+  min-width: var(--touch-min-target);
+  min-height: var(--touch-min-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  touch-action: manipulation;
+}
+
+.btn-close:hover, .btn-close:focus {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .deck-card-grid {

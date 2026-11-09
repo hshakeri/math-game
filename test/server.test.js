@@ -121,6 +121,10 @@ describe('M3 Server & Integration Test Suite', () => {
       assert.equal(data.encounters.length, 4);
       assert.equal(data.encounters[0].unlocked, true);
       assert.equal(data.encounters[0].node, 1);
+      // Guarantee zero gamification tokens
+      for (const enc of data.encounters) {
+        assert.equal(enc.stars, undefined, 'Catalog must not include stars');
+      }
     });
 
     it('POST /api/session/start initializes session and returns client-safe view', async () => {
@@ -244,6 +248,56 @@ describe('M3 Server & Integration Test Suite', () => {
       assert.match(sseContent, /event: connected/);
       assert.match(sseContent, /event: update/);
     });
+
+    it('discovers session and streams events when connected without session query param', async () => {
+      // Connect parent SSE client without session query parameter
+      let sseReceived = [];
+      let targetSessionId = null;
+      let reqRef = null;
+      let resolvePromise;
+      const ssePromise = new Promise((resolve, reject) => {
+        resolvePromise = resolve;
+        const req = http.get(`${testUrl}/api/parent/transcript?pin=${PARENT_PIN}`, (res) => {
+          reqRef = req;
+          assert.equal(res.statusCode, 200);
+          assert.match(res.headers['content-type'], /text\/event-stream/);
+          res.on('data', (chunk) => {
+            const str = chunk.toString();
+            sseReceived.push(str);
+            if (targetSessionId && str.includes(targetSessionId)) {
+              try { req.destroy(); } catch {}
+              resolve(sseReceived.join(''));
+            }
+          });
+          res.on('error', reject);
+        });
+        req.on('error', reject);
+      });
+
+      await new Promise(r => setTimeout(r, 60));
+
+      // Child starts session
+      const startRes = await fetch(`${testUrl}/api/session/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ encounterId: 'ch1-n2-dark-vault' })
+      });
+      const startData = await startRes.json();
+      assert.ok(startData.sessionId);
+      targetSessionId = startData.sessionId;
+
+      if (sseReceived.join('').includes(targetSessionId)) {
+        if (reqRef) {
+          try { reqRef.destroy(); } catch {}
+        }
+        resolvePromise(sseReceived.join(''));
+      }
+
+      const content = await ssePromise;
+      assert.match(content, /event: connected/);
+      assert.match(content, /session\.start/);
+      assert.match(content, new RegExp(startData.sessionId));
+    });
   });
 
   // 5. Security & PIN Authentication Tests
@@ -313,6 +367,33 @@ describe('M3 Server & Integration Test Suite', () => {
     });
 
     it('POST /api/parent/waiver applies once-per-chapter Look Back waiver', async () => {
+      // Waiver attempt outside look_back stage must return 400
+      const rejectRes = await fetch(`${testUrl}/api/parent/waiver`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, pin: PARENT_PIN })
+      });
+      assert.equal(rejectRes.status, 400);
+      const rejectData = await rejectRes.json();
+      assert.match(rejectData.error, /Look Back/i);
+
+      // Advance session to look_back via arrive -> justified correct conjecture
+      await fetch(`${testUrl}/api/session/${sessionId}/action`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: { type: 'arrive' } })
+      });
+      const conjRes = await fetch(`${testUrl}/api/session/${sessionId}/action`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: { type: 'conjecture', stem: 'think', value: 6, reason: 'Start with six coins' }
+        })
+      });
+      const conjData = await conjRes.json();
+      assert.equal(conjData.state, 'look_back');
+
+      // Now execute waiver in look_back
       const res1 = await fetch(`${testUrl}/api/parent/waiver`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -320,7 +401,16 @@ describe('M3 Server & Integration Test Suite', () => {
       });
       assert.equal(res1.status, 200);
       const data1 = await res1.json();
+      assert.equal(data1.ok, true);
       assert.equal(data1.waived, true);
+      assert.equal(data1.state, 'sealed');
+      assert.equal(data1.sealed, true);
+
+      // Verify session view state reflects sealed
+      const stateRes = await fetch(`${testUrl}/api/session/${sessionId}/state`);
+      const stateData = await stateRes.json();
+      assert.equal(stateData.state, 'sealed');
+      assert.equal(stateData.view.sealed, true);
 
       // Attempting second waiver must fail with 400
       const res2 = await fetch(`${testUrl}/api/parent/waiver`, {

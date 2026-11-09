@@ -88,6 +88,7 @@ export function getEncounterById(id) {
 // In-Memory Session Store
 // Map<sessionId, SessionRecord>
 export const sessionStore = new Map();
+export const globalParentSubscribers = new Set();
 
 /**
  * Validates Parent PIN using constant-time comparison.
@@ -163,7 +164,7 @@ export function sendJson(res, statusCode, data) {
  * Broadcasts an event to all active SSE subscribers of a session.
  */
 export function broadcastToSession(sessionRecord, eventType, payload) {
-  if (!sessionRecord || !sessionRecord.subscribers) return;
+  if (!sessionRecord) return;
   const dataStr = JSON.stringify({
     type: eventType,
     sessionId: sessionRecord.sessionId,
@@ -173,11 +174,25 @@ export function broadcastToSession(sessionRecord, eventType, payload) {
 
   const message = `event: ${eventType}\ndata: ${dataStr}\n\n`;
 
-  for (const clientRes of sessionRecord.subscribers) {
+  if (sessionRecord.subscribers) {
+    for (const clientRes of sessionRecord.subscribers) {
+      try {
+        clientRes.write(message);
+      } catch {
+        sessionRecord.subscribers.delete(clientRes);
+      }
+    }
+  }
+
+  // Forward to global parent subscribers not already in session subscribers
+  for (const clientRes of globalParentSubscribers) {
+    if (sessionRecord.subscribers && sessionRecord.subscribers.has(clientRes)) {
+      continue;
+    }
     try {
       clientRes.write(message);
     } catch {
-      sessionRecord.subscribers.delete(clientRes);
+      globalParentSubscribers.delete(clientRes);
     }
   }
 }
@@ -335,6 +350,23 @@ export function createServer(options = {}) {
 
         sessionStore.set(session.sessionId, sessionRecord);
 
+        // Broadcast session.start event to globalParentSubscribers and bind them
+        const startPayload = JSON.stringify({
+          type: 'session.start',
+          sessionId: session.sessionId,
+          encounterId: encounter.id,
+          timestamp: new Date().toISOString()
+        });
+        const startMsg = `event: session.start\ndata: ${startPayload}\n\n`;
+        for (const clientRes of globalParentSubscribers) {
+          try {
+            clientRes.write(startMsg);
+            sessionRecord.subscribers.add(clientRes);
+          } catch {
+            globalParentSubscribers.delete(clientRes);
+          }
+        }
+
         // Telemetry logging
         await logEvent(session.sessionId, 'session.start', {
           encounterId: encounter.id,
@@ -482,7 +514,7 @@ export function createServer(options = {}) {
       }
 
       // =======================================================================
-      // 4. GET /api/encounters (Catalog with unlock status and stars)
+      // 4. GET /api/encounters (Catalog with unlock status)
       // =======================================================================
       if (req.method === 'GET' && pathname === '/api/encounters') {
         loadAllEncounters();
@@ -496,12 +528,10 @@ export function createServer(options = {}) {
         const catalog = list.map((enc, idx) => {
           let unlocked = idx === 0;
           let completed = false;
-          let stars = 0;
 
           for (const sRec of sessionStore.values()) {
             if (sRec.encounter.id === enc.id && sRec.session.completed) {
               completed = true;
-              stars = 1;
               break;
             }
           }
@@ -523,7 +553,6 @@ export function createServer(options = {}) {
             title: enc.title,
             unlocked,
             completed,
-            stars,
             sceneAsset: completed ? enc.scene.unlocked : enc.scene.locked
           };
         });
@@ -553,7 +582,20 @@ export function createServer(options = {}) {
           return sendJson(res, 401, { ok: false, error: 'Unauthorized: Invalid parent PIN' });
         }
 
-        const sessionId = searchParams.get('session') || searchParams.get('sessionId');
+        let sessionId = searchParams.get('session') || searchParams.get('sessionId');
+        let sessionRecord = null;
+
+        // If sessionId is missing, resolve latest active session from sessionStore
+        if (!sessionId && sessionStore.size > 0) {
+          for (const sRec of sessionStore.values()) {
+            if (!sessionRecord || sRec.updatedAt >= sessionRecord.updatedAt) {
+              sessionRecord = sRec;
+              sessionId = sRec.sessionId;
+            }
+          }
+        } else if (sessionId) {
+          sessionRecord = sessionStore.get(sessionId);
+        }
 
         // Establish SSE connection
         res.writeHead(200, {
@@ -563,15 +605,16 @@ export function createServer(options = {}) {
           'Access-Control-Allow-Origin': '*'
         });
 
-        res.write(`event: connected\ndata: ${JSON.stringify({ status: 'connected', sessionId })}\n\n`);
+        res.write(`event: connected\ndata: ${JSON.stringify({ status: 'connected', sessionId: sessionId || null })}\n\n`);
         activeSseResponses.add(res);
 
-        let sessionRecord = null;
-        if (sessionId) {
-          sessionRecord = sessionStore.get(sessionId);
-          if (sessionRecord) {
-            sessionRecord.subscribers.add(res);
-          }
+        // If no explicit session requested, register with globalParentSubscribers
+        if (!searchParams.get('session') && !searchParams.get('sessionId')) {
+          globalParentSubscribers.add(res);
+        }
+
+        if (sessionRecord) {
+          sessionRecord.subscribers.add(res);
           // Replay historical events if available
           try {
             const pastEvents = readSessionEvents(sessionId, SESSIONS_DIR);
@@ -593,6 +636,7 @@ export function createServer(options = {}) {
         req.on('close', () => {
           clearInterval(heartbeatTimer);
           activeSseResponses.delete(res);
+          globalParentSubscribers.delete(res);
           if (sessionRecord) {
             sessionRecord.subscribers.delete(res);
           }
@@ -702,22 +746,28 @@ export function createServer(options = {}) {
           return sendJson(res, 400, { ok: false, error: 'Look Back waiver already used this chapter' });
         }
 
-        sessionRecord.session.parentWaiver = true;
-        sessionRecord.session.chapterWaiverUsed = true;
-
-        if (sessionRecord.session.state === 'look_back') {
-          const transRes = transition(sessionRecord.session, { type: 'waive' }, sessionRecord.encounter);
-          sessionRecord.session = transRes.session;
+        if (sessionRecord.session.state !== 'look_back') {
+          return sendJson(res, 400, { ok: false, error: 'Look Back waiver can only be used during Look Back stage' });
         }
+
+        const transRes = transition(sessionRecord.session, { type: 'waive' }, sessionRecord.encounter);
+        sessionRecord.session = transRes.session;
+        sessionRecord.updatedAt = Date.now();
 
         await logEvent(sessionId, 'parent.override', {
           kind: 'waive',
           encounterId: sessionRecord.encounter.id
         });
+
+        for (const ev of (transRes.events || [])) {
+          await logEvent(sessionId, ev.type, ev);
+          broadcastToSession(sessionRecord, ev.type, ev);
+        }
+
         broadcastToSession(sessionRecord, 'parent.override', { kind: 'waive', value: true });
-        broadcastToSession(sessionRecord, 'node.sealed', {
-          encounterId: sessionRecord.encounter.id,
-          waived: true
+        broadcastToSession(sessionRecord, 'update', {
+          state: sessionRecord.session.state,
+          sealed: Boolean(sessionRecord.session.isSealed)
         });
 
         return sendJson(res, 200, {
@@ -805,9 +855,11 @@ export async function closeServer(server) {
   if (server._activeSseResponses) {
     for (const sseRes of server._activeSseResponses) {
       try { sseRes.end(); } catch {}
+      globalParentSubscribers.delete(sseRes);
     }
     server._activeSseResponses.clear();
   }
+  globalParentSubscribers.clear();
 
   if (server._activeSockets) {
     for (const socket of server._activeSockets) {

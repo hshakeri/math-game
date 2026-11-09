@@ -11,6 +11,19 @@ let currentSessionId = typeof window !== 'undefined' ? (new URLSearchParams(wind
 let eventSource = null;
 let scribeEnabled = false;
 
+function setSessionId(id) {
+  if (!id) return;
+  currentSessionId = id;
+  const badge = document.getElementById('session-badge');
+  if (badge) badge.textContent = `Session: ${id}`;
+  const statSession = document.getElementById('stat-session');
+  if (statSession) statSession.textContent = id;
+}
+
+if (currentSessionId) {
+  setSessionId(currentSessionId);
+}
+
 // 1. PIN Authentication
 const pinSubmitBtn = document.getElementById('btn-pin-submit');
 if (pinSubmitBtn) pinSubmitBtn.addEventListener('click', unlockWithPin);
@@ -70,7 +83,7 @@ function initSSE() {
   };
 
   // Explicit event listeners for named SSE events
-  const eventTypes = ['connected', 'tutor.say', 'child.action', 'state.transition', 'update', 'parent.override', 'hint.override', 'node.sealed', 'message'];
+  const eventTypes = ['connected', 'session.start', 'tutor.say', 'child.action', 'state.transition', 'engine.transition', 'update', 'parent.override', 'hint.override', 'node.sealed', 'message'];
   for (const et of eventTypes) {
     eventSource.addEventListener(et, (event) => {
       try {
@@ -93,8 +106,15 @@ function handleSSEEvent(ev) {
   switch (ev.type) {
     case 'connected':
       item.innerHTML = `<strong>[${time}] System:</strong> Connected to real-time session monitor`;
-      if (ev.sessionId && !currentSessionId) {
-        currentSessionId = ev.sessionId;
+      if (ev.sessionId) {
+        setSessionId(ev.sessionId);
+      }
+      break;
+    case 'session.start':
+      item.classList.add('log-state');
+      item.innerHTML = `<strong>[${time}] System:</strong> Active session started: ${ev.sessionId} (${ev.encounterId || ''})`;
+      if (ev.sessionId) {
+        setSessionId(ev.sessionId);
       }
       break;
     case 'tutor.say':
@@ -127,6 +147,10 @@ function handleSSEEvent(ev) {
       break;
     default:
       item.innerHTML = `<strong>[${time}] ${ev.type || 'event'}:</strong> ${typeof ev === 'object' ? JSON.stringify(ev) : ev}`;
+  }
+
+  if (ev.sessionId && !currentSessionId) {
+    setSessionId(ev.sessionId);
   }
 
   transcript.appendChild(item);
