@@ -339,6 +339,49 @@ html, body {
   text-align: right;
 }
 
+/* Arrival Panel (Stage: arrive) */
+.arrival-panel, #arrival-panel {
+  background: var(--parchment-card);
+  border: 2px solid var(--parchment-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(44, 36, 22, 0.05);
+  text-align: center;
+}
+
+.arrival-prompt-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.arrival-guidance {
+  font-family: var(--font-family-serif);
+  font-size: var(--font-base);
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+.arrive-btn, #btn-approach-inscription {
+  background: var(--gold-accent);
+  color: #2c2416;
+  border: 2px solid var(--gold-dark);
+  font-weight: bold;
+  padding: 12px 28px;
+  box-shadow: 0 4px 10px rgba(184, 134, 11, 0.25);
+  font-size: 1.05rem;
+  min-height: var(--touch-min-target);
+  min-width: var(--touch-min-target);
+}
+
+.arrive-btn:hover, .arrive-btn:focus, #btn-approach-inscription:hover, #btn-approach-inscription:focus {
+  background: var(--gold-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(184, 134, 11, 0.35);
+}
+
 /* Conjecture Slate */
 .conjecture-slate {
   background: #fdf6e2;

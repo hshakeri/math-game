@@ -211,7 +211,21 @@ export class CastleGame {
     }
 
     const stuckBtn = document.getElementById('btn-im-stuck');
-    if (stuckBtn) stuckBtn.addEventListener('click', () => this.handleAction({ type: 'stuck' }));
+    if (stuckBtn) {
+      stuckBtn.addEventListener('click', () => {
+        if (this.currentView && (this.currentView.state === 'arrive' || this.currentView.phase === 'arrive')) {
+          this.handleAction({ type: 'arrive' });
+          return;
+        }
+        this.handleAction({ type: 'stuck' });
+      });
+    }
+
+    // Arrival Controls
+    const arriveBtn = document.getElementById('btn-approach-inscription');
+    if (arriveBtn) {
+      arriveBtn.addEventListener('click', () => this.handleAction({ type: 'arrive' }));
+    }
 
     // Conjecture Slate
     const conjSubmit = document.getElementById('btn-conjecture-submit');
@@ -355,9 +369,22 @@ export class CastleGame {
     // 3. Owl Utterance
     if (view.lastTutorUtterance && this.typewriter) {
       this.typewriter.type(view.lastTutorUtterance);
+    } else if (phase === 'arrive' && this.typewriter) {
+      const arrivalText = view.narrative?.arrival || 'Greetings, young architect. Read the inscription carefully.';
+      this.typewriter.type(arrivalText);
     }
 
-    // 4. Conjecture Slate visibility
+    // 4. Arrival Panel visibility
+    const arrivalPanel = document.getElementById('arrival-panel');
+    if (arrivalPanel) {
+      if (phase === 'arrive') {
+        arrivalPanel.classList.remove('hidden');
+      } else {
+        arrivalPanel.classList.add('hidden');
+      }
+    }
+
+    // 5. Conjecture Slate visibility
     const slate = document.getElementById('conjecture-slate');
     if (slate) {
       if (phase === 'conjecture') {
@@ -448,6 +475,10 @@ export class CastleGame {
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
+    if (this.currentView && (this.currentView.state === 'arrive' || this.currentView.phase === 'arrive')) {
+      this.handleAction({ type: 'arrive', text });
+      return;
+    }
     this.handleAction({ type: 'say', text });
   }
 
@@ -524,7 +555,7 @@ export class CastleGame {
     if (!mount || !diagramSpec) return;
 
     mountDiagram(mount, diagramSpec, diagramSpec.mode || 'workspace', this.currentView.mechanicState, (step) => {
-      this.handleAction({ type: 'step', step });
+      this.handleAction({ type: 'step', payload: step, step });
     });
   }
 
@@ -541,7 +572,7 @@ export class CastleGame {
       card.addEventListener('click', () => {
         const val = prompt(`Your answer for ${opt.kind}:`);
         if (val !== null) {
-          this.handleAction({ type: 'lookback', index: idx, value: val });
+          this.handleAction({ type: 'lookback', kind: opt.kind, index: idx, value: val });
         }
       });
       container.appendChild(card);

@@ -244,7 +244,9 @@ export function transition(session, action, encounter) {
     }
 
     if (action.type === 'conjecture') {
-      const { stem, value, reason } = action;
+      const stem = action.stem;
+      const value = action.value;
+      const reason = action.reason ?? action.justification ?? '';
       appendHistory('child', 'conjecture', { stem, value, reason });
       const isRight = checkAnswer(value, part.answer);
       const wordCount = countWords(reason);
@@ -297,7 +299,9 @@ export function transition(session, action, encounter) {
   if (next.state === 'understand') {
     // T05 & Second Conjecture Handling (SPEC §4 Rows 2–5)
     if (action.type === 'conjecture' && next.conjectures < 2) {
-      const { stem, value, reason } = action;
+      const stem = action.stem;
+      const value = action.value;
+      const reason = action.reason ?? action.justification ?? '';
       appendHistory('child', 'conjecture', { stem, value, reason });
       const isRight = checkAnswer(value, part.answer);
       const wordCount = countWords(reason);
@@ -366,12 +370,13 @@ export function transition(session, action, encounter) {
   if (next.state === 'plan') {
     if (action.type === 'card') {
       // T08: Plan -> Carry out (Workspace unlocks)
-      next.activeCard = action.cardId;
+      const cardId = action.cardId ?? action.card;
+      next.activeCard = cardId;
       next.state = 'carry_out';
       next.probeCountInState = 0;
-      const isCardInEncounter = Array.isArray(encounter.cards) && encounter.cards.includes(action.cardId);
-      recordEvent('engine.transition', { from: 'plan', to: 'carry_out', card: action.cardId, onTarget: isCardInEncounter });
-      appendHistory('child', 'select_card', { cardId: action.cardId });
+      const isCardInEncounter = Array.isArray(encounter.cards) && encounter.cards.includes(cardId);
+      recordEvent('engine.transition', { from: 'plan', to: 'carry_out', card: cardId, onTarget: isCardInEncounter });
+      appendHistory('child', 'select_card', { cardId });
       syncAliases();
       return { session: next, events };
     }
@@ -402,9 +407,10 @@ export function transition(session, action, encounter) {
 
     // Interactive workspace step
     if (action.type === 'step') {
-      appendHistory('child', 'step', action.payload);
+      const stepPayload = action.payload ?? action.step ?? action;
+      appendHistory('child', 'step', stepPayload);
       const mechanic = MECHANICS[part.mechanic.kind];
-      const stepRes = mechanic.checkStep(next.mechanicState, action.payload);
+      const stepRes = mechanic.checkStep(next.mechanicState, stepPayload);
       next.mechanicState = stepRes.state;
 
       if (stepRes.valid && stepRes.progress) {
@@ -441,7 +447,8 @@ export function transition(session, action, encounter) {
     }
 
     // Direct card trigger for simpler problem
-    if (action.type === 'card' && (action.cardId === 'tiny-case' || action.cardId === 'try-simpler-numbers')) {
+    const activeCardId = action.cardId ?? action.card;
+    if (action.type === 'card' && (activeCardId === 'tiny-case' || activeCardId === 'try-simpler-numbers')) {
       next.state = 'simpler_problem';
       next.simplerProblemState = {
         statement: part.ladder.l4.statement,
@@ -554,26 +561,29 @@ export function transition(session, action, encounter) {
   // =========================================================================
   if (next.state === 'look_back') {
     if (action.type === 'lookback') {
-      appendHistory('child', 'lookback', { kind: action.kind, value: action.value });
-      const option = encounter.lookBack.find(o => o.kind === action.kind);
+      const option = (action.kind && encounter.lookBack.find(o => o.kind === action.kind))
+        ?? (typeof action.index === 'number' && encounter.lookBack[action.index])
+        ?? encounter.lookBack[0];
+      const kind = action.kind ?? option?.kind;
+      appendHistory('child', 'lookback', { kind, index: action.index, value: action.value });
       const isRight = option && checkAnswer(action.value, option.check);
 
       if (isRight) {
         // T17: Look back -> Sealed
         next.state = 'sealed';
         next.lookBackCompleted = true;
-        recordEvent('engine.transition', { from: 'look_back', to: 'sealed', kind: action.kind });
-        recordEvent('node.sealed', { encounterId: encounter.id, partId: next.currentPartId, kind: action.kind, shortcut: next.shortcut });
+        recordEvent('engine.transition', { from: 'look_back', to: 'sealed', kind });
+        recordEvent('node.sealed', { encounterId: encounter.id, partId: next.currentPartId, kind, shortcut: next.shortcut });
         syncAliases();
         return { session: next, events };
       } else {
-        recordEvent('lookback.retry', { kind: action.kind });
+        recordEvent('lookback.retry', { kind });
         syncAliases();
         return { session: next, events };
       }
     }
 
-    if (action.type === 'waive') {
+    if (action.type === 'waive' || action.type === 'waiver') {
       // T18: Look back -> Sealed (Parent waiver)
       if (!next.parentWaiver && !next.chapterWaiverUsed) {
         next.parentWaiver = true;

@@ -451,6 +451,23 @@ export function createServer(options = {}) {
           return sendJson(res, 400, { ok: false, error: 'Action object with type is required' });
         }
 
+        // Defensively normalize wire properties across client and server
+        if (action.step && !action.payload) {
+          action.payload = action.step;
+        }
+        if (action.card && !action.cardId) {
+          action.cardId = action.card;
+        }
+        if (action.justification && !action.reason) {
+          action.reason = action.justification;
+        }
+        if (action.type === 'waiver') {
+          action.type = 'waive';
+        }
+        if (action.type === 'lookback' && !action.kind && typeof action.index === 'number' && sessionRecord.encounter?.lookBack?.[action.index]) {
+          action.kind = sessionRecord.encounter.lookBack[action.index].kind;
+        }
+
         // Apply queued parent hint override if present
         if (sessionRecord.queuedHintOverride && action.type !== 'parent_override') {
           const overrideVal = sessionRecord.queuedHintOverride;
