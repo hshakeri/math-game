@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <radialGradient id="parchmentGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#f7f1e3" />
+      <stop offset="80%" stop-color="#d8cca8" />
+      <stop offset="100%" stop-color="#2c2416" stop-opacity="0.2" />
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#parchmentGrad)" />
+
+  <!-- Outer Map Border & Insets -->
+  <rect x="40" y="40" width="1840" height="1000" fill="none" stroke="#2c2416" stroke-width="6" />
+  <rect x="56" y="56" width="1808" height="968" fill="none" stroke="#c8963e" stroke-width="2" />
+
+  <!-- Topography Contours -->
+  <path d="M 100 300 Q 400 200 800 350 T 1500 250 T 1800 400" fill="none" stroke="#5dade2" stroke-width="1" stroke-dasharray="4,6" opacity="0.4" />
+  <path d="M 80 500 Q 500 450 900 580 T 1600 500 T 1840 600" fill="none" stroke="#5dade2" stroke-width="1" stroke-dasharray="4,6" opacity="0.4" />
+  <path d="M 120 750 Q 600 700 1100 800 T 1750 720" fill="none" stroke="#5dade2" stroke-width="1" stroke-dasharray="4,6" opacity="0.4" />
+
+  <!-- The Outer Road (Winding track connecting the 4 nodes) -->
+  <path d="M 280 840 Q 420 540 680 620 T 1140 440 T 1560 300" fill="none" stroke="#c8963e" stroke-width="10" stroke-dasharray="16,10" />
+  <path d="M 280 840 Q 420 540 680 620 T 1140 440 T 1560 300" fill="none" stroke="#2c2416" stroke-width="3" />
+
+  <!-- Node 1 Icon (Tolls Canyon) -->
+  <g transform="translate(280, 840)">
+    <circle cx="0" cy="0" r="40" fill="#f7f1e3" stroke="#2c2416" stroke-width="4" />
+    <circle cx="0" cy="0" r="30" fill="#c8963e" opacity="0.4" />
+  </g>
+
+  <!-- Node 2 Icon (Dark Vault) -->
+  <g transform="translate(680, 620)">
+    <circle cx="0" cy="0" r="40" fill="#f7f1e3" stroke="#2c2416" stroke-width="4" />
+    <circle cx="0" cy="0" r="30" fill="#c8963e" opacity="0.4" />
+  </g>
+
+  <!-- Node 3 Icon (Five Shields) -->
+  <g transform="translate(1140, 440)">
+    <circle cx="0" cy="0" r="40" fill="#f7f1e3" stroke="#2c2416" stroke-width="4" />
+    <circle cx="0" cy="0" r="30" fill="#c8963e" opacity="0.4" />
+  </g>
+
+  <!-- Node 4 Icon (Castle Keep) -->
+  <g transform="translate(1560, 300)">
+    <circle cx="0" cy="0" r="50" fill="#f7f1e3" stroke="#2c2416" stroke-width="5" />
+    <circle cx="0" cy="0" r="38" fill="#c8963e" opacity="0.6" />
+  </g>
+
+  <!-- Compass Rose in Upper Corner -->
+  <g transform="translate(1680, 820)">
+    <circle cx="0" cy="0" r="90" fill="none" stroke="#2c2416" stroke-width="2" />
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#c8963e" stroke-width="1" stroke-dasharray="3,3" />
+    <!-- North Arrow -->
+    <polygon points="0,-110 -15,0 0,15 15,0" fill="#2c2416" />
+    <!-- South Arrow -->
+    <polygon points="0,110 -15,0 0,-15 15,0" fill="#d8cca8" stroke="#2c2416" />
+    <!-- East Arrow -->
+    <polygon points="110,0 0,-15 -15,0 0,15" fill="#d8cca8" stroke="#2c2416" />
+    <!-- West Arrow -->
+    <polygon points="-110,0 0,-15 15,0 0,15" fill="#d8cca8" stroke="#2c2416" />
+  </g>
+</svg>

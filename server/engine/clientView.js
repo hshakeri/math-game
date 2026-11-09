@@ -7,6 +7,8 @@
  * higher hint ladder texts, and solution trees.
  */
 
+import { hasMoreParts } from './stateMachine.js';
+
 export class SecurityLeakError extends Error {
   constructor(message, details = {}) {
     super(message);
@@ -148,7 +150,9 @@ export function getClientSafeSessionView(session, encounter) {
     availableChips = currentPart.chips?.plan || [];
   }
 
-  const isSealed = Boolean(session.isSealed || session.completed || session.lookBackCompleted || phase === 'sealed' || phase === 'map');
+  const moreParts = hasMoreParts(session, encounter);
+  const isEncounterSealed = Boolean(session.completed || session.lookBackCompleted || (phase === 'sealed' && !moreParts) || phase === 'map');
+  const isPartSealed = Boolean(phase === 'sealed' && moreParts);
 
   return {
     sessionId: session.sessionId,
@@ -156,14 +160,14 @@ export function getClientSafeSessionView(session, encounter) {
     chapter: encounter.chapter,
     node: encounter.node,
     title: encounter.title,
-    sceneAsset: isSealed ? encounter.scene.unlocked : encounter.scene.locked,
+    sceneAsset: isEncounterSealed ? encounter.scene.unlocked : encounter.scene.locked,
     scene: {
-      assetId: isSealed ? encounter.scene.unlocked : encounter.scene.locked,
-      state: isSealed ? 'unlocked' : 'locked'
+      assetId: isEncounterSealed ? encounter.scene.unlocked : encounter.scene.locked,
+      state: isEncounterSealed ? 'unlocked' : 'locked'
     },
     narrative: {
       arrival: encounter.narrative.arrival,
-      ...(isSealed && { sealed: encounter.narrative.sealed })
+      ...(isEncounterSealed && { sealed: encounter.narrative.sealed })
     },
     inscription: encounter.inscription,
     phase,
@@ -188,8 +192,11 @@ export function getClientSafeSessionView(session, encounter) {
     lookBackOptions: phase === 'look_back'
       ? encounter.lookBack.map(lb => ({ kind: lb.kind, prompt: lb.prompt }))
       : null,
-    sealed: isSealed,
-    codex: isSealed ? encounter.codex : null,
+    sealed: isEncounterSealed,
+    partSealed: isPartSealed,
+    hasMoreParts: moreParts,
+    nextPartAvailable: isPartSealed,
+    codex: isEncounterSealed ? encounter.codex : null,
     parentWaiverAvailable: !(session.chapterWaiverUsed ?? session.parentWaiver),
     parentScribe: Boolean(session.parentScribe),
     parentFlag: Boolean(session.parentFlag),

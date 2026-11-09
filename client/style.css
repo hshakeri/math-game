@@ -213,6 +213,55 @@ html, body {
 }
 
 /* 5. Encounter Screen (#encounter) */
+#screen-encounter {
+  position: relative;
+}
+
+.encounter-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.28;
+  pointer-events: none;
+  transition: opacity var(--anim-duration) var(--anim-ease), background-image var(--anim-duration) var(--anim-ease);
+}
+
+.encounter-header,
+.encounter-body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Intermediate Part Completion Panel (SPEC §4, §14) */
+.part-complete-panel {
+  margin: 16px 0;
+  animation: fadeIn 200ms ease-out;
+}
+
+.part-complete-card {
+  background: var(--parchment-card);
+  border: 3px solid var(--gold-accent);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(200, 150, 62, 0.25);
+}
+
+.part-complete-card .part-title {
+  font-family: var(--font-family-serif);
+  font-size: 1.5rem;
+  color: var(--gold-accent);
+  margin-bottom: 8px;
+}
+
+.part-complete-card .part-desc {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
 .encounter-header {
   display: flex;
   justify-content: space-between;

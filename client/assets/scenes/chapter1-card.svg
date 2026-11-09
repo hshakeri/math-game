@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1c2631" />
+      <stop offset="50%" stop-color="#2c2416" />
+      <stop offset="100%" stop-color="#1c2631" />
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#cardGrad)" />
+
+  <!-- Geometric Parchment Plate -->
+  <rect x="240" y="160" width="1440" height="760" fill="#f7f1e3" stroke="#c8963e" stroke-width="8" rx="8" />
+  <rect x="270" y="190" width="1380" height="700" fill="none" stroke="#2c2416" stroke-width="3" />
+
+  <!-- Drafting Corner Accents -->
+  <polygon points="270,190 350,190 270,270" fill="#c8963e" />
+  <polygon points="1650,190 1570,190 1650,270" fill="#c8963e" />
+  <polygon points="270,890 350,890 270,810" fill="#c8963e" />
+  <polygon points="1650,890 1570,890 1650,810" fill="#c8963e" />
+
+  <!-- Center Architect Guild Crest (No text) -->
+  <g transform="translate(960, 540)">
+    <!-- Arcane Circle -->
+    <circle cx="0" cy="0" r="220" fill="none" stroke="#2c2416" stroke-width="6" />
+    <circle cx="0" cy="0" r="200" fill="none" stroke="#c8963e" stroke-width="3" stroke-dasharray="8,6" />
+
+    <!-- Drafting Dividers / Compass -->
+    <path d="M 0 -140 L -90 130" stroke="#2c2416" stroke-width="10" stroke-linecap="round" />
+    <path d="M 0 -140 L 90 130" stroke="#2c2416" stroke-width="10" stroke-linecap="round" />
+    <circle cx="0" cy="-140" r="22" fill="#c8963e" stroke="#2c2416" stroke-width="4" />
+    <path d="M -60 40 Q 0 70 60 40" fill="none" stroke="#5dade2" stroke-width="4" />
+
+    <!-- Plumb Line Bob -->
+    <line x1="0" y1="-120" x2="0" y2="90" stroke="#2c2416" stroke-width="3" stroke-dasharray="5,5" />
+    <polygon points="0,130 -16,90 16,90" fill="#c8963e" stroke="#2c2416" stroke-width="3" />
+  </g>
+</svg>

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <radialGradient id="torchLight" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c8963e" stop-opacity="0.9" />
+      <stop offset="60%" stop-color="#c8963e" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#1c2631" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Dark Masonry Vault Background -->
+  <rect width="1920" height="1080" fill="#1c2631" />
+
+  <!-- Vault Rib Arches -->
+  <path d="M 0 1080 Q 960 100 1920 1080" fill="none" stroke="#2c2416" stroke-width="24" />
+  <path d="M 200 1080 Q 960 250 1720 1080" fill="none" stroke="#d8cca8" stroke-width="12" opacity="0.4" />
+  <path d="M 400 1080 Q 960 400 1520 1080" fill="none" stroke="#2c2416" stroke-width="8" />
+
+  <!-- Stone Wall Blocks -->
+  <line x1="0" y1="500" x2="1920" y2="500" stroke="#2c2416" stroke-width="3" opacity="0.6" />
+  <line x1="0" y1="700" x2="1920" y2="700" stroke="#2c2416" stroke-width="3" opacity="0.6" />
+  <line x1="0" y1="900" x2="1920" y2="900" stroke="#2c2416" stroke-width="3" opacity="0.6" />
+
+  <!-- Three Sconces / Torches -->
+  <!-- Left Torch -->
+  <circle cx="360" cy="460" r="160" fill="url(#torchLight)" />
+  <rect x="350" y="480" width="20" height="70" fill="#d8cca8" stroke="#2c2416" stroke-width="2" />
+  <polygon points="360,430 345,475 375,475" fill="#c8963e" />
+
+  <!-- Center Sconce -->
+  <circle cx="960" cy="380" r="220" fill="url(#torchLight)" />
+  <rect x="950" y="400" width="20" height="70" fill="#d8cca8" stroke="#2c2416" stroke-width="2" />
+  <polygon points="960,350 945,395 975,395" fill="#c8963e" />
+
+  <!-- Right Torch -->
+  <circle cx="1560" cy="460" r="160" fill="url(#torchLight)" />
+  <rect x="1550" y="480" width="20" height="70" fill="#d8cca8" stroke="#2c2416" stroke-width="2" />
+  <polygon points="1560,430 1545,475 1575,475" fill="#c8963e" />
+
+  <!-- Alchemical Pedestal -->
+  <polygon points="760,1080 820,780 1100,780 1160,1080" fill="#d8cca8" stroke="#2c2416" stroke-width="4" />
+  <rect x="800" y="740" width="320" height="40" fill="#2c2416" />
+
+  <!-- Crystal Chest -->
+  <rect x="840" y="720" width="240" height="60" fill="#d8cca8" stroke="#2c2416" stroke-width="3" />
+  <path d="M 840 680 L 840 590 Q 960 540 1080 590 L 1080 680 Z" fill="#2c2416" stroke="#c8963e" stroke-width="2" />
+  
+    <!-- Crystal Facets Glowing -->
+    <polygon points="920,670 940,630 960,670 940,700" fill="#e74c3c" opacity="0.9" />
+    <polygon points="960,670 980,620 1000,670 980,710" fill="#2980b9" opacity="0.9" />
+    <polygon points="1000,670 1020,635 1040,670 1020,705" fill="#27ae60" opacity="0.9" />
+    
+
+  <!-- Mechanical Claw Silhouette hanging from ceiling -->
+  <line x1="960" y1="0" x2="960" y2="300" stroke="#2c2416" stroke-width="6" />
+  <circle cx="960" cy="300" r="20" fill="#d8cca8" stroke="#2c2416" stroke-width="3" />
+  <path d="M 945 315 Q 920 370 940 400" fill="none" stroke="#2c2416" stroke-width="5" />
+  <path d="M 975 315 Q 1000 370 980 400" fill="none" stroke="#2c2416" stroke-width="5" />
+</svg>

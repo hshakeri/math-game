@@ -238,6 +238,14 @@ export class CastleGame {
     const stoneSubmit = document.getElementById('btn-stone-submit');
     if (stoneSubmit) stoneSubmit.addEventListener('click', () => this.handleFinalSubmit());
 
+    // Multi-Part Next Part Button
+    const btnNextPart = document.getElementById('btn-next-part');
+    if (btnNextPart) {
+      btnNextPart.addEventListener('click', () => {
+        this.handleAction({ type: 'next_part' });
+      });
+    }
+
     // Golden Seal Modal Continue
     const sealContinue = document.getElementById('btn-seal-continue');
     if (sealContinue) {
@@ -332,6 +340,13 @@ export class CastleGame {
     if (!view) return;
     this.currentView = view;
     const phase = view.state || view.phase;
+
+    // 0. Set Scene Backdrop
+    const backdropEl = document.getElementById('encounter-backdrop');
+    const assetId = view.sceneAsset || view.scene?.assetId;
+    if (backdropEl && assetId) {
+      backdropEl.style.backgroundImage = `url('/assets/scenes/${assetId}.svg')`;
+    }
 
     // 1. Update Title and Inscription
     const titleEl = document.getElementById('encounter-title');
@@ -448,8 +463,20 @@ export class CastleGame {
       }
     }
 
+    // 9.5 Intermediate Part Complete Panel
+    const partPanel = document.getElementById('part-complete-panel');
+    if (partPanel) {
+      if (view.partSealed && view.hasMoreParts) {
+        partPanel.classList.remove('hidden');
+        const title = document.getElementById('part-complete-title');
+        if (title) title.textContent = `Torch ${String(view.currentPartId || '').toUpperCase()} Solved!`;
+      } else {
+        partPanel.classList.add('hidden');
+      }
+    }
+
     // 10. Golden Seal Trigger
-    if (view.sealed && !this.sealShown) {
+    if (view.sealed && !view.hasMoreParts && !this.sealShown) {
       this.showGoldenSeal(view.codex);
     }
   }

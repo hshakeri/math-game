@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <linearGradient id="keepSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c2631" />
+      <stop offset="100%" stop-color="#2c2416" />
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#keepSky)" />
+
+  <!-- Massive Castle Archway -->
+  <path d="M 400 1080 L 400 500 Q 960 100 1520 500 L 1520 1080 Z" fill="#1c2631" stroke="#d8cca8" stroke-width="24" />
+
+  <!-- Portcullis Iron Lattice -->
+  <g transform="translate(440, 450)" stroke="#2c2416" stroke-width="8">
+    <!-- Vertical Bars with Spikes -->
+    <line x1="120" y1="0" x2="120" y2="600" />
+    <polygon points="110,600 120,630 130,600" fill="#2c2416" />
+    <line x1="260" y1="0" x2="260" y2="600" />
+    <polygon points="250,600 260,630 270,600" fill="#2c2416" />
+    <line x1="400" y1="0" x2="400" y2="600" />
+    <polygon points="390,600 400,630 410,600" fill="#2c2416" />
+    <line x1="540" y1="0" x2="540" y2="600" />
+    <polygon points="530,600 540,630 550,600" fill="#2c2416" />
+    <line x1="680" y1="0" x2="680" y2="600" />
+    <polygon points="670,600 680,630 690,600" fill="#2c2416" />
+    <line x1="820" y1="0" x2="820" y2="600" />
+    <polygon points="810,600 820,630 830,600" fill="#2c2416" />
+    <line x1="940" y1="0" x2="940" y2="600" />
+    <polygon points="930,600 940,630 950,600" fill="#2c2416" />
+
+    <!-- Horizontal Bars -->
+    <line x1="60" y1="120" x2="980" y2="120" stroke-width="12" />
+    <line x1="60" y1="280" x2="980" y2="280" stroke-width="12" />
+    <line x1="60" y1="440" x2="980" y2="440" stroke-width="12" />
+  </g>
+
+  <!-- Left Guardian Statue: Jimmy -->
+  <g transform="translate(200, 620)">
+    <rect x="0" y="200" width="140" height="260" fill="#d8cca8" stroke="#2c2416" stroke-width="4" />
+    <circle cx="70" cy="140" r="50" fill="#d8cca8" stroke="#2c2416" stroke-width="4" />
+    <circle cx="70" cy="280" r="40" fill="#f7f1e3" stroke="#2c2416" stroke-width="5" />
+  </g>
+
+  <!-- Center Guardian Statue (Behind Arch Key): Kimmy -->
+  <g transform="translate(910, 160)">
+    <circle cx="50" cy="50" r="45" fill="#d8cca8" stroke="#2c2416" stroke-width="4" />
+    <circle cx="50" cy="50" r="28" fill="#f7f1e3" stroke="#2c2416" stroke-width="5" />
+  </g>
+
+  <!-- Right Guardian Statue: Timmy -->
+  <g transform="translate(1580, 620)">
+    <rect x="0" y="200" width="140" height="260" fill="#d8cca8" stroke="#2c2416" stroke-width="4" />
+    <circle cx="70" cy="140" r="50" fill="#d8cca8" stroke="#2c2416" stroke-width="4" />
+    <circle cx="70" cy="280" r="40" fill="#f7f1e3" stroke="#2c2416" stroke-width="5" />
+  </g>
+
+  <!-- Floor Pavement -->
+  <rect x="0" y="980" width="1920" height="100" fill="#d8cca8" stroke="#2c2416" stroke-width="4" />
+</svg>

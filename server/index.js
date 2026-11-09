@@ -227,6 +227,18 @@ export function broadcastToSession(sessionRecord, eventType, payload) {
   }
 }
 
+let cachedManifest = null;
+let cachedManifestMtime = 0;
+
+function getCachedAssetManifest(manifestPath) {
+  const stat = fs.statSync(manifestPath);
+  if (!cachedManifest || stat.mtimeMs > cachedManifestMtime) {
+    cachedManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    cachedManifestMtime = stat.mtimeMs;
+  }
+  return cachedManifest;
+}
+
 /**
  * Safe Static File Server with Directory Traversal Prevention.
  */
@@ -284,17 +296,35 @@ export function serveStaticFile(req, res, pathname, clientDir = CLIENT_DIR) {
     return sendJson(res, 403, { ok: false, error: 'Directory listing forbidden' });
   }
 
-  // Check asset manifest approval if under /assets/
+  // Strict Asset Manifest Approval Gate (SPEC §8, §14)
   if (fileRel.startsWith('/assets/')) {
+    // Allow the manifest itself to be served
+    if (fileRel === '/assets/manifest.json') {
+      return streamFileToResponse(safePath, res, '.json');
+    }
+
     const manifestPath = path.join(clientDir, 'assets/manifest.json');
-    if (fs.existsSync(manifestPath)) {
-      try {
-        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-        const relAsset = path.relative(path.join(clientDir, 'assets'), safePath);
-        if (manifest.assets && manifest.assets[relAsset] && manifest.assets[relAsset].approved === false) {
-          return sendJson(res, 403, { ok: false, error: 'Asset not approved' });
-        }
-      } catch {}
+    if (!fs.existsSync(manifestPath)) {
+      return sendJson(res, 403, { ok: false, error: 'Asset manifest missing' });
+    }
+
+    let manifest;
+    try {
+      manifest = getCachedAssetManifest(manifestPath);
+    } catch {
+      return sendJson(res, 403, { ok: false, error: 'Asset validation failed' });
+    }
+
+    const rawRel = path.relative(path.join(clientDir, 'assets'), safePath);
+    const relAsset = rawRel.split(path.sep).join('/');
+
+    const assetMeta = manifest?.assets?.[relAsset];
+    if (!assetMeta) {
+      return sendJson(res, 404, { ok: false, error: 'Asset not registered in manifest' });
+    }
+
+    if (assetMeta.approved !== true) {
+      return sendJson(res, 403, { ok: false, error: 'Asset not approved' });
     }
   }
 

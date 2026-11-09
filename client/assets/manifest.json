@@ -1,0 +1,447 @@
+{
+  "version": 1,
+  "styleBible": "tools/assets/style.md",
+  "reviewChecklist": [
+    "hero and owl match the character sheets",
+    "no text rendered inside the image",
+    "nothing frightening or gore",
+    "nothing that reads as a hint for the puzzle",
+    "anatomy and hands plausible"
+  ],
+  "assets": {
+    "scenes/ch1-n1-locked.svg": {
+      "id": "ch1-n1-locked",
+      "type": "scene",
+      "file": "scenes/ch1-n1-locked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "28a7684dddd874a732c029e495aac44cfc287f6865f37fcd9618106ab1edab44",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/ch1-n1-unlocked.svg": {
+      "id": "ch1-n1-unlocked",
+      "type": "scene",
+      "file": "scenes/ch1-n1-unlocked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "d74bf635b088859b473a02041fd6a374a7fbe59b6a9102d9f12fddd73ba74441",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/ch1-n2-locked.svg": {
+      "id": "ch1-n2-locked",
+      "type": "scene",
+      "file": "scenes/ch1-n2-locked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "f5efe2b98e3cc4b4aa02213e080419847300a9e45fdb86288d9afbba9dc91d02",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/ch1-n2-unlocked.svg": {
+      "id": "ch1-n2-unlocked",
+      "type": "scene",
+      "file": "scenes/ch1-n2-unlocked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "0e55a8ea4836e88f590e6e0b5fbfb37521b06385750106c706ebdf95f1097c92",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/ch1-n3-locked.svg": {
+      "id": "ch1-n3-locked",
+      "type": "scene",
+      "file": "scenes/ch1-n3-locked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "bea05e995294ec7069eb5fbfe81ac3501454703fa4a975c90b8d8fa45d70ad6e",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/ch1-n3-unlocked.svg": {
+      "id": "ch1-n3-unlocked",
+      "type": "scene",
+      "file": "scenes/ch1-n3-unlocked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "20a8d95136a4f4e9643995d800f84c0a85ae514ac0f51c5d6568782120500c65",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/ch1-n4-locked.svg": {
+      "id": "ch1-n4-locked",
+      "type": "scene",
+      "file": "scenes/ch1-n4-locked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "61e65ea0c85dce5c36494bc91a87d7f92e4cd6eee547d940e73ef15ac7ee777a",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/ch1-n4-unlocked.svg": {
+      "id": "ch1-n4-unlocked",
+      "type": "scene",
+      "file": "scenes/ch1-n4-unlocked.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "2637f7febc425717a481f226fccdf6f49ae948e794391ec79d3bdfab76b181ba",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/map-ch1.svg": {
+      "id": "map-ch1",
+      "type": "scene",
+      "file": "scenes/map-ch1.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "0702357279c6101bdbaf0b7c7d0f2e5b7b8bde33b222dd92fa58ef154d8bd217",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "scenes/chapter1-card.svg": {
+      "id": "chapter1-card",
+      "type": "scene",
+      "file": "scenes/chapter1-card.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080,
+        "aspect": "16:9"
+      },
+      "sha256": "71156d71e8d024eb588297a2a688e15edf665171a17fd0dabc2773dfac3777c7",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/archimedes-sheet.svg": {
+      "id": "archimedes-sheet",
+      "type": "avatar",
+      "file": "avatars/archimedes-sheet.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1024,
+        "height": 768,
+        "aspect": "4:3"
+      },
+      "sha256": "c5429aaefe46036e976a80d359a6b1242507f066ba784f2a1417bee97dbe6a1f",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/hero-sheet.svg": {
+      "id": "hero-sheet",
+      "type": "avatar",
+      "file": "avatars/hero-sheet.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 1024,
+        "height": 768,
+        "aspect": "4:3"
+      },
+      "sha256": "9812b483511f60d704ef6ec8f33a66729d45697d06cc0c8526088404208b1886",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/hero-1.svg": {
+      "id": "hero-1",
+      "type": "avatar",
+      "file": "avatars/hero-1.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "aspect": "1:1"
+      },
+      "sha256": "5289cd6a021b86d9d53fd878d574b69aeb0ddac98fbac86b1d34ed97f43a011d",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/hero-2.svg": {
+      "id": "hero-2",
+      "type": "avatar",
+      "file": "avatars/hero-2.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "aspect": "1:1"
+      },
+      "sha256": "b2d55953a512f7e42a8354b9034d2c7433e42489240de593b349cbd5eaa1d79a",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/hero-3.svg": {
+      "id": "hero-3",
+      "type": "avatar",
+      "file": "avatars/hero-3.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "aspect": "1:1"
+      },
+      "sha256": "6b0033ab368d6468be90db585f91fad0cb65252600da2d900d1decdae62cbff5",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/hero-4.svg": {
+      "id": "hero-4",
+      "type": "avatar",
+      "file": "avatars/hero-4.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "aspect": "1:1"
+      },
+      "sha256": "d51d0a0d1607c1ece4cad2a4d4f998ce0481fe294f27eeddba62f32355f5ca27",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/hero-5.svg": {
+      "id": "hero-5",
+      "type": "avatar",
+      "file": "avatars/hero-5.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "aspect": "1:1"
+      },
+      "sha256": "a78bd04cfeb89c587010b4cf55f4b9e32b03311bc84632cd173e4c6cefffe6c1",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    },
+    "avatars/hero-6.svg": {
+      "id": "hero-6",
+      "type": "avatar",
+      "file": "avatars/hero-6.svg",
+      "format": "image/svg+xml",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "aspect": "1:1"
+      },
+      "sha256": "f5cba882e84dcd76231e1bec320d4c0ed51e792e31d2233e233946d5bdada290",
+      "placeholder": true,
+      "approved": true,
+      "review": {
+        "heroOwlMatch": true,
+        "noTextInImage": true,
+        "nothingFrightening": true,
+        "noPuzzleHints": true,
+        "plausibleAnatomy": true,
+        "reviewedBy": "Heman Shakeri",
+        "reviewedAt": "2026-11-09T03:00:00Z"
+      }
+    }
+  },
+  "byAssetId": {
+    "ch1-n1-locked": "scenes/ch1-n1-locked.svg",
+    "ch1-n1-unlocked": "scenes/ch1-n1-unlocked.svg",
+    "ch1-n2-locked": "scenes/ch1-n2-locked.svg",
+    "ch1-n2-unlocked": "scenes/ch1-n2-unlocked.svg",
+    "ch1-n3-locked": "scenes/ch1-n3-locked.svg",
+    "ch1-n3-unlocked": "scenes/ch1-n3-unlocked.svg",
+    "ch1-n4-locked": "scenes/ch1-n4-locked.svg",
+    "ch1-n4-unlocked": "scenes/ch1-n4-unlocked.svg",
+    "map-ch1": "scenes/map-ch1.svg",
+    "chapter1-card": "scenes/chapter1-card.svg",
+    "archimedes-sheet": "avatars/archimedes-sheet.svg",
+    "hero-sheet": "avatars/hero-sheet.svg",
+    "hero-1": "avatars/hero-1.svg",
+    "hero-2": "avatars/hero-2.svg",
+    "hero-3": "avatars/hero-3.svg",
+    "hero-4": "avatars/hero-4.svg",
+    "hero-5": "avatars/hero-5.svg",
+    "hero-6": "avatars/hero-6.svg"
+  }
+}

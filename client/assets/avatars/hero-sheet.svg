@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768" width="100%" height="100%">
+  <rect width="1024" height="768" fill="#ffffff" />
+  <line x1="512" y1="0" x2="512" y2="768" stroke="#d8cca8" stroke-width="2" stroke-dasharray="6,4" />
+  <line x1="0" y1="384" x2="1024" y2="384" stroke="#d8cca8" stroke-width="2" stroke-dasharray="6,4" />
+
+  <!-- Front View (Top-Left) -->
+  <g transform="translate(256, 192)">
+    <circle cx="0" cy="-60" r="45" fill="#f7f1e3" stroke="#2c2416" stroke-width="3" />
+    <path d="M -45 -70 Q 0 -110 45 -70 Q 30 -40 -45 -70" fill="#2c2416" />
+    <path d="M -40 0 L 40 0 L 50 100 L -50 100 Z" fill="#1c2631" stroke="#2c2416" stroke-width="3" />
+    <line x1="-45" y1="50" x2="45" y2="50" stroke="#c8963e" stroke-width="5" />
+    <!-- Satchel strap -->
+    <line x1="-35" y1="0" x2="35" y2="80" stroke="#2c2416" stroke-width="4" />
+    <rect x="25" y="70" width="30" height="25" rx="4" fill="#d8cca8" stroke="#2c2416" stroke-width="2" />
+  </g>
+
+  <!-- Back View (Top-Right) -->
+  <g transform="translate(768, 192)">
+    <circle cx="0" cy="-60" r="45" fill="#f7f1e3" stroke="#2c2416" stroke-width="3" />
+    <path d="M -45 -60 Q 0 -110 45 -60 L 40 -30 L -40 -30 Z" fill="#2c2416" />
+    <path d="M -40 0 L 40 0 L 50 100 L -50 100 Z" fill="#1c2631" stroke="#2c2416" stroke-width="3" />
+    <line x1="-45" y1="50" x2="45" y2="50" stroke="#c8963e" stroke-width="5" />
+  </g>
+
+  <!-- Left View (Bottom-Left) -->
+  <g transform="translate(256, 576)">
+    <circle cx="-5" cy="-60" r="40" fill="#f7f1e3" stroke="#2c2416" stroke-width="3" />
+    <path d="M -30 0 L 25 0 L 25 100 L -30 100 Z" fill="#1c2631" stroke="#2c2416" stroke-width="3" />
+  </g>
+
+  <!-- Right View (Bottom-Right) -->
+  <g transform="translate(768, 576)">
+    <circle cx="5" cy="-60" r="40" fill="#f7f1e3" stroke="#2c2416" stroke-width="3" />
+    <path d="M -25 0 L 30 0 L 30 100 L -25 100 Z" fill="#1c2631" stroke="#2c2416" stroke-width="3" />
+  </g>
+</svg>

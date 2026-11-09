@@ -64,6 +64,7 @@
 
     <!-- 2. ENCOUNTER SCREEN (#encounter) -->
     <section id="screen-encounter" class="screen hidden" aria-label="Active Mathematical Encounter">
+      <div id="encounter-backdrop" class="encounter-backdrop" aria-hidden="true"></div>
       <!-- Top Navigation & Status -->
       <header class="encounter-header">
         <a href="#map" class="btn-touch back-btn" aria-label="Return to Map">← Road</a>
@@ -116,6 +117,15 @@
             <button id="btn-approach-inscription" class="btn-touch btn-primary arrive-btn" aria-label="Approach Inscription and Begin">
               📜 Approach Inscription
             </button>
+          </div>
+        </section>
+
+        <!-- Intermediate Part Complete Panel (Stage: sealed with hasMoreParts) -->
+        <section id="part-complete-panel" class="part-complete-panel hidden" role="region" aria-label="Part Complete">
+          <div class="part-complete-card">
+            <h3 id="part-complete-title" class="part-title">Torch Lit!</h3>
+            <p id="part-complete-desc" class="part-desc">You have mastered this chamber. The path opens to the next challenge.</p>
+            <button id="btn-next-part" class="btn-touch btn-primary">Proceed to Next Part</button>
           </div>
         </section>
 
