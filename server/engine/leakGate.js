@@ -49,7 +49,7 @@ export const PRAISE_PATTERNS = [
 ];
 
 // Stage 8: Banned operations at l0/l1 (including doubling and halving inflections)
-export const BANNED_OPS_L0_L1 = /\b(?:add|subtract|multiply|divide|double(?:ing|ed|s)?|halve(?:ing|ed|s)?|doubling|halving|plus|minus|times)\b/i;
+export const BANNED_OPS_L0_L1 = /\b(?:add|subtract|multiply|divide|double[ds]?|doubling|halve[ds]?|halving|plus|minus|times)\b/i;
 
 const UNICODE_ROMAN_MAP = {
   '\u2160': 1, '\u2161': 2, '\u2162': 3, '\u2163': 4, '\u2164': 5,
@@ -74,17 +74,22 @@ export function normalizeText(text) {
   s = s.normalize('NFKC');
   // 3. Strip zero-width and invisible formatting characters
   s = s.replace(/[\u200B-\u200D\uFEFF\u00AD\u2060]/g, '');
-  // 4. Map Cyrillic homoglyphs
-  s = s.replace(/[\u0430]/g, 'a')
-       .replace(/[\u0441]/g, 'c')
-       .replace(/[\u0435]/g, 'e')
-       .replace(/[\u043E]/g, 'o')
-       .replace(/[\u0440]/g, 'p')
-       .replace(/[\u0445]/g, 'x')
-       .replace(/[\u0456\u0457]/g, 'i')
-       .replace(/[\u0443]/g, 'y')
-       .replace(/[\u0455]/g, 's')
-       .replace(/[\u0458]/g, 'j');
+  // 4. Map Cyrillic homoglyphs (both uppercase and lowercase visual & phonetic homoglyphs)
+  s = s.replace(/[\u0430\u0410]/g, 'a')
+       .replace(/[\u0441\u0421]/g, 'c')
+       .replace(/[\u0435\u0415]/g, 'e')
+       .replace(/[\u043E\u041E]/g, 'o')
+       .replace(/[\u0440\u0420]/g, 'p')
+       .replace(/[\u0445\u0425]/g, 'x')
+       .replace(/[\u0456\u0457\u0406\u0407]/g, 'i')
+       .replace(/[\u0443\u0423]/g, 'y')
+       .replace(/[\u0455\u0405]/g, 's')
+       .replace(/[\u0458\u0408]/g, 'j')
+       .replace(/[\u0442\u0422]/g, 't')
+       .replace(/[\u0412\u0432]/g, 'b')
+       .replace(/[\u041D\u043D]/g, 'h')
+       .replace(/[\u041A\u043A]/g, 'k')
+       .replace(/[\u041C\u043C]/g, 'm');
   // 5. Normalize typographic dashes to hyphen
   s = s.replace(/[\u2010-\u2015\u2212]/g, '-');
   return s;

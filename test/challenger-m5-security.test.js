@@ -122,10 +122,8 @@ describe('Challenger M5 Security & Adversarial Exploit Suite', () => {
       assert.equal(resLower.reason, 'forbidden');
     });
 
-    // 1.5 EMPIRICAL VULNERABILITY 1: Uppercase Cyrillic Homoglyph Leak Evasion
-    it('1.5-EMPIRICAL-FINDING: exposes that uppercase Cyrillic homoglyphs evade the leak gate across all 4 encounters', {
-      todo: 'Vulnerability: normalizeText lacks uppercase Cyrillic homoglyph mappings (e.g. \\u0405, \\u0422)'
-    }, () => {
+    // 1.5 Uppercase Cyrillic Homoglyph Leak Prevention
+    it('1.5 blocks uppercase Cyrillic homoglyphs across all 4 encounters', () => {
       // Demonstration of gate evasion vectors across all 4 encounters:
       // Encounter 1 (Reverse Tolls): Answer 6 via Cyrillic Capital Dze \u0405 + \u0456 + \u0445 ("Ѕіх")
       const cyrillicCapitalSix = '\u0405\u0456\u0445';
@@ -145,24 +143,27 @@ describe('Challenger M5 Security & Adversarial Exploit Suite', () => {
       assert.equal(
         resE1.allowed,
         false,
-        "VULNERABILITY CONFIRMED: E1 answer 6 leaked via uppercase Cyrillic homoglyph '\\u0405\\u0456\\u0445' (Ѕіх)"
+        "E1 answer 6 must be blocked when using uppercase Cyrillic homoglyph '\\u0405\\u0456\\u0445' (Ѕіх)"
       );
+      assert.equal(resE1.reason, 'forbidden');
+
       assert.equal(
         resE3.allowed,
         false,
-        "VULNERABILITY CONFIRMED: E3 answer 30 leaked via uppercase Cyrillic homoglyph '\\u0422hirty' (Тhirty)"
+        "E3 answer 30 must be blocked when using uppercase Cyrillic homoglyph '\\u0422hirty' (Тhirty)"
       );
+      assert.equal(resE3.reason, 'forbidden');
+
       assert.equal(
         resE4.allowed,
         false,
-        "VULNERABILITY CONFIRMED: E4 answer 24 leaked via uppercase Cyrillic homoglyph '\\u0422wenty-four' (Тwenty-four)"
+        "E4 answer 24 must be blocked when using uppercase Cyrillic homoglyph '\\u0422wenty-four' (Тwenty-four)"
       );
+      assert.equal(resE4.reason, 'forbidden');
     });
 
-    // 1.6 EMPIRICAL VULNERABILITY 2: Past-tense inflections 'doubled' and 'halved' evade BANNED_OPS_L0_L1
-    it('1.6-EMPIRICAL-FINDING: exposes that BANNED_OPS_L0_L1 fails to block past-tense inflections doubled and halved', {
-      todo: "Vulnerability: regex double(?:ing|ed|s)? requires doubleed, omitting doubled and halved"
-    }, () => {
+    // 1.6 Past-tense inflections 'doubled' and 'halved' blocked by BANNED_OPS_L0_L1
+    it('1.6 blocks past-tense inflections doubled and halved at rungs l0 and l1', () => {
       // In Encounter 1 (Reverse Tolls), doubling is the central mechanic
       const uDoubled = 'Could the coins have been doubled by the gate to reach the count on the stone?';
       const resDoubled = checkUtterance(uDoubled, { rung: 'l0', forbidden: [] }, { minLen: 40 });
@@ -174,13 +175,20 @@ describe('Challenger M5 Security & Adversarial Exploit Suite', () => {
       assert.equal(
         resDoubled.allowed,
         false,
-        "VULNERABILITY CONFIRMED: Banned operation 'doubled' permitted at rung l0"
+        "Banned operation 'doubled' must be blocked at rung l0"
       );
+      assert.equal(resDoubled.reason, 'banned_operation');
+
       assert.equal(
         resHalved.allowed,
         false,
-        "VULNERABILITY CONFIRMED: Banned operation 'halved' permitted at rung l0"
+        "Banned operation 'halved' must be blocked at rung l0"
       );
+      assert.equal(resHalved.reason, 'banned_operation');
+
+      // Verify direct exported regex matches
+      assert.equal(BANNED_OPS_L0_L1.test('doubled'), true, "BANNED_OPS_L0_L1 must match 'doubled'");
+      assert.equal(BANNED_OPS_L0_L1.test('halved'), true, "BANNED_OPS_L0_L1 must match 'halved'");
     });
 
     // 1.7 Evaluative praise phrases

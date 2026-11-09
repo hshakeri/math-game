@@ -291,6 +291,32 @@ describe('Tier 5 Adversarial Hardening Suite (T5.1 – T5.10)', () => {
       assert.equal(resRoman.allowed, false);
       assert.ok(resRoman.reason === 'forbidden' || resRoman.reason === 'rung');
     });
+
+    it('normalizes Cyrillic homoglyphs (both uppercase and lowercase) and blocks forbidden numbers', () => {
+      // 1. Lowercase Cyrillic: \u0455\u0456\u0445 -> "six" (Reverse Tolls forbidden: 6)
+      const uLower = "Could she start with \u0455\u0456\u0445 coins in the pouch on the road?";
+      const resLower = checkUtterance(uLower, { rung: 'l0', forbidden: [6], givens: [3, 5, 9, 13] }, { minLen: 40 });
+      assert.equal(resLower.allowed, false, "Expected lowercase Cyrillic 'six' to be blocked");
+      assert.equal(resLower.reason, 'forbidden');
+
+      // 2. Uppercase Cyrillic Dze: \u0405ix -> "Six" (Reverse Tolls forbidden: 6)
+      const uDze = "Could she start with \u0405ix coins in the pouch on the enchanted road?";
+      const resDze = checkUtterance(uDze, { rung: 'l0', forbidden: [6], givens: [3, 5, 9, 13] }, { minLen: 40 });
+      assert.equal(resDze.allowed, false, "Expected uppercase Cyrillic Dze '\\u0405ix' to be blocked");
+      assert.equal(resDze.reason, 'forbidden');
+
+      // 3. Uppercase Cyrillic Te: \u0422hirty -> "Thirty" (Five Shields forbidden: 30)
+      const uTe30 = "Could the perimeter around one shield be \u0422hirty cubits in the courtyard?";
+      const resTe30 = checkUtterance(uTe30, { rung: 'l0', forbidden: [10, 22, 30], givens: [2, 3, 5, 66] }, { minLen: 40 });
+      assert.equal(resTe30.allowed, false, "Expected uppercase Cyrillic Te '\\u0422hirty' to be blocked");
+      assert.equal(resTe30.reason, 'forbidden');
+
+      // 4. Uppercase Cyrillic Te: \u0422wenty-four -> "Twenty-four" (Castle Keep forbidden: 24)
+      const uTe24 = "Could she start with \u0422wenty-four coins on the stone table in the room?";
+      const resTe24 = checkUtterance(uTe24, { rung: 'l0', forbidden: [2, 5, 17, 24], givens: [34, 85] }, { minLen: 40 });
+      assert.equal(resTe24.allowed, false, "Expected uppercase Cyrillic Te '\\u0422wenty-four' to be blocked");
+      assert.equal(resTe24.reason, 'forbidden');
+    });
   });
 
   // =========================================================================
@@ -313,6 +339,42 @@ describe('Tier 5 Adversarial Hardening Suite (T5.1 – T5.10)', () => {
       const uL2 = "Walking backwards, you undo the paying first and then undo doubling, what happens next?";
       const resL2 = checkUtterance(uL2, { rung: 'l2', forbidden: [] }, { minLen: 40 });
       assert.equal(resL2.allowed, true);
+    });
+
+    it('rejects past-tense operation inflections (doubled, halved) at rungs l0 and l1', () => {
+      // doubled at l0
+      const uDoubledL0 = "Could the coins have been doubled by the gate to reach the count on the stone?";
+      const resDoubledL0 = checkUtterance(uDoubledL0, { rung: 'l0', forbidden: [] }, { minLen: 40 });
+      assert.equal(resDoubledL0.allowed, false);
+      assert.equal(resDoubledL0.reason, 'banned_operation');
+
+      // doubled at l1
+      const uDoubledL1 = "If the value was doubled at the first archway, what did we start with originally?";
+      const resDoubledL1 = checkUtterance(uDoubledL1, { rung: 'l1', forbidden: [] }, { minLen: 40 });
+      assert.equal(resDoubledL1.allowed, false);
+      assert.equal(resDoubledL1.reason, 'banned_operation');
+
+      // halved at l0
+      const uHalvedL0 = "Could the crystals in the vault have been halved into two equal piles?";
+      const resHalvedL0 = checkUtterance(uHalvedL0, { rung: 'l0', forbidden: [] }, { minLen: 40 });
+      assert.equal(resHalvedL0.allowed, false);
+      assert.equal(resHalvedL0.reason, 'banned_operation');
+
+      // halved at l1
+      const uHalvedL1 = "When the pile was halved by the sorcerer, how many gems remained in each tray?";
+      const resHalvedL1 = checkUtterance(uHalvedL1, { rung: 'l1', forbidden: [] }, { minLen: 40 });
+      assert.equal(resHalvedL1.allowed, false);
+      assert.equal(resHalvedL1.reason, 'banned_operation');
+    });
+
+    it('allows past-tense operation inflections (doubled, halved) at rung l2 as strategic guidance', () => {
+      const uDoubledL2 = "Since the pile was doubled by the gate, could you work backwards from the final amount?";
+      const resDoubledL2 = checkUtterance(uDoubledL2, { rung: 'l2', forbidden: [] }, { minLen: 40 });
+      assert.equal(resDoubledL2.allowed, true);
+
+      const uHalvedL2 = "Because the total was halved at the vault table, undoing that step reverses the change?";
+      const resHalvedL2 = checkUtterance(uHalvedL2, { rung: 'l2', forbidden: [] }, { minLen: 40 });
+      assert.equal(resHalvedL2.allowed, true);
     });
   });
 
