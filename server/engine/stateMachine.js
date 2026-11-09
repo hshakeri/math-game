@@ -242,6 +242,16 @@ export function transition(session, action, encounter) {
     return { session: next, events };
   }
 
+  // A first note starts the encounter and continues through this same turn.
+  // The legacy explicit arrival action remains available below.
+  if (next.state === 'arrive' && ['say', 'chip', 'stuck'].includes(action.type)) {
+    next.state = 'conjecture';
+    next.conjectures = 0;
+    next.probeCountInState = 0;
+    recordEvent('engine.transition', { from: 'arrive', to: 'conjecture', reason: 'first_note' });
+    appendHistory('engine', 'arrive_to_conjecture');
+  }
+
   // Chat is another way to enter an answer, never a request for a model to
   // judge it. Retain only a child's literal claim until they supply a reason.
   const conversationStates = ['conjecture', 'understand', 'plan', 'carry_out'];
@@ -341,6 +351,16 @@ export function transition(session, action, encounter) {
       return { session: next, events };
     }
 
+    if (['say', 'chip', 'stuck'].includes(action.type)) {
+      // No explicit claim was recognized above. Treat the child's note as the
+      // first Understand response, not an unanswered conjecture form.
+      next.state = 'understand';
+      next.probeCountInState = 0;
+      recordEvent('engine.transition', { from: 'conjecture', to: 'understand', reason: 'conversation' });
+      recordEvent('conversation.support_requested');
+      // Continue into Understand below; it records and consumes the action once.
+    }
+
     if (action.type === 'conjecture') {
       const stem = action.stem;
       const value = action.value;
@@ -424,8 +444,9 @@ export function transition(session, action, encounter) {
           return { session: next, events };
         }
       } else {
-        // T05: Second wrong conjecture -> closes conjecture window, updates misconception
-        next.conjectures = 2;
+        // An opening note may enter Understand before any guess. Count this
+        // actual conjecture; the second wrong one closes the window.
+        next.conjectures = Math.min(2, next.conjectures + 1);
         const matched = matchMisconception(value, part.misconceptions);
         if (matched) {
           next.misconceptionTag = matched.tag;
@@ -446,7 +467,7 @@ export function transition(session, action, encounter) {
       }
     }
 
-    if (action.type === 'say' || action.type === 'chip') {
+    if (action.type === 'say' || action.type === 'chip' || action.type === 'stuck') {
       appendHistory('child', action.type, { text: action.text || action.chip });
       const classification = action.classification || {};
       const allTrue = Boolean(classification.unknown && classification.data && classification.condition);

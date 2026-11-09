@@ -57,7 +57,7 @@ for (const phase of ['conjecture', 'understand', 'plan']) {
       await act({ type: 'say', text: 'I know the story ends at the castle.' });
     }
     const partial = await act({ type: 'say', text: 'Gate 1: 6*2-5=7' });
-    assert.equal(partial.state, phase);
+    assert.equal(partial.state, phase === 'conjecture' ? 'understand' : phase);
     assert.equal(partial.events.some(event => event.type === 'node.sealed'), false);
     const complete = await act({ type: 'say', text: gateSteps });
     assert.equal(complete.state, 'sealed');

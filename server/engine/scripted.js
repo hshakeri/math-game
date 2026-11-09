@@ -294,6 +294,11 @@ const GENERAL_FOLLOW_UPS = [
   "Let us leave your idea on the page while we look at the clues in the inscription. My monocle is ready, and the notebook has room for your reasons. What would you check next?"
 ];
 
+const OPENING_SUPPORT = [
+  'Your note is in the notebook, and the inscription can stay beside it while we find a place to begin. My monocle is ready for the clues. Which part of the story tells you something you know for certain?',
+  'We can leave room in the notebook for an answer while we inspect the story. The inscription has clues we can return to as we work. What is the story asking us to find out?'
+];
+
 function previousSpeech(options) {
   if (typeof options.previousSpeech === 'string' && options.previousSpeech) return options.previousSpeech;
   const history = options.publicHistory?.length ? options.publicHistory : options.transcript || [];
@@ -326,6 +331,7 @@ export function getScriptedFollowUp(state, options = {}) {
  * @returns {{speech: string, usedPoolIndex: number}}
  */
 export function selectScriptedProbe(encounterId, partId, state, rung = 'l0', options = {}) {
+  if (state === 'understand' && options.conversationCue === 'opening_support') return select(OPENING_SUPPORT, options);
   const encProbes = SCRIPTED_PROBES[encounterId]?.[partId];
   if (!encProbes) {
     return select(GENERAL_FOLLOW_UPS, options);

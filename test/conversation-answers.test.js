@@ -278,7 +278,7 @@ test('questions and ambiguous claims do not justify a pending answer', async t =
     await act({ type: 'arrive' });
     await act({ type: 'say', text: '6' });
     const result = await act({ type: 'say', text });
-    assert.equal(result.state, 'conjecture', text);
+    assert.equal(result.state, 'understand', text);
     assert.equal(act.session().pendingConversationAnswer, null);
     assert.equal(act.session().conjectures, 0);
   }
@@ -290,7 +290,7 @@ for (const text of ['six or seven', 'I changed my mind', 'I cannot explain', 'I 
     await act({ type: 'arrive' });
     await act({ type: 'say', text: '6' });
     const result = await act({ type: 'say', text });
-    assert.equal(result.state, 'conjecture');
+    assert.equal(result.state, 'understand');
     assert.equal(act.session().pendingConversationAnswer, null);
     assert.equal(act.session().conjectures, 0);
     assert.equal(act.session().shortcut, false);
@@ -320,7 +320,7 @@ test('chat answers seal only the current part and cannot carry into the next par
   assert.equal(act.session().pendingConversationAnswer, null);
   await act({ type: 'arrive' });
   const explanation = await act({ type: 'say', text: 'I considered how the colours could differ.' });
-  assert.equal(explanation.state, 'conjecture');
+  assert.equal(explanation.state, 'understand');
 });
 
 test('reason requests stay local and pass every gate across encounter rungs', async () => {

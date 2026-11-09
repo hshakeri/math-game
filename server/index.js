@@ -591,12 +591,13 @@ export function createServer(options = {}) {
               state: nextSession.state,
               hintRung: nextSession.hintRung,
               publicHistory: modelDialogue(nextSession, historyGate),
-              childMessage: action.text || action.reason || (action.value !== undefined ? String(action.value) : ''),
+              childMessage: action.text || action.chip || action.reason || (action.value !== undefined ? String(action.value) : ''),
               childAction: action.type,
               previousSpeech: nextSession.lastTutorUtterance || '',
               chosenCard: nextSession.activeCard,
               reflectionKind: nextSession.activeLookBackKind,
               conversationCue: events.some(event => event.type === 'conversation.reason_requested') ? 'reason'
+                : events.some(event => event.type === 'conversation.support_requested') ? 'opening_support'
                 : events.some(event => event.type === 'lookback.input_requested') ? 'reflection_format'
                 : events.some(event => event.type === 'lookback.retry') ? 'reflection_retry' : undefined,
               sessionId

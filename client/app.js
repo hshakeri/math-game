@@ -201,33 +201,15 @@ export class CastleGame {
     const textInput = document.getElementById('child-text-input');
     if (textInput) {
       textInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') this.handleSendReply();
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !e.isComposing && e.keyCode !== 229 && !e.repeat) {
+          e.preventDefault();
+          this.handleSendReply();
+        }
       });
     }
 
     const stuckBtn = document.getElementById('btn-im-stuck');
-    if (stuckBtn) {
-      stuckBtn.addEventListener('click', () => {
-        if (this.currentView && (this.currentView.state === 'arrive' || this.currentView.phase === 'arrive')) {
-          this.handleAction({ type: 'arrive' });
-          return;
-        }
-        this.handleAction({ type: 'stuck' });
-      });
-    }
-
-    // Arrival Controls
-    const arriveBtn = document.getElementById('btn-approach-inscription');
-    if (arriveBtn) {
-      arriveBtn.addEventListener('click', () => this.handleAction({ type: 'arrive' }));
-    }
-
-    // Conjecture Slate
-    const conjSubmit = document.getElementById('btn-conjecture-submit');
-    if (conjSubmit) conjSubmit.addEventListener('click', () => this.handleConjecture());
-
-    const conjSkip = document.getElementById('btn-conjecture-skip');
-    if (conjSkip) conjSkip.addEventListener('click', () => this.handleAction({ type: 'skip_conjecture' }));
+    if (stuckBtn) stuckBtn.addEventListener('click', () => this.handleAction({ type: 'stuck' }));
 
     // Stone Dial Submit
     const stoneSubmit = document.getElementById('btn-stone-submit');
@@ -344,7 +326,7 @@ export class CastleGame {
       }
       if (epoch !== this.requestEpoch) return;
       this.activeSessionId = data.sessionId;
-      for (const id of ['child-text-input', 'conjecture-value', 'conjecture-reason', 'final-answer-input', 'tiny-case-answer']) {
+      for (const id of ['child-text-input', 'final-answer-input', 'tiny-case-answer']) {
         const input = document.getElementById(id);
         if (input) input.value = '';
       }
@@ -591,27 +573,7 @@ export class CastleGame {
     } else if (speak && view.lastTutorUtterance) {
       this.speak(view.lastTutorUtterance, { record: !Array.isArray(view.dialogue) });
     } else if (speak && phase === 'arrive') {
-      this.speak('Let’s explore the story. Tap the places on the map, then tell me what we are trying to find.', { delay: 450, record: !Array.isArray(view.dialogue) });
-    }
-
-    // 4. Arrival Panel visibility
-    const arrivalPanel = document.getElementById('arrival-panel');
-    if (arrivalPanel) {
-      if (phase === 'arrive') {
-        arrivalPanel.classList.remove('hidden');
-      } else {
-        arrivalPanel.classList.add('hidden');
-      }
-    }
-
-    // 5. Conjecture Slate visibility
-    const slate = document.getElementById('conjecture-slate');
-    if (slate) {
-      if (phase === 'conjecture') {
-        slate.classList.remove('hidden');
-      } else {
-        slate.classList.add('hidden');
-      }
+      this.speak('Leave an idea, some working, or a question in your note. I’ll read along.', { delay: 450, record: !Array.isArray(view.dialogue) });
     }
 
     // 5. Workspace / Scroll unlock
@@ -653,10 +615,10 @@ export class CastleGame {
     }
 
     // One place to act: show dialogue controls only when the phase uses them.
-    document.querySelector('.reply-strip')?.classList.toggle('hidden', ['arrive', 'conjecture', 'look_back', 'sealed', 'map'].includes(phase));
+    document.querySelector('.reply-strip')?.classList.toggle('hidden', ['look_back', 'sealed', 'map'].includes(phase));
 
     // 6. Chips
-    this.renderChips(view.availableChips || []);
+    this.renderChips(['arrive', 'conjecture'].includes(phase) ? [] : view.availableChips || []);
 
     // 7. Scribe Mode reflection
     const textInput = document.getElementById('child-text-input');
@@ -666,7 +628,7 @@ export class CastleGame {
         textInput.placeholder = 'Parent is typing on the parent tablet...';
       } else {
         textInput.disabled = false;
-        textInput.placeholder = 'I’m thinking…';
+        textInput.placeholder = 'An idea, some working, or a question…';
       }
     }
 
@@ -713,6 +675,7 @@ export class CastleGame {
     const container = document.getElementById('chip-container');
     if (!container) return;
     container.innerHTML = '';
+    container.classList.toggle('hidden', !chips.length);
     chips.forEach(chipText => {
       const btn = document.createElement('button');
       btn.className = 'chip btn-touch';
@@ -731,29 +694,15 @@ export class CastleGame {
     return sent;
   }
 
-  handleSendReply() {
+  async handleSendReply() {
     const input = document.getElementById('child-text-input');
-    if (!input) return;
-    const text = input.value.trim();
-    if (!text || this.busy) return;
-    if (this.currentView && (this.currentView.state === 'arrive' || this.currentView.phase === 'arrive')) {
-      this.handleAction({ type: 'arrive', text });
-      return;
-    }
-    this.handleAction({ type: 'say', text }).then(sent => { if (sent && input.value.trim() === text) input.value = ''; });
-  }
-
-  handleConjecture() {
-    const stemEl = document.getElementById('conjecture-stem');
-    const valEl = document.getElementById('conjecture-value');
-    const reasonEl = document.getElementById('conjecture-reason');
-    if (!stemEl || !valEl || !reasonEl) return;
-
-    const stem = stemEl.value;
-    const value = valEl.value.trim();
-    const reason = reasonEl.value.trim();
-    if (!value || !reason) { this.notice('Give Grubb your idea and a few words about why you think it.'); return; }
-    this.handleAction({ type: 'conjecture', stem, value, justification: reason, reason });
+    if (!input) return false;
+    const draft = input.value;
+    const text = draft.trim();
+    if (!text || this.busy) return false;
+    const sent = await this.handleAction({ type: 'say', text });
+    if (sent && input.value === draft) input.value = '';
+    return sent;
   }
 
   handleFinalSubmit() {

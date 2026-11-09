@@ -168,6 +168,107 @@ test('page module bootstrap builds the playable home map from index.html', async
   assert.ok(document.getElementById('calculation-mount').querySelector('[data-calc-entry]'));
 });
 
+const noteView = (overrides = {}) => ({
+  encounterId: 'ch1-n1-reverse-tolls', currentPartId: 'a', state: 'arrive',
+  title: 'The gate', partPrompt: 'What amount was there at the beginning?',
+  dialogue: [], workspaceUnlocked: false, availableChips: ['I have an idea.'], revealedHints: [],
+  ...overrides
+});
+
+async function openNote(t) {
+  const page = await bootstrap(t);
+  const calls = [];
+  let reply = () => ({ ok: true, json: async () => ({ view: noteView({ state: 'understand' }), events: [] }) });
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url, body: options?.body && JSON.parse(options.body) });
+    if (url === '/api/session/start') return { ok: true, json: async () => ({ sessionId: 'note-session', view: noteView() }) };
+    assert.equal(url, '/api/session/note-session/action');
+    return reply();
+  };
+  page.window.location.hash = '#encounter?id=ch1-n1-reverse-tolls';
+  page.window.dispatch('hashchange');
+  await new Promise(resolve => setImmediate(resolve));
+  return { ...page, calls, replyWith: fn => { reply = fn; }, input: page.document.getElementById('child-text-input') };
+}
+
+function visible(node) {
+  for (let current = node; current; current = current.parentElement) {
+    if (current.hidden || current.classList.contains('hidden') || (current.tagName === 'DETAILS' && !current.open)) return false;
+  }
+  return true;
+}
+
+test('opening a challenge immediately offers one multiline note without a readiness request', async t => {
+  const { document, window, calls, input } = await openNote(t);
+  assert.deepEqual(calls.map(call => call.url), ['/api/session/start']);
+  assert.equal(input.tagName, 'TEXTAREA');
+  assert.equal(input.getAttribute('maxlength'), '2000');
+  assert.equal(visible(input), true);
+  assert.equal(input.disabled, false);
+  assert.equal(document.querySelectorAll('textarea').filter(visible).length, 1);
+  assert.equal(document.getElementById('btn-approach-inscription'), null);
+  assert.equal(document.getElementById('conjecture-slate'), null);
+  assert.equal(document.getElementById('conjecture-value'), null);
+  assert.equal(document.getElementById('conjecture-reason'), null);
+  assert.equal(document.getElementById('chip-container').children.length, 0);
+  window.game.updateView(noteView({ state: 'conjecture' }));
+  assert.equal(visible(input), true, 'The same note stays available during the internal conjecture phase');
+  assert.equal(document.getElementById('chip-container').children.length, 0);
+  assert.match(markup, /<label[^>]*for="child-text-input"[^>]*>Your note<\/label>/);
+  assert.match(markup, />Send note<\/button>/);
+});
+
+test('the first note sends its full multiline text as one say action and clears only after acceptance', async t => {
+  const { document, calls, input } = await openNote(t);
+  const note = 'I drew the route on my page.\n' + 'My working follows each part of the story. '.repeat(8);
+  input.value = note;
+  document.getElementById('btn-send-reply').dispatch('click');
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(calls.length, 2, 'One session start and one note, with no readiness action in between');
+  assert.deepEqual(calls[1].body.action, { type: 'say', text: note.trim() });
+  assert.equal(input.value, '');
+});
+
+test('a failed note request keeps the complete draft and shows a retry notice', async t => {
+  const { document, input, replyWith } = await openNote(t);
+  replyWith(() => ({ ok: false, status: 503 }));
+  const draft = '  An unfinished thought.\nMy next line is still here.  ';
+  input.value = draft;
+  document.getElementById('btn-send-reply').dispatch('click');
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(input.value, draft);
+  assert.equal(input.disabled, false);
+  assert.equal(document.getElementById('game-notice').classList.contains('hidden'), false);
+  assert.match(document.getElementById('game-notice').textContent, /try again/i);
+});
+
+test('the note keyboard keeps Enter for newlines and sends only Ctrl or Command Enter outside composition', async t => {
+  const { calls, input } = await openNote(t);
+  input.value = 'My first line';
+  let prevented = 0;
+  for (const properties of [{}, { shiftKey: true }, { ctrlKey: true, isComposing: true }, { metaKey: true, keyCode: 229 }]) {
+    input.dispatch('keydown', { key: 'Enter', ...properties, preventDefault() { prevented++; } });
+  }
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(calls.length, 1, 'Newlines and IME confirmation must not submit a note');
+  assert.equal(prevented, 0, 'Ordinary Enter keeps the browser’s native newline behavior');
+  for (const modifier of ['ctrlKey', 'metaKey']) {
+    input.value = `A note sent with ${modifier}.\nIts second line.`;
+    input.dispatch('keydown', { key: 'Enter', [modifier]: true, preventDefault() { prevented++; } });
+    await new Promise(resolve => setImmediate(resolve));
+  }
+  assert.equal(calls.length, 3);
+  assert.equal(prevented, 2);
+  assert.ok(calls.slice(1).every(call => call.body.action.type === 'say' && call.body.action.text.includes('\n')));
+});
+
+test('the opening stuck button sends the actual help request instead of a readiness action', async t => {
+  const { document, calls } = await openNote(t);
+  document.getElementById('btn-im-stuck').dispatch('click');
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(calls[1].body.action, { type: 'stuck' });
+});
+
 for (const failure of ['HTTP failure', 'network failure']) {
   test(`home startup exposes ${failure} and retry loads the playable road`, async t => {
     let recovered = false;

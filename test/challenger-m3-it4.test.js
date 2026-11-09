@@ -429,7 +429,7 @@ describe('Challenger M3 Iteration 4: Empirical Wire Integration Stress Suite', (
   // ===========================================================================
   describe('3. Invariant Enforcement in "arrive" State', () => {
 
-    it('rejects state mutation from arbitrary child actions during arrive', async () => {
+    it('keeps out-of-order mechanic, submit and card actions inert during arrive', async () => {
       const startRes = await fetch(`${testUrl}/api/session/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -438,12 +438,9 @@ describe('Challenger M3 Iteration 4: Empirical Wire Integration Stress Suite', (
       const { sessionId } = await startRes.json();
 
       const nonArrivalActions = [
-        { type: 'say', text: 'Hello owl' },
-        { type: 'chip', chip: 'Look at the clues' },
         { type: 'step', step: { action: 'place', bin: 0 } },
         { type: 'submit', value: 10 },
-        { type: 'card', cardId: 'work-backwards' },
-        { type: 'stuck' }
+        { type: 'card', cardId: 'work-backwards' }
       ];
 
       for (const act of nonArrivalActions) {

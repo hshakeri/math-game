@@ -4,8 +4,17 @@ const TENS = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty'
 const NUMBER = '(?:[+-]?\\d+|(?:minus )?(?:' + SMALL.join('|') + '|' + TENS.join('|') + ')(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?)';
 const CLAIM = new RegExp('\\b(?:(?:(?:my|the|final)\\s+)?answer|x)\\s*(?:is|equals|=|:)\\s*(' + NUMBER + ')(?!\\w|\\.\\d)', 'gi');
 const BARE = new RegExp('^(' + NUMBER + ')[.!]?$','i');
+const LEADING_BECAUSE = new RegExp('^(?:i think\\s+)?(' + NUMBER + ')\\s+because\\s+(.+)$', 'is');
 const ALTERNATIVES = new RegExp('\\b' + NUMBER + '\\s+(?:or|and)\\s+' + NUMBER + '\\b', 'i');
 const REPLACEMENT = new RegExp('\\b(?:(?:it|that|this)\\s+(?:is|equals)|i\\s+(?:get|got))\\s+' + NUMBER + '\\b', 'i');
+
+function invalidReason(text) {
+  const normalized = text.replace(/[‘’]/g, "'");
+  return /[?]/.test(normalized)
+    || /\b(?:don't|do not|cannot|can't|can not|unable|unsure|uncertain|changed my mind|change my mind|not sure|nothing|all known|maybe|either|want|help|hint|repeat|forget|cancel|wait)\b/i.test(normalized)
+    || /\b(?:answer|x)\s*(?:is|equals|=|:)/i.test(normalized)
+    || ALTERNATIVES.test(normalized) || REPLACEMENT.test(normalized);
+}
 
 function integer(token) {
   if (/^[+-]?\d+$/.test(token)) {
@@ -33,6 +42,13 @@ export function parseIntegerClaim(input) {
     const value = integer(bare[1]);
     return value === null ? null : { value, reason: '' };
   }
+  const leading = text.match(LEADING_BECAUSE);
+  if (leading) {
+    const value = integer(leading[1]);
+    const reason = leading[2].trim();
+    if (value === null || invalidReason(reason)) return null;
+    return { value, reason };
+  }
   const matches = [...text.matchAll(CLAIM)];
   // Multiple answer declarations require the child to choose one explicitly.
   if (matches.length !== 1) return null;
@@ -56,8 +72,7 @@ export function isReasonReply(text) {
   // a recognizable explanation cue, and reject retractions/new alternatives.
   return typeof text === 'string' && text.trim().split(/\s+/).length >= 3 &&
     /\b(?:because|since|by|reason|work|worked|working|undo|undid|reverse|reversed|backwards|check|checked|trace|traced|count|counted|calculate|calculated|calculation|use|used|consider|considered|notice|noticed|divided|multiplied|added|subtracted)\b/i.test(text) &&
-    !/[?]/.test(text) && !/\b(?:don't|do not|cannot|can't|can not|unable|unsure|uncertain|changed my mind|change my mind|not sure|nothing|all known|maybe|either|want|help|hint|repeat|forget|cancel|wait)\b/i.test(text) &&
-    !/\b(?:answer|x)\s*(?:is|equals|=|:)/i.test(text) && !ALTERNATIVES.test(text) && !REPLACEMENT.test(text);
+    !invalidReason(text);
 }
 
 /** Match the selected authored reflection's input shape, without evaluating math. */

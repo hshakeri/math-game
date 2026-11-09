@@ -1,0 +1,106 @@
+{
+  "observedAt": "2026-11-09T14:17:51.494Z",
+  "base": "http://localhost:8091",
+  "scope": "Real local HTTP through the scripted adapter; fixture text omitted.",
+  "regressionSources": [
+    "test/conversation-entry.test.js",
+    "test/conversation-verification.test.js"
+  ],
+  "results": [
+    {
+      "label": "Complete equation in first note",
+      "inputSha256": "1124ba168871010a1775ae1586c29d2eda359aba1233a7b2476e5597bd89c74c",
+      "state": "sealed",
+      "childEntries": 1,
+      "actions": [
+        "say"
+      ],
+      "sealEvents": 1
+    },
+    {
+      "label": "Complete gate list in first note",
+      "inputSha256": "292548a61994874eb9055124eb621a7407e7f5153e330f9d2a06d7036dc18622",
+      "state": "sealed",
+      "childEntries": 1,
+      "actions": [
+        "say"
+      ],
+      "sealEvents": 1
+    },
+    {
+      "label": "First question starts support",
+      "inputSha256": "6202d6733d5d116f40a56f43df8a8438215eccade72db8ba6b3141dada175824",
+      "state": "understand",
+      "childEntries": 1,
+      "actions": [
+        "say"
+      ],
+      "sealEvents": 0
+    },
+    {
+      "label": "One-box answer and reason",
+      "inputSha256": "8e6caeaa3d3a30b4ce6139b4079213c319a0343903bef5afa0ecd01f2af620a2",
+      "state": "look_back",
+      "childEntries": 1,
+      "actions": [
+        "say"
+      ],
+      "sealEvents": 0
+    },
+    {
+      "label": "Contradictory explanation stays ungraded",
+      "inputSha256": "a3383243f5f15a29c2a5d57636f5369e0e1119e32093d8a29753270320126197",
+      "state": "understand",
+      "childEntries": 1,
+      "actions": [
+        "say"
+      ],
+      "sealEvents": 0
+    },
+    {
+      "label": "Bare first answer asks for reasoning",
+      "inputSha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683",
+      "state": "conjecture",
+      "childEntries": 1,
+      "actions": [
+        "say"
+      ],
+      "sealEvents": 0
+    },
+    {
+      "label": "Follow-up reason completes claim",
+      "state": "look_back",
+      "actions": [
+        "say",
+        "say"
+      ]
+    },
+    {
+      "label": "Help starts and advances support",
+      "states": [
+        "understand",
+        "plan"
+      ],
+      "actions": [
+        "stuck",
+        "stuck"
+      ]
+    },
+    {
+      "label": "First note in next chamber",
+      "states": [
+        "sealed",
+        "arrive",
+        "sealed"
+      ],
+      "actions": [
+        "say",
+        "next_part",
+        "say"
+      ],
+      "nodeSeal": false
+    }
+  ],
+  "allTutorCallsScripted": true,
+  "updatedNotePageServed": true
+}

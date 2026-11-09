@@ -48,6 +48,7 @@ export const MANDATORY_EVENT_TYPES = new Set([
   'step.failure',
   'conjecture.skeptic_prompt',
   'conversation.reason_requested',
+  'conversation.support_requested',
   'ladder.escalate',
   'child.say',
   'simpler_problem.wrong',

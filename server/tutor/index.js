@@ -277,7 +277,7 @@ export async function generateTurn(ctx, options = {}) {
   // Prior tutor speech is only a local cursor, never new model context: it may
   // contain a hint from a rung that has since faded. The ordinary public request
   // remains whitelisted above and unchanged for model adapters.
-  const scriptedRequest = { ...adapterRequest, previousSpeech: ctx.previousSpeech || '' };
+  const scriptedRequest = { ...adapterRequest, previousSpeech: ctx.previousSpeech || '', conversationCue: ctx.conversationCue };
   const screenScripted = speech => {
     // Authored text uses the validator's 40–300 bounds; every other gate stage is
     // identical to model screening. Never return a rejected authored candidate.
