@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TutorTurn",
+  "description": "Structured generation response schema for Archimedes the Owl",
+  "type": "object",
+  "required": ["speech", "studentSignal"],
+  "properties": {
+    "speech": {
+      "type": "string",
+      "description": "The exact tutor reply to the student. Must be between 150 and 300 characters, ending with exactly one question mark. No lists, no emoji.",
+      "minLength": 150,
+      "maxLength": 300
+    },
+    "utterance": {
+      "type": "string",
+      "description": "Alias for speech."
+    },
+    "usedPoolIndex": {
+      "type": ["integer", "null"],
+      "description": "0-based index of the probe from allowedContent.pool if chosen or paraphrased, otherwise null."
+    },
+    "understanding": {
+      "type": ["object", "null"],
+      "description": "Classification of child understanding during the Understand stage.",
+      "properties": {
+        "unknown": {
+          "type": "boolean",
+          "description": "True if child understands what is to be found."
+        },
+        "data": {
+          "type": "boolean",
+          "description": "True if child identifies the givens/facts."
+        },
+        "condition": {
+          "type": "boolean",
+          "description": "True if child recognizes the rule, constraint, or relationship."
+        }
+      },
+      "additionalProperties": false
+    },
+    "studentSignal": {
+      "type": "string",
+      "description": "Advisory telemetry on student engagement state.",
+      "enum": ["engaged", "stuck", "guessing", "off_topic"]
+    },
+    "suggestCard": {
+      "type": ["string", "null"],
+      "description": "Name of a heuristic card recommended to the student at rung l1 or higher, if applicable."
+    }
+  },
+  "additionalProperties": false
+}
