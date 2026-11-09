@@ -13,6 +13,7 @@ import * as seamGrid from './mechanics/seam-grid.js';
 import * as factorDials from './mechanics/factor-dials.js';
 import { getClientSafeSessionView } from './clientView.js';
 import { parseIntegerClaim, isReasonReply, parseReflectionReply } from './conversationAnswer.js';
+import { currentActionEvidence, verifyForwardEvidence } from './forwardVerification.js';
 
 export const MECHANICS = {
   'inverse-chain': inverseChain,
@@ -160,6 +161,7 @@ export function transition(session, action, encounter) {
   }
 
   const events = [];
+  const originalAction = action;
   const part = getPart(encounter, session.currentPartId);
 
   // Pure deep clone of session state to prevent in-place mutation
@@ -202,6 +204,21 @@ export function transition(session, action, encounter) {
     ];
   }
 
+  function creditExistingVerification(candidate) {
+    if (next.state !== 'look_back' || hasMoreParts(next, encounter)) return false;
+    const verification = getActiveLookBack(next, encounter);
+    const claimed = typeof candidate === 'string' ? parseIntegerClaim(candidate)?.value : candidate;
+    const evidence = verifyForwardEvidence(currentActionEvidence(originalAction), claimed, part, verification);
+    if (!evidence) return false;
+    next.state = 'sealed';
+    next.lookBackCompleted = true;
+    next.activeLookBackKind = 'verify';
+    recordEvent('lookback.verified', { kind: 'verify', source: evidence.source, repairedClose: evidence.repairedClose });
+    recordEvent('engine.transition', { from: 'look_back', to: 'sealed', kind: 'verify' });
+    recordEvent('node.sealed', { encounterId: encounter.id, partId: next.currentPartId, kind: 'verify', shortcut: next.shortcut });
+    return true;
+  }
+
   // --- Parent Overrides (Can occur in any state) ---
   if (action.type === 'parent_override') {
     if (typeof action.hintRung === 'string') {
@@ -242,6 +259,13 @@ export function transition(session, action, encounter) {
   if (action.type === 'say' && conversationStates.includes(next.state) && part.answer.type === 'integer') {
     const text = typeof action.text === 'string' ? action.text : '';
     let claim = parseIntegerClaim(text);
+    if (!claim) {
+      // A complete concrete route contains its own explicitly typed start.
+      // Derive a claim only after every authored gate and typed result checks;
+      // incomplete or incorrect lists remain ordinary conversation.
+      const proof = verifyForwardEvidence(text, null, part, encounter.lookBack.find(option => option.kind === 'verify'));
+      if (proof) claim = { value: proof.candidate, reason: text };
+    }
     const pending = next.pendingConversationAnswer;
     if (!claim && pending?.partId === next.currentPartId && isReasonReply(text)) {
       claim = { value: pending.value, reason: text };
@@ -269,6 +293,7 @@ export function transition(session, action, encounter) {
           next.shortcut = shortcut;
           recordEvent('engine.transition', { from: shortcut ? from : 'submit', to: next.state, shortcut, attempts: next.attempts });
           if (shortcut) recordEvent('shortcut', { shortcut: true, words: countWords(claim.reason) });
+          creditExistingVerification(claim.value);
         } else {
           if (shortcut) next.conjectures += 1;
           recordEvent('engine.transition', { from: shortcut ? from : 'submit', to: from, correct: false, attempts: next.attempts });
@@ -331,6 +356,7 @@ export function transition(session, action, encounter) {
           next.shortcut = true;
           recordEvent('engine.transition', { from: 'conjecture', to: next.state, shortcut: true });
           recordEvent('shortcut', { shortcut: true, words: wordCount });
+          creditExistingVerification(value);
           syncAliases();
           return { session: next, events };
         } else {
@@ -387,6 +413,7 @@ export function transition(session, action, encounter) {
           next.shortcut = true;
           recordEvent('engine.transition', { from: 'understand', to: next.state, shortcut: true });
           recordEvent('shortcut', { shortcut: true, words: wordCount });
+          creditExistingVerification(value);
           syncAliases();
           return { session: next, events };
         } else {
@@ -564,6 +591,7 @@ export function transition(session, action, encounter) {
           // T15: Submit -> Look back (last part)
           next.state = 'look_back';
           recordEvent('engine.transition', { from: 'submit', to: 'look_back', attempts: next.attempts });
+          creditExistingVerification(action.value);
         }
       } else {
         // T16: Submit -> Carry out
@@ -661,6 +689,10 @@ export function transition(session, action, encounter) {
       if (option) next.activeLookBackKind = kind;
       const input = action.type === 'say' ? action.text : action.value;
       appendHistory('child', action.type, action.type === 'say' ? { text: input } : { kind, index: action.index, value: input });
+      if (option?.kind === 'verify' && creditExistingVerification(null)) {
+        syncAliases();
+        return { session: next, events };
+      }
       const reply = option && parseReflectionReply(input, option.check);
       if (!reply) {
         recordEvent('lookback.input_requested', { kind });

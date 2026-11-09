@@ -1,0 +1,12 @@
+{
+  "source": "content/encounters/chasm-reverse-tolls.json",
+  "reference": "SymPy, independently derived from each authored gate",
+  "symbolicStages": [
+    "2*x - 5",
+    "4*x - 13",
+    "8*x - 35"
+  ],
+  "childExpressionMatches": true,
+  "substitutionMatchesPublicEndAndVerifyCheck": true,
+  "skillVerification": "\u2713 8*x - 35 = 8*x - 35"
+}

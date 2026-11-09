@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#18262b">
   <meta name="description" content="Keybreakers: The Goblin’s Gate. Explore the map, meet its keepers, and find a way through.">
-  <link rel="manifest" href="/manifest.webmanifest?v=20261109-play">
+  <link rel="manifest" href="/manifest.webmanifest?v=20261109-proof">
   <title>Keybreakers · The Goblin’s Gate</title>
-  <link rel="stylesheet" href="/style.css?v=20261109-play">
-  <link rel="stylesheet" href="/world-map.css?v=20261109-play">
-  <link rel="stylesheet" href="/calculation-tools.css?v=20261109-play">
-  <link rel="stylesheet" href="/adventure.css?v=20261109-play">
+  <link rel="stylesheet" href="/style.css?v=20261109-proof">
+  <link rel="stylesheet" href="/world-map.css?v=20261109-proof">
+  <link rel="stylesheet" href="/calculation-tools.css?v=20261109-proof">
+  <link rel="stylesheet" href="/adventure.css?v=20261109-proof">
 </head>
 <body class="parchment-theme">
   <a class="skip-link" href="#app-root">Skip to adventure</a>
@@ -34,7 +34,7 @@
           <section id="arrival-panel" class="arrival-panel hidden" aria-label="Start exploring"><button id="btn-approach-inscription" class="btn-touch btn-primary">“I’m ready to try.” →</button></section>
           <section id="conjecture-slate" class="conjecture-slate hidden" aria-label="Tell Grubb your idea"><h3>Have a starting idea?</h3><p class="conjecture-help">Try your idea and explain why, or make a plan with Rivet.</p><div class="conjecture-inputs"><label class="sr-only" for="conjecture-stem">Start your thought</label><select id="conjecture-stem" class="select-touch"><option value="think">I think…</option><option value="notice">I notice…</option><option value="what_if">What if…</option></select><label class="sr-only" for="conjecture-value">Your idea</label><input id="conjecture-value" class="input-touch" placeholder="My answer or idea…" maxlength="140"><label class="sr-only" for="conjecture-reason">Why you think so</label><input id="conjecture-reason" class="input-touch" placeholder="Because… (a few words)" maxlength="140"><div class="conjecture-actions"><button id="btn-conjecture-submit" class="btn-touch btn-primary">“Here’s my hunch.”</button><button id="btn-conjecture-skip" class="btn-touch btn-secondary">“Let’s explore first.”</button></div></div></section>
           <section id="part-complete-panel" class="part-complete-panel hidden" aria-label="A chamber opens"><h3 id="part-complete-title">A chamber opens.</h3><p id="part-complete-desc">Rivet gathers the tools. There is more to explore inside.</p><button id="btn-next-part" class="btn-touch btn-primary">“Let’s keep going.” →</button></section>
-          <section id="look-back-panel" class="look-back-panel hidden" aria-label="One final check"><h3>The answer lock clicks into place.</h3><p id="look-back-prompt">One last check for your Seal.</p><div id="look-back-options"></div></section>
+          <section id="look-back-panel" class="look-back-panel hidden" aria-label="One final check"><div id="look-back-options"></div></section>
           <footer class="reply-strip" aria-label="Your hero’s words"><div class="hero-speaker"><span id="reply-hero" aria-hidden="true"></span><span><strong id="hero-speaker-name">YOU</strong><small>What do you say?</small></span></div><div id="chip-container" class="chip-container" role="group" aria-label="Choose your hero’s words"></div><div class="input-row"><label class="sr-only" for="child-text-input">Your hero’s words</label><input type="text" id="child-text-input" class="input-touch text-field" maxlength="140" placeholder="I’m thinking…"><button id="btn-send-reply" class="btn-touch btn-primary send-btn" aria-label="Say this">Say it ↵</button></div></footer>
           <details id="dialogue-history-details" class="dialogue-history-details" open><summary>Our conversation</summary><div id="dialogue-history-log" class="history-log" role="log" aria-label="Your conversation with Rivet" aria-live="off"></div></details>
           <div id="submit-dial-container" class="submit-dial-container hidden"><label for="final-answer-input" class="dial-label">My answer for the gate</label><input type="number" id="final-answer-input" class="input-touch answer-input" placeholder="Value"><button id="btn-stone-submit" class="btn-touch btn-primary">Try the gate →</button></div>
@@ -46,6 +46,6 @@
   </main>
   <aside id="deck-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deck-heading"><div class="deck-modal"><header class="deck-modal-header"><div><span class="eyebrow">A SMALL COLLECTION OF BIG IDEAS</span><h2 id="deck-heading">Lemma’s deck.</h2></div><button id="btn-close-deck" class="btn-close" aria-label="Close Deck">×</button></header><div class="still-dialogue lemma-dialogue"><div id="lemma-portrait" class="still-art" aria-hidden="true"></div><div class="speech-bubble"><span class="speech-name">LEMMA</span><p id="lemma-speech-text" class="speech-words" aria-hidden="true"></p><p id="lemma-speech-accessible" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p><button class="speech-control" data-speech="lemma" type="button">Read now</button></div></div><div id="deck-card-grid" class="deck-card-grid"></div></div></aside>
   <aside id="golden-seal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="seal-theorem-title"><div class="seal-modal"><span class="eyebrow">A WAY TO REMEMBER</span><div id="seal-hero" aria-hidden="true"></div><div class="seal-graphic-container"><svg id="golden-seal-svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Golden Seal"><path fill="#c8963e" d="m60 3 12 9 15 0 6 14 13 7-1 16 9 11-9 12 1 15-14 6-7 13-16-1-11 9-12-9-15 1-6-14-13-7 1-16-9-11 9-12-1-15 14-6 7-13 16 1Z"/><circle cx="60" cy="60" r="36" fill="none" stroke="#62471d" stroke-width="2"/><path d="M46 46h28v28H46zM60 35v50M35 60h50" stroke="#62471d" fill="none" stroke-width="3"/></svg></div><h2 id="seal-theorem-title">The gate is open.</h2><p id="seal-theorem-name" class="seal-name"></p><p id="seal-theorem-rule" class="seal-rule"></p><button id="btn-seal-continue" class="btn-touch btn-primary">Back to the road →</button></div></aside>
-  <script type="module" src="/app.js?v=20261109-play"></script>
+  <script type="module" src="/app.js?v=20261109-proof"></script>
 </body>
 </html>

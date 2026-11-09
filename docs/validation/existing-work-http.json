@@ -1,0 +1,51 @@
+{
+  "observedAt": "2026-11-09T14:03:15.604Z",
+  "scope": "Exact saved inputs replayed locally through HTTP using only the scripted adapter; raw child text omitted.",
+  "source": "data/sessions/f6679dd6-6358-4d02-8d8e-999388aefe5c.jsonl",
+  "regressionSource": "test/conversation-verification.test.js",
+  "results": [
+    {
+      "label": "Original answer and equation",
+      "inputSha256": "8c027f72d57c4d9670b1ce0771cbf7a09bb60f5a6c76605c5e1882460e50cb9b",
+      "state": "sealed",
+      "verificationEvents": 1,
+      "sealEvents": 1,
+      "speech": null
+    },
+    {
+      "label": "Saved partial gate calculation",
+      "inputSha256": "4cc236d239f774c10d0bdf7de088ab90e196ab8dc466e80bc6368c26069f0f50",
+      "state": "look_back",
+      "verificationEvents": 0,
+      "sealEvents": 0,
+      "speech": "format guidance (text omitted)"
+    },
+    {
+      "label": "Saved complete gate calculations",
+      "inputSha256": "0b5e44d97255a944e08ced7345223fa3387f5ab9b702176472ca2f3141f5840b",
+      "state": "sealed",
+      "verificationEvents": 1,
+      "sealEvents": 1,
+      "speech": null
+    },
+    {
+      "label": "Repeated completed working",
+      "inputSha256": "0b5e44d97255a944e08ced7345223fa3387f5ab9b702176472ca2f3141f5840b",
+      "state": "sealed",
+      "verificationEvents": 0,
+      "sealEvents": 0,
+      "speech": null
+    },
+    {
+      "label": "Complete working in ordinary chat",
+      "inputSha256": "675f68e6b77104df79883001fc2ae8acecbd69fafce6f5714ee338c4d4a5b5d2",
+      "state": "sealed",
+      "verificationEvents": 1,
+      "sealEvents": 1,
+      "speech": null
+    }
+  ],
+  "allReplayTutorCallsScripted": true,
+  "updatedEntryServed": true,
+  "protectedContentAndPillarsUnchangedFrom": "846f93d0681463a4b48b955540678a5d1abb76fe"
+}

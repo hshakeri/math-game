@@ -92,7 +92,8 @@ test('a failed task selection restores the selector to the task its form will su
 });
 
 test('the final-check state is explicit and the history follows the active controls', () => {
-  assert.match(markup, /The answer lock clicks into place/);
-  assert.match(markup, /One last check for your Seal/);
+  const panel = markup.match(/<section[^>]*id="look-back-panel"[\s\S]*?<\/section>/)?.[0];
+  assert.match(panel, /aria-label="One final check"/);
+  assert.doesNotMatch(panel, /<h3|id="look-back-prompt"/, 'Only the selected reflection question belongs above its reply controls');
   assert.ok(markup.indexOf('id="dialogue-history-details"') > markup.indexOf('id="btn-send-reply"'));
 });

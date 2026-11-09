@@ -37,12 +37,13 @@ async function plan(act) {
   await act({ type: 'say', text: 'I can explain what the inscription tells me.' });
 }
 
-test('an explicit conclusion inside a justified conjecture opens the gate', async t => {
+test('an explicit conclusion with the complete forward verification earns the Seal', async t => {
   const act = await conversation(t);
   await act({ type: 'arrive' });
-  const text = 'The journey gives 2*(2*(2*x-5)-3)-9=13; I undid each toll in reverse order, then checked forwards, so x is 6.';
+  const text = 'I undid each toll in reverse order, then checked forwards. The journey gives 2*(2*(2*x-5)-3)-9=13; so x is 6.';
   const result = await act({ type: 'conjecture', value: text, reason: text });
-  assert.equal(result.state, 'look_back', 'A final numeric conclusion must not be converted to NaN and sent back to Understand');
+  assert.equal(result.state, 'sealed', 'The final numeric conclusion and complete forward verification must both be credited');
+  assert.equal(result.speech, null);
 });
 
 test('a numeric chat answer followed by its reason continues to Look Back', async t => {
@@ -68,11 +69,11 @@ test('a typed answer to the active Look Back check earns the Seal instead of ano
   assert.equal(reflected.speech, null, 'No further tutor question follows the Seal');
 });
 
-test('a pasted symbolic equation in the Look Back form gets result-format guidance', async t => {
+test('an incomplete symbolic equation in the Look Back form gets result-format guidance', async t => {
   const act = await conversation(t);
   await act({ type: 'arrive' });
-  const algebra = 'The journey gives 2*(2*(2*x-5)-3)-9=13; I undid each toll, so x is 6.';
-  const solved = await act({ type: 'conjecture', value: algebra });
+  const algebra = 'The journey gives 2*(2*x-5)-9=13; so x is 6.';
+  const solved = await act({ type: 'conjecture', value: 6, reason: 'I undid each toll.' });
   assert.equal(solved.state, 'look_back');
   assert.match(solved.speech, /What does he hold at the castle door/);
   const repeated = await act({ type: 'lookback', kind: 'verify', value: algebra });
@@ -119,11 +120,11 @@ test('an invalid explicit reflection kind cannot fall back and earn a Seal', asy
   assert.ok(result.events.some(event => event.type === 'lookback.input_requested'));
 });
 
-test('equation results are never extracted or evaluated as a reflection answer', async t => {
+test('unsupported equation results are never extracted as a reflection answer', async t => {
   const act = await conversation(t);
   await act({ type: 'arrive' });
   await act({ type: 'conjecture', value: 6, reason: 'I reversed each toll.' });
-  for (const value of ['2+2=13', '2*(2*(2*6-5)-3)-9=13', 'x=13 or x=6', 'x is 6', '13?', '', 'true']) {
+  for (const value of ['2+2=13', '2*(2*6-5)-9=13', 'x=13 or x=6', 'x is 6', '13?', '', 'true']) {
     const result = await act({ type: 'lookback', kind: 'verify', value });
     assert.equal(result.state, 'look_back', value);
     assert.ok(result.events.some(event => event.type === 'lookback.input_requested'), value);

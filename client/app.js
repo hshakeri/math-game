@@ -127,6 +127,7 @@ export class CastleGame {
     this.history = [];
     this.lastSpoken = '';
     this.lookBackKey = '';
+    this.lookBackFeedback = null;
     this.hero = { name: '', variant: 1 }; // One boy Keybreaker; no setup step.
     this.storyStop = 0;
     this.calculationTools = null;
@@ -311,6 +312,7 @@ export class CastleGame {
     this.sealShown = false;
     this.lastSpoken = '';
     this.lookBackKey = '';
+    this.lookBackFeedback = null;
     this.history = [];
     this.renderHistory();
     this.currentView = null;
@@ -375,11 +377,12 @@ export class CastleGame {
       if (words && !serverHistory) this.appendHistory('You', words);
       this.updateView(data.view || data, { speak: false });
       this.renderReaction(data.view || data, data.events || []);
+      this.renderLookBackFeedback(data.view || data, data.events || []);
       // One response carries the same utterance in both places. A new child turn
       // may legitimately receive the same scripted sentence as the previous turn.
-      const finished = ['sealed', 'map'].includes(this.currentView?.state || this.currentView?.phase);
-      if (!finished && data.speech) this.speak(data.speech, { repeat: true, record: !serverHistory });
-      else if (!finished && data.view?.lastTutorUtterance) this.speak(data.view.lastTutorUtterance, { record: !serverHistory });
+      const reflectionOrFinished = ['look_back', 'sealed', 'map'].includes(this.currentView?.state || this.currentView?.phase);
+      if (!reflectionOrFinished && data.speech) this.speak(data.speech, { repeat: true, record: !serverHistory });
+      else if (!reflectionOrFinished && data.view?.lastTutorUtterance) this.speak(data.view.lastTutorUtterance, { record: !serverHistory });
       if (action.type === 'lookback' && (data.view?.sealed || data.view?.completed)) {
         try { localStorage.setItem(`keybreakers_note_${this.currentView.encounterId}`, String(action.value)); } catch {}
       }
@@ -556,14 +559,19 @@ export class CastleGame {
     if (newScene) this.renderStoryMap();
     const titleEl = document.getElementById('encounter-title');
     if (titleEl) titleEl.textContent = view.story?.kind === 'toll-road' ? 'The three toll gates' : view.title || 'The gate';
+    const reflectionOrFinished = ['look_back', 'sealed', 'map'].includes(phase);
     const goal = document.getElementById('challenge-goal');
-    if (goal) goal.textContent = view.story?.kind === 'toll-road'
-      ? 'How many Star-Coins were in his pouch at the beginning?' : view.partPrompt || view.prompt || '';
+    if (goal) {
+      goal.classList.toggle('hidden', reflectionOrFinished);
+      goal.textContent = reflectionOrFinished ? '' : view.story?.kind === 'toll-road'
+        ? 'How many Star-Coins were in his pouch at the beginning?' : view.partPrompt || view.prompt || '';
+    }
+    document.querySelector('.map-conversation')?.classList.toggle('hidden', reflectionOrFinished);
 
     // 2. Deck Button lock status (Unlocked only in 'plan' and forward)
     const deckBtn = document.getElementById('btn-toggle-deck');
     const lockBadge = document.getElementById('deck-lock-badge');
-    const isPlanOrLater = ['plan', 'carry_out', 'simpler_problem', 'submit', 'look_back'].includes(phase);
+    const isPlanOrLater = ['plan', 'carry_out', 'simpler_problem', 'submit'].includes(phase);
     if (deckBtn) {
       deckBtn.classList.toggle('hidden', !isPlanOrLater);
       if (isPlanOrLater) {
@@ -578,7 +586,7 @@ export class CastleGame {
     }
 
     // 3. Owl Utterance
-    if (['sealed', 'map'].includes(phase)) {
+    if (reflectionOrFinished) {
       this.cancelSpeech({ clear: true });
     } else if (speak && view.lastTutorUtterance) {
       this.speak(view.lastTutorUtterance, { record: !Array.isArray(view.dialogue) });
@@ -843,7 +851,7 @@ export class CastleGame {
     const labels = { verify: 'Check my route', 'second-method': 'Try another way', perturb: 'Change the story' };
     const label = document.createElement('label');
     label.className = 'lookback-selector';
-    label.textContent = 'My final check';
+    label.textContent = 'Another check';
     const select = document.createElement('select');
     select.className = 'select-touch';
     select.setAttribute('aria-label', 'Choose a final check');
@@ -867,18 +875,32 @@ export class CastleGame {
       }
     });
     label.appendChild(select);
-    container.appendChild(label);
 
     const card = document.createElement('div');
     card.className = 'lookback-card';
+    const speaker = document.createElement('span');
+    speaker.className = 'speech-name';
+    speaker.textContent = 'RIVET · FINAL CHECK';
+    card.appendChild(speaker);
     const prompt = document.createElement('p');
+    prompt.id = 'look-back-question';
+    prompt.className = 'lookback-question';
     prompt.textContent = selected.prompt;
     card.appendChild(prompt);
+    const feedback = document.createElement('p');
+    feedback.id = 'look-back-feedback';
+    feedback.className = 'lookback-feedback hidden';
+    feedback.setAttribute('role', 'status');
+    feedback.setAttribute('aria-live', 'polite');
+    feedback.setAttribute('aria-atomic', 'true');
+    this.lookBackFeedback = feedback;
+    card.appendChild(feedback);
     if (selected.responseType === 'choice' && Array.isArray(selected.choices)) {
       const choices = document.createElement('div');
       choices.className = 'lookback-choices';
       choices.setAttribute('role', 'group');
-      choices.setAttribute('aria-label', selected.prompt);
+      choices.setAttribute('aria-labelledby', prompt.id);
+      choices.setAttribute('aria-describedby', feedback.id);
       selected.choices.forEach((text, index) => {
         const button = document.createElement('button');
         button.type = 'button';
@@ -890,12 +912,14 @@ export class CastleGame {
       card.appendChild(choices);
     } else {
       const form = document.createElement('form');
+      form.setAttribute('aria-labelledby', prompt.id);
       const input = document.createElement('input');
       input.type = 'text';
       input.inputMode = 'numeric';
       input.className = 'input-touch';
       input.placeholder = 'Final number…';
-      input.setAttribute('aria-label', `Final number: ${selected.prompt}`);
+      input.setAttribute('aria-label', 'Your final number');
+      input.setAttribute('aria-describedby', `${prompt.id} ${feedback.id}`);
       input.maxLength = 140;
       const submitBtn = document.createElement('button');
       submitBtn.type = 'submit';
@@ -911,6 +935,23 @@ export class CastleGame {
       card.appendChild(form);
     }
     container.appendChild(card);
+    if (options.length > 1) container.appendChild(label);
+  }
+
+  renderLookBackFeedback(view, events = []) {
+    if ((view.state || view.phase) !== 'look_back' || !this.lookBackFeedback) return;
+    const options = view.lookBackOptions || [];
+    const selected = options.find(option => option.kind === view.activeLookBackKind)
+      || options.find(option => option.kind === 'verify') || options[0];
+    if (!selected) return;
+    const event = events.findLast(item => ['lookback.input_requested', 'lookback.retry'].includes(item.type)
+      && (!item.kind || item.kind === selected.kind));
+    if (!event) return;
+    this.lookBackFeedback.textContent = event.type === 'lookback.retry'
+      ? 'The final check is still open. Check your result or choose another check.'
+      : selected.responseType === 'choice' ? 'Choose a statement below.'
+        : 'Enter the final number for the question above.';
+    this.lookBackFeedback.classList.remove('hidden');
   }
 
   renderMap() {

@@ -51,8 +51,11 @@ function documentSurface() {
   };
   function node(attributes = {}) {
     const classes = new Set((attributes.class || '').split(/\s+/).filter(Boolean));
+    let html = '';
     return {
-      id: attributes.id || '', textContent: '', innerHTML: '', disabled: false, open: false,
+      id: attributes.id || '', textContent: '', disabled: false, open: false,
+      get innerHTML() { return html; },
+      set innerHTML(value) { html = value; this.children = []; },
       style: {}, children: [], listeners: {},
       classList: {
         add: value => classes.add(value), remove: value => classes.delete(value),
@@ -113,6 +116,87 @@ function view(overrides = {}) {
 
 function response(payload) { return { ok: true, json: async () => payload }; }
 function deferred() { let resolve; const promise = new Promise(done => { resolve = done; }); return { promise, resolve }; }
+
+test('Look Back replaces the original goal with one selected reflection question', async t => {
+  const { game, clock, document, callbacks } = harness(t);
+  const initial = view({ state: 'carry_out', story: { kind: 'toll-road', gates: [], end: 13 }, lastTutorUtterance: 'How many coins were there at the beginning?' });
+  game.updateView(initial);
+  const goal = document.getElementById('challenge-goal');
+  assert.equal(goal.classList.contains('hidden'), false);
+  assert.match(goal.textContent, /beginning/);
+  const selected = 'What total do you reach at the castle door?';
+  const reflection = view({
+    state: 'look_back', story: initial.story, activeLookBackKind: 'verify',
+    lookBackOptions: [
+      { kind: 'verify', prompt: selected, responseType: 'integer' },
+      { kind: 'perturb', prompt: 'What if the toll changes?', responseType: 'integer' }
+    ],
+    dialogue: [], lastTutorUtterance: 'Enter a number below. What result do you get for the task shown below?'
+  });
+  globalThis.fetch = async () => response({ view: reflection, speech: reflection.lastTutorUtterance });
+  await game.handleAction({ type: 'say', text: 'My starting amount follows from my working.' });
+  assert.equal(goal.classList.contains('hidden'), true, 'The starting-amount goal must not compete with the final check');
+  assert.equal(goal.textContent, '', 'The old goal is also removed from the current text content');
+  assert.equal(document.querySelector('.map-conversation').classList.contains('hidden'), true, 'A second tutor prompt must not compete with the selected question');
+  const descendants = node => [node, ...node.children.flatMap(descendants)];
+  const active = descendants(document.getElementById('look-back-options'));
+  assert.equal(active.filter(node => node.textContent === selected).length, 1);
+  assert.equal(active.some(node => node.textContent === reflection.lookBackOptions[1].prompt), false);
+  assert.equal(document.getElementById('look-back-panel').classList.contains('hidden'), false);
+  assert.equal(document.getElementById('btn-toggle-deck').classList.contains('hidden'), true);
+  assert.equal(document.getElementById('btn-im-stuck').classList.contains('hidden'), false);
+  clock.advance(10_000);
+  assert.equal(callbacks.length, 0, 'Neither the old goal nor a second reflection prompt should keep pacing behind the form');
+  game.updateView(view({ state: 'plan', partPrompt: 'The next challenge goal.' }));
+  assert.equal(goal.classList.contains('hidden'), false);
+  assert.equal(goal.textContent, 'The next challenge goal.');
+  assert.equal(document.querySelector('.map-conversation').classList.contains('hidden'), false);
+});
+
+test('sealed and finished views remove the old challenge goal', t => {
+  const { game, document } = harness(t);
+  game.showGoldenSeal = () => { game.sealShown = true; };
+  for (const state of ['sealed', 'map']) {
+    game.updateView(view({ state: 'understand', partPrompt: 'The old challenge goal.' }));
+    game.updateView(view({ state: 'look_back', lookBackOptions: [{ kind: 'verify', prompt: 'The former reflection question?', responseType: 'integer' }] }));
+    assert.equal(document.getElementById('look-back-panel').classList.contains('hidden'), false);
+    game.updateView(view({ state, sealed: true, partPrompt: 'The old challenge goal.' }));
+    const goal = document.getElementById('challenge-goal');
+    assert.equal(goal.classList.contains('hidden'), true, state);
+    assert.equal(goal.textContent, '', state);
+    assert.equal(document.getElementById('look-back-panel').classList.contains('hidden'), true, state);
+    assert.equal(document.querySelector('.map-conversation').classList.contains('hidden'), true, state);
+  }
+});
+
+test('Look Back format and retry events show inline feedback without adding another question', async t => {
+  const { game, document } = harness(t);
+  const descendants = node => [node, ...node.children.flatMap(descendants)];
+  const options = [
+    { kind: 'verify', prompt: 'What total do you reach at the castle door?', responseType: 'integer' },
+    { kind: 'second-method', prompt: 'Which statement explains your route?', responseType: 'choice', choices: ['I followed the road.', 'I skipped the road.'] }
+  ];
+  for (const [kind, type, expected] of [
+    ['verify', 'lookback.input_requested', 'Enter the final number for the question above.'],
+    ['verify', 'lookback.retry', 'The final check is still open. Check your result or choose another check.'],
+    ['second-method', 'lookback.input_requested', 'Choose a statement below.']
+  ]) {
+    const selected = options.find(option => option.kind === kind);
+    const reflection = view({ state: 'look_back', activeLookBackKind: kind, lookBackOptions: options, dialogue: [] });
+    globalThis.fetch = async () => response({ view: reflection, events: [{ type, kind }], speech: 'What result do you get for the task shown below?' });
+    await game.handleAction({ type: 'lookback', kind, value: 'My explanation' });
+    const nodes = descendants(document.getElementById('look-back-options'));
+    const status = nodes.find(node => node.getAttribute('role') === 'status');
+    assert.ok(status, 'The active reflection form needs accessible format/retry feedback');
+    assert.equal(status.getAttribute('aria-live'), 'polite');
+    assert.equal(status.textContent, expected);
+    assert.equal(status.classList.contains('hidden'), false);
+    assert.equal(nodes.filter(node => node.textContent.includes('?')).length, 1);
+    assert.equal(nodes.filter(node => node.textContent === selected.prompt).length, 1);
+    game.updateView(reflection);
+    assert.equal(status.textContent, expected, 'Refreshing the same view must preserve current feedback');
+  }
+});
 
 test('finishing or reloading a sealed encounter never replays the previous tutor question', async t => {
   const { game, clock, callbacks } = harness(t);
