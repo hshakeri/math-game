@@ -1,0 +1,16 @@
+{
+  "name": "Castle of Theorems",
+  "short_name": "CastleTheorems",
+  "start_url": "/#map",
+  "display": "standalone",
+  "background_color": "#f7f1e3",
+  "theme_color": "#f7f1e3",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦉</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

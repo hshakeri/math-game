@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Dashboard — Castle of Theorems</title>
+  <style>
+    :root {
+      --bg: #1e242b;
+      --card-bg: #28313b;
+      --border: #3f4e5e;
+      --text: #e0e6ed;
+      --accent: #4a90e2;
+      --warn: #e67e22;
+      --success: #27ae60;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
+    h1 { font-size: 1.5rem; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    label { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: #95a5a6; display: block; margin-bottom: 6px; }
+    input, select, button { width: 100%; min-height: 48px; border-radius: 8px; border: 1px solid var(--border); padding: 10px; font-size: 1rem; background: #161b22; color: #fff; }
+    button { cursor: pointer; font-weight: bold; background: var(--accent); border: none; }
+    button:hover { filter: brightness(1.1); }
+    .btn-warn { background: var(--warn); }
+    .transcript-log { height: 350px; overflow-y: auto; background: #12161c; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 0.9rem; }
+    .log-item { margin-bottom: 8px; padding: 6px; border-radius: 4px; border-left: 3px solid var(--accent); }
+    .log-tutor { border-color: #f1c40f; background: rgba(241, 196, 15, 0.05); }
+    .log-child { border-color: var(--success); background: rgba(39, 174, 96, 0.05); }
+    .log-state { border-color: #9b59b6; background: rgba(155, 89, 182, 0.05); }
+    .hidden { display: none !important; }
+    /* PIN Modal */
+    .pin-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; }
+    .pin-box { background: var(--card-bg); padding: 30px; border-radius: 16px; text-align: center; max-width: 340px; width: 100%; }
+    .pin-input { font-size: 2rem; letter-spacing: 12px; text-align: center; margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Parent Dashboard & Observer</h1>
+      <span id="conn-status" style="color:var(--warn);">Connecting...</span>
+    </header>
+
+    <!-- Telemetry Insights (STRICTLY ISOLATED FROM CHILD CLIENT) -->
+    <div class="card">
+      <div class="controls-grid">
+        <div>
+          <label>Current Phase / State</label>
+          <div id="stat-state" style="font-size:1.2rem; font-weight:bold;">--</div>
+        </div>
+        <div>
+          <label>Active Hint Ladder Rung</label>
+          <div id="stat-rung" style="font-size:1.2rem; font-weight:bold; color:#f1c40f;">--</div>
+        </div>
+        <div>
+          <label>Probes in Current Phase</label>
+          <div id="stat-probes" style="font-size:1.2rem; font-weight:bold;">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Controls -->
+    <div class="card">
+      <h2 style="font-size:1.1rem; margin-bottom:16px;">Tutor & Experience Controls</h2>
+      <div class="controls-grid">
+        <div>
+          <label for="select-rung">Force Hint Rung</label>
+          <select id="select-rung">
+            <option value="l0">l0 — Clarify Goal & Givens</option>
+            <option value="l1">l1 — Strategic Heuristic</option>
+            <option value="l2">l2 — Visual Diagram Hint</option>
+            <option value="l4">l4 — Simpler Analogous Problem</option>
+            <option value="l3">l3 — Operational Step Directive</option>
+          </select>
+          <button id="btn-apply-rung" style="margin-top:8px;">Apply Rung Override</button>
+        </div>
+
+        <div>
+          <label>Parent Scribe Mode</label>
+          <button id="btn-toggle-scribe" class="btn-warn">Enable Scribe Mode</button>
+          <p id="scribe-status" style="font-size:0.8rem; margin-top:6px; color:#bdc3c7;">
+            Child types directly. Scribe mode lets parent keyboard submit for child.
+          </p>
+        </div>
+
+        <div>
+          <label>Chapter Look Back Waiver</label>
+          <button id="btn-apply-waiver" class="btn-warn">Waive Look Back (1x per Chapter)</button>
+          <p id="waiver-status" style="font-size:0.8rem; margin-top:6px; color:#bdc3c7;">Available</p>
+        </div>
+      </div>
+
+      <!-- Scribe Text Entry Box (Active when Scribe Mode is Enabled) -->
+      <div id="scribe-input-area" class="hidden" style="margin-top:20px; border-top:1px solid var(--border); padding-top:16px;">
+        <label for="scribe-text">Type on behalf of child:</label>
+        <div style="display:flex; gap:10px;">
+          <input type="text" id="scribe-text" placeholder="Type child's verbal explanation here..." />
+          <button id="btn-scribe-send" style="width:120px;">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live SSE Transcript -->
+    <div class="card">
+      <h2 style="font-size:1.1rem; margin-bottom:12px;">Live Dialogue Transcript (SSE)</h2>
+      <div id="transcript" class="transcript-log"></div>
+    </div>
+  </div>
+
+  <!-- 4-Digit PIN Modal -->
+  <div id="pin-modal" class="pin-modal">
+    <div class="pin-box">
+      <h2>Enter Parent PIN</h2>
+      <p style="font-size:0.85rem; color:#95a5a6; margin-top:6px;">Default PIN is 1234</p>
+      <input type="password" id="pin-input" maxlength="4" class="pin-input" autofocus />
+      <button id="btn-pin-submit">Unlock Dashboard</button>
+      <p id="pin-error" style="color:#e74c3c; margin-top:10px; font-size:0.9rem;" class="hidden">Incorrect PIN</p>
+    </div>
+  </div>
+
+  <script src="parent.js"></script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f1e3">
+  <meta name="description" content="Castle of Theorems — Pólya-style mathematical encounters for home play">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦉</text></svg>">
+  <title>Castle of Theorems</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="parchment-theme">
+  <!-- Screen Router Root -->
+  <main id="app-root">
+
+    <!-- 1. MAP SCREEN (#map) -->
+    <section id="screen-map" class="screen" aria-label="Castle Map">
+      <header class="map-header">
+        <h1 class="game-title">Castle of Theorems</h1>
+        <p class="chapter-badge">Chapter 1: The Outer Road</p>
+        <nav class="map-nav">
+          <a href="#codex" class="nav-btn codex-btn" aria-label="Open Royal Codex">📜 Codex</a>
+          <a href="/parent.html" class="nav-btn parent-link" aria-label="Parent Dashboard">🔒 Parent</a>
+        </nav>
+      </header>
+
+      <div class="map-canvas-container">
+        <!-- Pure SVG Castle Road Map -->
+        <svg id="castle-map-svg" viewBox="0 0 900 600" role="img" aria-label="Interactive map showing four encounter nodes on the road to the castle">
+          <!-- Road Path -->
+          <path d="M 120 500 Q 280 460 380 340 T 640 220 T 780 100" class="road-path" />
+          
+          <!-- Node 1: Reverse Tolls -->
+          <g class="map-node" id="map-node-1" data-node="ch1-n1-reverse-tolls" tabindex="0" role="button" aria-label="Encounter 1: Chasm of Reverse Tolls">
+            <circle cx="120" cy="500" r="44" class="node-circle" />
+            <text x="120" y="506" class="node-num">I</text>
+            <text x="120" y="565" class="node-label">Reverse Tolls</text>
+          </g>
+
+          <!-- Node 2: Dark Vault -->
+          <g class="map-node" id="map-node-2" data-node="ch1-n2-dark-vault" tabindex="0" role="button" aria-label="Encounter 2: Alchemist's Dark Vault">
+            <circle cx="380" cy="340" r="44" class="node-circle" />
+            <text x="380" y="346" class="node-num">II</text>
+            <text x="380" y="405" class="node-label">Dark Vault</text>
+          </g>
+
+          <!-- Node 3: Five Shields -->
+          <g class="map-node" id="map-node-3" data-node="ch1-n3-five-shields" tabindex="0" role="button" aria-label="Encounter 3: Courtyard of Five Shields">
+            <circle cx="640" cy="220" r="44" class="node-circle" />
+            <text x="640" y="226" class="node-num">III</text>
+            <text x="640" y="285" class="node-label">Five Shields</text>
+          </g>
+
+          <!-- Node 4: Castle Keep -->
+          <g class="map-node" id="map-node-4" data-node="ch1-n4-castle-keep" tabindex="0" role="button" aria-label="Encounter 4: Castle Keep Portcullis">
+            <circle cx="780" cy="100" r="44" class="node-circle" />
+            <text x="780" y="106" class="node-num">IV</text>
+            <text x="780" y="165" class="node-label">Castle Keep</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 2. ENCOUNTER SCREEN (#encounter) -->
+    <section id="screen-encounter" class="screen hidden" aria-label="Active Mathematical Encounter">
+      <!-- Top Navigation & Status -->
+      <header class="encounter-header">
+        <a href="#map" class="btn-touch back-btn" aria-label="Return to Map">← Road</a>
+        <h2 id="encounter-title" class="encounter-title">The Encounter</h2>
+        <button id="btn-toggle-deck" class="btn-touch deck-toggle-btn locked" aria-label="Heuristic Deck (Locked)">
+          🎴 Deck <span id="deck-lock-badge" class="badge">🔒</span>
+        </button>
+      </header>
+
+      <!-- Main Encounter Layout -->
+      <div class="encounter-body">
+        <!-- Story / Inscription Panel -->
+        <article class="inscription-card" aria-label="Stone Inscription">
+          <div class="card-header">
+            <span class="card-label">Stone Inscription</span>
+            <button id="btn-audio-toggle" class="btn-icon" aria-label="Toggle sound">🔊</button>
+          </div>
+          <p id="inscription-text" class="inscription-content"></p>
+          <div id="part-prompt-banner" class="part-prompt hidden"></div>
+        </article>
+
+        <!-- Owl Speech Bubble (Archimedes) -->
+        <section class="owl-dialogue-section" aria-label="Archimedes the Owl">
+          <div class="owl-avatar-container">
+            <svg class="owl-avatar-svg" viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="Archimedes the Owl">
+              <circle cx="40" cy="40" r="36" fill="#e8d8b8" stroke="#8b5a2b" stroke-width="4"/>
+              <!-- Owl Eyes -->
+              <circle cx="28" cy="36" r="12" fill="#fff" stroke="#4a3728" stroke-width="3"/>
+              <circle cx="52" cy="36" r="12" fill="#fff" stroke="#4a3728" stroke-width="3"/>
+              <circle cx="28" cy="36" r="5" fill="#2c2523"/>
+              <circle cx="52" cy="36" r="5" fill="#2c2523"/>
+              <!-- Beak -->
+              <polygon points="40,42 34,50 46,50" fill="#c8963e"/>
+              <!-- Brow -->
+              <path d="M 16 28 Q 28 32 40 28 Q 52 32 64 28" fill="none" stroke="#6e4726" stroke-width="3"/>
+            </svg>
+            <span class="owl-name">Archimedes</span>
+          </div>
+
+          <div id="owl-bubble" class="owl-bubble" tabindex="0" role="status" aria-live="polite" aria-label="Archimedes speech bubble (Tap to complete)">
+            <p id="owl-speech-text" class="owl-text">Greetings, young architect. Read the inscription carefully.</p>
+            <span class="bubble-tap-cue">Tap to read instantly</span>
+          </div>
+        </section>
+
+        <!-- Conjecture Slate (Active during Stage: conjecture) -->
+        <section id="conjecture-slate" class="conjecture-slate hidden" aria-label="Conjecture Slate">
+          <h3>State Your Early Conjecture</h3>
+          <p class="conjecture-help">What do you suspect before we begin? (Optional)</p>
+          <div class="conjecture-inputs">
+            <select id="conjecture-stem" class="select-touch">
+              <option value="think">I think...</option>
+              <option value="notice">I notice...</option>
+              <option value="what_if">What if...</option>
+            </select>
+            <input type="text" id="conjecture-value" class="input-touch" placeholder="Your value / idea" />
+            <input type="text" id="conjecture-reason" class="input-touch" placeholder="Because... (at least 3 words)" />
+            <div class="conjecture-actions">
+              <button id="btn-conjecture-submit" class="btn-touch btn-primary">Test Conjecture</button>
+              <button id="btn-conjecture-skip" class="btn-touch btn-secondary">Explore Step by Step</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interactive Workspace / The Scroll (Blueprint Theme) -->
+        <section id="workspace-scroll" class="workspace-scroll blueprint-theme" aria-label="Interactive Diagram Workspace">
+          <header class="workspace-header">
+            <span class="workspace-title">The Royal Scroll</span>
+            <div id="active-card-pill" class="active-card-pill hidden">
+              Active Heuristic: <span id="active-card-name">None</span>
+            </div>
+          </header>
+
+          <div id="diagram-mount" class="diagram-mount" role="region" aria-label="Mathematical diagram area">
+            <!-- Diagram SVG injected here -->
+            <p id="workspace-placeholder-text" class="workspace-placeholder">
+              Choose a card from the Heuristic Deck during the Plan stage to unlock the blueprint tools.
+            </p>
+          </div>
+        </section>
+
+        <!-- Dialogue History Log (Collapsible) -->
+        <details class="dialogue-history-details">
+          <summary class="history-summary">Previous Words & Steps</summary>
+          <div id="dialogue-history-log" class="history-log" aria-label="Turn history"></div>
+        </details>
+
+        <!-- Look Back Panel (Stage: look_back) -->
+        <section id="look-back-panel" class="look-back-panel hidden" aria-label="Look Back and Reflect">
+          <h3>Look Back: The Master's Examination</h3>
+          <p id="look-back-prompt" class="look-back-prompt"></p>
+          <div id="look-back-options" class="look-back-options"></div>
+        </section>
+
+        <!-- Child Reply Strip & Controls -->
+        <footer class="reply-strip" aria-label="Child response controls">
+          <!-- Chip Suggestions Container -->
+          <div id="chip-container" class="chip-container" role="group" aria-label="Quick response chips"></div>
+
+          <!-- Free-text input row -->
+          <div class="input-row">
+            <input 
+              type="text" 
+              id="child-text-input" 
+              class="input-touch text-field" 
+              maxlength="140" 
+              placeholder="Your thought or question (up to 140 chars)..." 
+              aria-label="Child response text" 
+            />
+            <button id="btn-send-reply" class="btn-touch btn-primary send-btn" aria-label="Send reply">↵ Send</button>
+            <button id="btn-im-stuck" class="btn-touch btn-stuck" aria-label="I'm stuck">I'm stuck</button>
+          </div>
+
+          <!-- Stone Submit Dial (Active during Submit stage) -->
+          <div id="submit-dial-container" class="submit-dial-container hidden">
+            <span class="dial-label">Carve Final Theorem Answer:</span>
+            <input type="number" id="final-answer-input" class="input-touch answer-input" placeholder="Value" />
+            <button id="btn-stone-submit" class="btn-touch btn-stone-dial" aria-label="Submit final answer to stone portal">
+              💎 Submit to Portal
+            </button>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+    <!-- 3. CODEX SCREEN (#codex) -->
+    <section id="screen-codex" class="screen hidden" aria-label="Royal Codex Archive">
+      <header class="codex-header">
+        <a href="#map" class="btn-touch back-btn" aria-label="Return to Map">← Road</a>
+        <h2>The Royal Codex of Theorems</h2>
+      </header>
+      <div id="codex-grid" class="codex-grid">
+        <!-- Rendered dynamically from sealed encounters -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- OVERLAYS -->
+
+  <!-- 4. HEURISTIC DECK OVERLAY -->
+  <aside id="deck-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="The Heuristic Deck">
+    <div class="deck-modal">
+      <header class="deck-modal-header">
+        <h3>The Heuristic Deck</h3>
+        <p class="deck-subtitle">Select a tool to illuminate the problem</p>
+        <button id="btn-close-deck" class="btn-close" aria-label="Close Deck">✕</button>
+      </header>
+      <div id="deck-card-grid" class="deck-card-grid">
+        <!-- 6 Heuristic Cards -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- 5. GOLDEN SEAL OVERLAY -->
+  <aside id="golden-seal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Encounter Complete - Golden Seal Awarded">
+    <div class="seal-modal">
+      <div class="seal-graphic-container">
+        <!-- Pure SVG Golden Seal -->
+        <svg id="golden-seal-svg" viewBox="0 0 200 200" width="180" height="180" class="seal-svg" role="img" aria-label="Golden Seal of the Royal Architect">
+          <defs>
+            <radialGradient id="gold-grad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff4b8"/>
+              <stop offset="50%" stop-color="#e5b842"/>
+              <stop offset="100%" stop-color="#996c14"/>
+            </radialGradient>
+            <filter id="seal-shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#3d2806" flood-opacity="0.4"/>
+            </filter>
+          </defs>
+          <circle cx="100" cy="100" r="88" fill="url(#gold-grad)" filter="url(#seal-shadow)"/>
+          <circle cx="100" cy="100" r="76" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="6,4"/>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#7a5410" stroke-width="2"/>
+          <!-- Compass Crest -->
+          <path d="M 100 45 L 125 140 L 100 125 L 75 140 Z" fill="#66440c"/>
+          <circle cx="100" cy="45" r="8" fill="#fff"/>
+          <text x="100" y="165" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff" letter-spacing="2">SEALED</text>
+        </svg>
+      </div>
+
+      <h2 id="seal-theorem-title" class="seal-title">Theorem Sealed!</h2>
+      <p id="seal-theorem-name" class="seal-name">The Socks-and-Shoes Rule</p>
+      <p id="seal-theorem-rule" class="seal-rule">To undo a chain of steps, undo the last step first.</p>
+
+      <div class="seal-actions" style="margin-top:20px;">
+        <button id="btn-seal-continue" class="btn-touch btn-primary">Return to the Road</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PWA & Client Script -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

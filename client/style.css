@@ -1,0 +1,755 @@
+/* ==========================================================================
+   Castle of Theorems — Master Stylesheet
+   Pure Vanilla CSS, Zero Dependencies, SPEC §8 & §9 Compliant
+   ========================================================================== */
+
+/* 1. CSS Custom Properties / Themes */
+:root {
+  /* Warm Parchment Palette (Narrative, Owl, Story) */
+  --parchment-bg: #f7f1e3;
+  --parchment-card: #fdfaf2;
+  --parchment-border: #d8cca8;
+  --ink-primary: #2c2416;
+  --ink-secondary: #594a34;
+  --gold-accent: #c8963e;
+  --gold-glow: #e5b842;
+  --gold-dark: #8c6014;
+
+  /* Blueprint Palette (Interactive Workspace & Diagram) */
+  --blueprint-bg: #1c2631;
+  --blueprint-card: #233140;
+  --blueprint-border: #3d5166;
+  --blueprint-grid: rgba(93, 173, 226, 0.12);
+  --blueprint-line: #5dade2;
+  --blueprint-text: #ecf0f1;
+  --blueprint-glow: #aed6f1;
+
+  /* Universal Ergonomics (SPEC §9) */
+  --touch-min-target: 56px;
+  --touch-spacing: 12px;
+  --font-base: 18px;
+  --font-owl: 19px;
+  --font-inscription: 20px;
+  --font-family-serif: 'Georgia', 'Times New Roman', serif;
+  --font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'Courier New', Courier, monospace;
+
+  /* Transitions strictly <= 200ms per SPEC §8 */
+  --anim-duration: 180ms;
+  --anim-ease: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* 2. Base & Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-base);
+  line-height: 1.5;
+  background-color: var(--parchment-bg);
+  color: var(--ink-primary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Touch Target Invariant (SPEC §9: >= 56px touch target, >= 12px spacing) */
+.btn-touch, .select-touch, .input-touch, .chip, .deck-card, .map-node {
+  min-height: var(--touch-min-target);
+  min-width: var(--touch-min-target);
+  font-size: var(--font-base);
+  border-radius: 12px;
+  margin: calc(var(--touch-spacing) / 2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  transition: transform var(--anim-duration) var(--anim-ease),
+              background-color var(--anim-duration) var(--anim-ease),
+              border-color var(--anim-duration) var(--anim-ease);
+}
+
+.btn-touch:active, .chip:active, .deck-card:active {
+  transform: scale(0.96);
+}
+
+/* 3. Screen Router Layout */
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 16px;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.screen.hidden {
+  display: none !important;
+}
+
+/* 4. Map Screen (#map) */
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--parchment-border);
+}
+
+.game-title {
+  font-family: var(--font-family-serif);
+  font-size: 1.6rem;
+  color: var(--gold-dark);
+}
+
+.chapter-badge {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+.map-nav {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-btn {
+  text-decoration: none;
+  color: var(--ink-primary);
+  background: var(--parchment-card);
+  border: 2px solid var(--parchment-border);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.nav-btn:hover {
+  border-color: var(--gold-accent);
+}
+
+.map-canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+#castle-map-svg {
+  width: 100%;
+  max-height: 70vh;
+}
+
+.road-path {
+  fill: none;
+  stroke: var(--parchment-border);
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-dasharray: 8 12;
+}
+
+.map-node {
+  cursor: pointer;
+  outline: none;
+}
+
+.node-circle {
+  fill: var(--parchment-card);
+  stroke: var(--gold-accent);
+  stroke-width: 6;
+  transition: r var(--anim-duration) var(--anim-ease), fill var(--anim-duration) var(--anim-ease);
+}
+
+.map-node:hover .node-circle, .map-node:focus .node-circle {
+  r: 48;
+  fill: #fff9e6;
+}
+
+.map-node.active .node-circle {
+  stroke: var(--gold-dark);
+  stroke-width: 8;
+  animation: pulse-arrival 2s infinite;
+}
+
+.map-node.sealed .node-circle {
+  fill: var(--gold-glow);
+  stroke: var(--gold-dark);
+}
+
+.node-num {
+  font-family: var(--font-family-serif);
+  font-size: 24px;
+  font-weight: bold;
+  text-anchor: middle;
+  fill: var(--ink-primary);
+}
+
+.node-label {
+  font-size: 16px;
+  font-weight: bold;
+  text-anchor: middle;
+  fill: var(--ink-secondary);
+}
+
+@keyframes pulse-arrival {
+  0% { stroke-width: 6; transform: scale(1); }
+  50% { stroke-width: 12; transform: scale(1.04); }
+  100% { stroke-width: 6; transform: scale(1); }
+}
+
+/* 5. Encounter Screen (#encounter) */
+.encounter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--parchment-border);
+}
+
+.encounter-title {
+  font-family: var(--font-family-serif);
+  font-size: 1.4rem;
+}
+
+.deck-toggle-btn.locked {
+  opacity: 0.6;
+  filter: grayscale(0.8);
+}
+
+.inscription-card {
+  background: var(--parchment-card);
+  border: 2px solid var(--parchment-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  box-shadow: 0 4px 12px rgba(44, 36, 22, 0.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card-label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--gold-dark);
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.inscription-content {
+  font-family: var(--font-family-serif);
+  font-size: var(--font-inscription);
+  line-height: 1.6;
+  color: var(--ink-primary);
+}
+
+.part-prompt {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #f0e6cf;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+/* Owl Speech Bubble Section */
+.owl-dialogue-section {
+  display: flex;
+  align-items: flex-start;
+  margin: 16px 0;
+  gap: 16px;
+}
+
+.owl-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 72px;
+}
+
+.owl-name {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--gold-dark);
+  margin-top: 4px;
+}
+
+.owl-bubble {
+  flex: 1;
+  background: #ffffff;
+  border: 2px solid var(--gold-accent);
+  border-radius: 18px;
+  border-top-left-radius: 4px;
+  padding: 16px 20px;
+  min-height: 72px;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(200, 150, 62, 0.15);
+  cursor: pointer;
+}
+
+.owl-text {
+  font-size: var(--font-owl);
+  line-height: 1.5;
+  color: var(--ink-primary);
+}
+
+.bubble-tap-cue {
+  display: block;
+  font-size: 0.75rem;
+  color: #a0907d;
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* Conjecture Slate */
+.conjecture-slate {
+  background: #fdf6e2;
+  border: 2px dashed var(--gold-accent);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.conjecture-slate h3 {
+  font-size: 1.1rem;
+  color: var(--gold-dark);
+  margin-bottom: 4px;
+}
+
+.conjecture-help {
+  font-size: 0.9rem;
+  color: var(--ink-secondary);
+  margin-bottom: 12px;
+}
+
+.conjecture-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conjecture-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* 6. Interactive Workspace (The Scroll / Blueprint Theme) */
+.workspace-scroll.blueprint-theme {
+  background-color: var(--blueprint-bg);
+  background-image: 
+    linear-gradient(var(--blueprint-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border: 2px solid var(--blueprint-border);
+  border-radius: 18px;
+  color: var(--blueprint-text);
+  padding: 16px;
+  margin-top: 12px;
+  min-height: 280px;
+}
+
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--blueprint-border);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.workspace-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--blueprint-line);
+}
+
+.active-card-pill {
+  font-size: 0.85rem;
+  background: var(--blueprint-card);
+  border: 1px solid var(--blueprint-line);
+  color: var(--blueprint-glow);
+  padding: 4px 12px;
+  border-radius: 16px;
+}
+
+.diagram-mount {
+  width: 100%;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diagram-svg {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+
+.workspace-placeholder {
+  color: #7f8c8d;
+  font-style: italic;
+  text-align: center;
+  max-width: 480px;
+  padding: 32px 16px;
+}
+
+/* Dialogue History Log */
+.dialogue-history-details {
+  margin-top: 16px;
+  background: var(--parchment-card);
+  border: 1px solid var(--parchment-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+}
+
+.history-summary {
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink-secondary);
+}
+
+.history-log {
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-item {
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.history-item.tutor {
+  background: #fef9e7;
+  border-left: 3px solid var(--gold-accent);
+}
+
+.history-item.child {
+  background: #eafaf1;
+  border-left: 3px solid #27ae60;
+}
+
+/* Look Back Panel */
+.look-back-panel {
+  background: #fffdf5;
+  border: 2px solid var(--gold-dark);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+.look-back-panel h3 {
+  font-size: 1.15rem;
+  color: var(--gold-dark);
+  margin-bottom: 8px;
+}
+
+.look-back-prompt {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.look-back-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 7. Reply Strip & Child Input */
+.reply-strip {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px solid var(--parchment-border);
+}
+
+.chip-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--touch-spacing);
+  margin-bottom: 12px;
+}
+
+.chip {
+  background: var(--parchment-card);
+  border: 2px solid var(--parchment-border);
+  color: var(--ink-primary);
+  padding: 8px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.chip:hover, .chip:focus {
+  background: #ffffff;
+  border-color: var(--gold-accent);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--touch-spacing);
+}
+
+.text-field {
+  flex: 1;
+  background: #ffffff;
+  border: 2px solid var(--parchment-border);
+  padding: 0 16px;
+  color: var(--ink-primary);
+}
+
+.text-field:focus {
+  outline: none;
+  border-color: var(--gold-accent);
+}
+
+.btn-primary {
+  background: var(--gold-accent);
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  padding: 0 24px;
+}
+
+.btn-primary:hover {
+  background: var(--gold-dark);
+}
+
+.btn-secondary {
+  background: var(--parchment-card);
+  border: 2px solid var(--parchment-border);
+  color: var(--ink-primary);
+  padding: 0 20px;
+}
+
+.btn-stuck {
+  background: transparent;
+  border: 2px dashed #b09e80;
+  color: var(--ink-secondary);
+  padding: 0 16px;
+}
+
+/* Stone Submit Dial */
+.submit-dial-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 16px;
+  background: #ebe4d3;
+  border-radius: 16px;
+}
+
+.dial-label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.answer-input {
+  width: 120px;
+  background: #ffffff;
+  border: 2px solid var(--parchment-border);
+  padding: 0 12px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.btn-stone-dial {
+  background: linear-gradient(135deg, #7f8c8d, #34495e);
+  color: #ffffff;
+  font-weight: bold;
+  border: 2px solid #2c3e50;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  padding: 0 24px;
+}
+
+/* 8. Modals & Overlays */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(44, 36, 22, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.deck-modal {
+  background: var(--parchment-card);
+  border: 3px solid var(--gold-accent);
+  border-radius: 20px;
+  max-width: 720px;
+  width: 100%;
+  padding: 24px;
+  position: relative;
+}
+
+.deck-modal-header {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.deck-modal-header h3 {
+  font-family: var(--font-family-serif);
+  font-size: 1.4rem;
+  color: var(--gold-dark);
+}
+
+.deck-subtitle {
+  font-size: 0.95rem;
+  color: var(--ink-secondary);
+}
+
+.btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--ink-secondary);
+}
+
+.deck-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.deck-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  background: #ffffff;
+  border: 2px solid var(--parchment-border);
+  text-align: left;
+}
+
+.deck-card:hover {
+  border-color: var(--gold-accent);
+  box-shadow: 0 4px 12px rgba(200, 150, 62, 0.2);
+}
+
+.deck-card.recommended {
+  border-color: var(--gold-dark);
+  background: #fffdf5;
+}
+
+/* Golden Seal Modal */
+.seal-modal {
+  background: var(--parchment-card);
+  border: 4px solid var(--gold-dark);
+  border-radius: 24px;
+  padding: 32px;
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+  animation: seal-pop var(--anim-duration) var(--anim-ease);
+}
+
+@keyframes seal-pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.seal-title {
+  font-family: var(--font-family-serif);
+  color: var(--gold-dark);
+  margin-top: 16px;
+}
+
+.seal-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--ink-primary);
+  margin: 6px 0;
+}
+
+.seal-rule {
+  font-style: italic;
+  color: var(--ink-secondary);
+  margin-bottom: 24px;
+}
+
+/* Codex Screen (#codex) */
+.codex-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--parchment-border);
+}
+
+.codex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.codex-card {
+  background: var(--parchment-card);
+  border: 2px solid var(--gold-accent);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.codex-card h3 {
+  font-family: var(--font-family-serif);
+  color: var(--gold-dark);
+  margin-bottom: 6px;
+}
+
+.codex-card p {
+  font-size: 0.95rem;
+  color: var(--ink-secondary);
+}
+
+/* Utilities */
+.hidden {
+  display: none !important;
+}
+
+.badge {
+  font-size: 0.85rem;
+  margin-left: 4px;
+}
