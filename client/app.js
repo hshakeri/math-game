@@ -160,6 +160,11 @@ export class CastleGame {
   }
 
   initDOM() {
+    // Check dyslexia-friendly font setting
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('cot_dyslexia') === 'true') {
+      document.body.classList.add('dyslexia-font');
+    }
+
     const speechEl = document.getElementById('owl-speech-text');
     this.typewriter = new Typewriter(speechEl, this.synth);
 
@@ -592,16 +597,47 @@ export class CastleGame {
     container.innerHTML = '';
     options.forEach((opt, idx) => {
       const card = document.createElement('div');
-      card.className = 'btn-touch chip';
+      card.className = 'btn-touch chip lookback-card';
       card.style.display = 'block';
       card.style.textAlign = 'left';
-      card.innerHTML = `<strong>Option ${idx + 1} (${opt.kind}):</strong><p>${opt.prompt}</p>`;
-      card.addEventListener('click', () => {
-        const val = prompt(`Your answer for ${opt.kind}:`);
-        if (val !== null) {
+      card.style.padding = '12px';
+      card.style.marginBottom = '12px';
+
+      const title = document.createElement('strong');
+      title.textContent = `Option ${idx + 1} (${opt.kind}): `;
+      const promptP = document.createElement('p');
+      promptP.style.margin = '6px 0 10px 0';
+      promptP.textContent = opt.prompt;
+
+      const form = document.createElement('form');
+      form.style.display = 'flex';
+      form.style.gap = '8px';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'input-touch';
+      input.placeholder = 'Your reflection answer...';
+      input.style.flex = '1';
+
+      const submitBtn = document.createElement('button');
+      submitBtn.type = 'submit';
+      submitBtn.className = 'btn-touch btn-primary';
+      submitBtn.textContent = 'Submit';
+
+      form.appendChild(input);
+      form.appendChild(submitBtn);
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = input.value.trim();
+        if (val) {
           this.handleAction({ type: 'lookback', kind: opt.kind, index: idx, value: val });
         }
       });
+
+      card.appendChild(title);
+      card.appendChild(promptP);
+      card.appendChild(form);
       container.appendChild(card);
     });
   }
@@ -616,27 +652,40 @@ export class CastleGame {
     });
   }
 
-  renderCodex() {
+  async renderCodex() {
     const grid = document.getElementById('codex-grid');
     if (!grid) return;
-    grid.innerHTML = `
-      <article class="codex-card">
-        <h3>The Socks-and-Shoes Rule</h3>
-        <p>To undo a chain of steps, undo the last step first.</p>
-      </article>
-      <article class="codex-card">
-        <h3>The Goblin Rule</h3>
-        <p>To guarantee a match, prepare for the worst luck first.</p>
-      </article>
-      <article class="codex-card">
-        <h3>The Hidden Seams Rule</h3>
-        <p>When boundaries touch, internal seams reveal unit ratios.</p>
-      </article>
-      <article class="codex-card">
-        <h3>The Rune Splitting Rule</h3>
-        <p>Break numbers into prime runes to spot what is shared.</p>
-      </article>
-    `;
+
+    const THEOREMS = [
+      { id: 'ch1-n1-reverse-tolls', name: 'The Socks-and-Shoes Rule', desc: 'To undo a chain of steps, undo the last step first.' },
+      { id: 'ch1-n2-dark-vault', name: 'The Goblin Rule', desc: 'To guarantee a match, prepare for the worst luck first.' },
+      { id: 'ch1-n3-five-shields', name: 'The Hidden Seams Rule', desc: 'When boundaries touch, internal seams reveal unit ratios.' },
+      { id: 'ch1-n4-castle-keep', name: 'The Rune Splitting Rule', desc: 'Break numbers into prime runes to spot what is shared.' }
+    ];
+
+    let completedIds = new Set();
+    try {
+      const res = await fetch('/api/encounters');
+      if (res.ok) {
+        const data = await res.json();
+        const catalog = data.encounters || (Array.isArray(data) ? data : []);
+        for (const enc of catalog) {
+          if (enc.completed) completedIds.add(enc.id);
+        }
+      }
+    } catch {
+      // offline / fallback
+    }
+
+    grid.innerHTML = THEOREMS.map(t => {
+      const unlocked = completedIds.has(t.id);
+      return `
+        <article class="codex-card ${unlocked ? 'unlocked' : 'locked'}" style="${unlocked ? '' : 'opacity: 0.6; filter: grayscale(1);'}">
+          <h3>${unlocked ? t.name : '??? Locked Theorem'}</h3>
+          <p>${unlocked ? t.desc : 'Seal this encounter on the map to inscribe its theorem into your Codex.'}</p>
+        </article>
+      `;
+    }).join('');
   }
 }
 

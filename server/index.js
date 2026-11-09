@@ -165,8 +165,14 @@ export async function parseJsonBody(req, maxBytes = 1024 * 1024) {
       if (!raw.trim()) return resolve({});
       try {
         const parsed = JSON.parse(raw);
+        if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          const err = new Error('JSON payload must be a non-null object');
+          err.statusCode = 400;
+          return reject(err);
+        }
         resolve(parsed);
-      } catch {
+      } catch (e) {
+        if (e.statusCode) return reject(e);
         const err = new Error('Invalid JSON payload');
         err.statusCode = 400;
         reject(err);
@@ -373,7 +379,13 @@ export function createServer(options = {}) {
       return res.end();
     }
 
-    const reqUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    let reqUrl;
+    try {
+      reqUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    } catch {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ ok: false, error: 'Malformed request URL or Host header' }));
+    }
     const pathname = reqUrl.pathname;
     const searchParams = reqUrl.searchParams;
 
@@ -912,8 +924,10 @@ export function createServer(options = {}) {
 
       return sendJson(res, 405, { ok: false, error: 'Method Not Allowed' });
     } catch (err) {
-      console.error('Unhandled server error:', err);
       const statusCode = err.statusCode || 500;
+      if (statusCode >= 500) {
+        console.error('Unhandled server error:', err);
+      }
       return sendJson(res, statusCode, { ok: false, error: err.message || 'Internal Server Error' });
     }
   });

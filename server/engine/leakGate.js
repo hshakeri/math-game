@@ -26,13 +26,14 @@ if (fs.existsSync(rulesPath)) {
   }
 }
 
-// Stage 6: Praise Lexicon (16 forbidden words/phrases)
+// Stage 6: Praise Lexicon (16 forbidden words/phrases + evaluative variants)
 export const PRAISE_PATTERNS = [
   { pattern: /\bgreat\b/i, name: 'great' },
   { pattern: /\bbrilliant\b/i, name: 'brilliant' },
   { pattern: /\bexactly\b/i, name: 'exactly' },
   { pattern: /\bcorrect\b/i, name: 'correct' },
   { pattern: /\bright\s*!/i, name: 'right!' },
+  { pattern: /\b(?:that['’]?s|that\s+is|you(?:'re|\s+are|\s+have\s+the))\s+right\b/i, name: 'that is right' },
   { pattern: /\bwell\s+done\b/i, name: 'well done' },
   { pattern: /\bnice\s+(?:job|work|thinking)\b/i, name: 'nice job/work/thinking' },
   { pattern: /\bperfect\b/i, name: 'perfect' },
@@ -42,12 +43,52 @@ export const PRAISE_PATTERNS = [
   { pattern: /\bgood\s+job\b/i, name: 'good job' },
   { pattern: /\bthat['’]?s\s+it\b/i, name: "that's it" },
   { pattern: /\bclose\s*!/i, name: 'close!' },
+  { pattern: /\b(?:you(?:'re|\s+are)\s+(?:very\s+)?)close\b/i, name: 'you are close' },
   { pattern: /\bnot\s+quite\b/i, name: 'not quite' },
   { pattern: /\balmost\b/i, name: 'almost' }
 ];
 
-// Stage 8: Banned operations at l0/l1
-export const BANNED_OPS_L0_L1 = /\b(?:add|subtract|multiply|divide|double|halve|plus|minus|times)\b/i;
+// Stage 8: Banned operations at l0/l1 (including doubling and halving inflections)
+export const BANNED_OPS_L0_L1 = /\b(?:add|subtract|multiply|divide|double(?:ing|ed|s)?|halve(?:ing|ed|s)?|doubling|halving|plus|minus|times)\b/i;
+
+const UNICODE_ROMAN_MAP = {
+  '\u2160': 1, '\u2161': 2, '\u2162': 3, '\u2163': 4, '\u2164': 5,
+  '\u2165': 6, '\u2166': 7, '\u2167': 8, '\u2168': 9, '\u2169': 10,
+  '\u216A': 11, '\u216B': 12,
+  '\u2170': 1, '\u2171': 2, '\u2172': 3, '\u2173': 4, '\u2174': 5,
+  '\u2175': 6, '\u2176': 7, '\u2177': 8, '\u2178': 9, '\u2179': 10,
+  '\u217A': 11, '\u217B': 12
+};
+
+/**
+ * Normalizes unicode, strips zero-width/invisible characters, maps homoglyphs,
+ * and standardizes typographic dashes.
+ * @param {string} text
+ * @returns {string}
+ */
+export function normalizeText(text) {
+  if (!text || typeof text !== 'string') return '';
+  // 1. Map Roman numeral characters BEFORE NFKC decomposes them into letter sequences
+  let s = text.replace(/[\u2160-\u216B\u2170-\u217B]/g, ch => UNICODE_ROMAN_MAP[ch] !== undefined ? ` ${UNICODE_ROMAN_MAP[ch]} ` : ch);
+  // 2. Unicode NFKC (fullwidth digits e.g. ６, mathematical digits e.g. 𝟔)
+  s = s.normalize('NFKC');
+  // 3. Strip zero-width and invisible formatting characters
+  s = s.replace(/[\u200B-\u200D\uFEFF\u00AD\u2060]/g, '');
+  // 4. Map Cyrillic homoglyphs
+  s = s.replace(/[\u0430]/g, 'a')
+       .replace(/[\u0441]/g, 'c')
+       .replace(/[\u0435]/g, 'e')
+       .replace(/[\u043E]/g, 'o')
+       .replace(/[\u0440]/g, 'p')
+       .replace(/[\u0445]/g, 'x')
+       .replace(/[\u0456\u0457]/g, 'i')
+       .replace(/[\u0443]/g, 'y')
+       .replace(/[\u0455]/g, 's')
+       .replace(/[\u0458]/g, 'j');
+  // 5. Normalize typographic dashes to hyphen
+  s = s.replace(/[\u2010-\u2015\u2212]/g, '-');
+  return s;
+}
 
 // Number dictionaries
 export const ONES_WORDS = {
@@ -91,7 +132,9 @@ export function extractNumbers(text) {
   const results = [];
   if (!text || typeof text !== 'string') return results;
 
-  const lower = text.toLowerCase();
+  const normalized = normalizeText(text);
+  const cleanForWords = normalized.replace(/[_*~`]/g, ' ');
+  const lower = cleanForWords.toLowerCase();
   const coveredRanges = [];
 
   function isCovered(start, end) {
@@ -140,8 +183,8 @@ export function extractNumbers(text) {
   }
 
   // 5. Compound word numbers (e.g. twenty-four, thirty-four, eighty-five, twenty-fourth)
-  // Handles variable whitespace, hyphens, and combinations like 'twenty - four', 'twenty  four'
-  const compoundRegex = /\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[\s-]+)(one|two|three|four|five|six|seven|eight|nine|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)\b/gi;
+  // Handles variable whitespace, hyphens, and combinations like 'twenty - four', 'twenty  four', 'twenty–four'
+  const compoundRegex = /\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[\s\-_–—]+)(one|two|three|four|five|six|seven|eight|nine|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)\b/gi;
   while ((match = compoundRegex.exec(lower)) !== null) {
     const tens = TENS_WORDS[match[1].toLowerCase()] ?? TENS_WORDS[match[1]];
     const unitKey = match[2].toLowerCase();
@@ -280,10 +323,14 @@ export function checkUtterance(text, context = {}, options = {}) {
     };
   }
 
+  // Text normalization for numeric extraction, construction rules, praise, and operations
+  const normalized = normalizeText(trimmed);
+  const cleanForScreening = normalized.replace(/[_*~`]/g, ' ');
+
   // -------------------------------------------------------------------------
   // STAGE 3: Numeric extraction
   // -------------------------------------------------------------------------
-  const extracted = extractNumbers(trimmed);
+  const extracted = extractNumbers(cleanForScreening);
 
   // -------------------------------------------------------------------------
   // STAGE 4: Forbidden check (forbidden list + target answer)
@@ -308,7 +355,8 @@ export function checkUtterance(text, context = {}, options = {}) {
         // Allowed ONLY if in givens AND appears inside an exact verbatim quote of the inscription >= 12 chars
         let allowedByQuote = false;
         if (givens.includes(fVal)) {
-          allowedByQuote = isInsideQuotedInscription(trimmed, num.start, num.end, inscription);
+          allowedByQuote = isInsideQuotedInscription(trimmed, num.start, num.end, inscription) ||
+                           isInsideQuotedInscription(cleanForScreening, num.start, num.end, inscription);
         }
 
         if (!allowedByQuote) {
@@ -327,7 +375,7 @@ export function checkUtterance(text, context = {}, options = {}) {
   // STAGE 5: Regex rules (Answer constructions, equations, answer reveals)
   // -------------------------------------------------------------------------
   for (const rule of CONSTRUCTION_RULES) {
-    if (rule.regex.test(trimmed)) {
+    if (rule.regex.test(trimmed) || rule.regex.test(cleanForScreening)) {
       return {
         allowed: false,
         stage: 5,
@@ -341,7 +389,7 @@ export function checkUtterance(text, context = {}, options = {}) {
   // STAGE 6: Praise lexicon check (Evaluation leakage)
   // -------------------------------------------------------------------------
   for (const { pattern, name } of PRAISE_PATTERNS) {
-    if (pattern.test(trimmed)) {
+    if (pattern.test(trimmed) || pattern.test(cleanForScreening)) {
       return {
         allowed: false,
         stage: 6,
@@ -356,8 +404,8 @@ export function checkUtterance(text, context = {}, options = {}) {
   // -------------------------------------------------------------------------
   const rung = context.rung || 'l0';
   if (rung === 'l0' || rung === 'l1') {
-    // Zero digits allowed at l0 and l1
-    const digitMatch = trimmed.match(/[0-9]/);
+    // Zero digits allowed at l0 and l1 (checked on normalized text to catch fullwidth/NFKC digits)
+    const digitMatch = normalized.match(/[0-9]/);
     if (digitMatch) {
       return {
         allowed: false,
@@ -366,8 +414,8 @@ export function checkUtterance(text, context = {}, options = {}) {
         detail: `Forbidden digit '${digitMatch[0]}' at rung ${rung}`
       };
     }
-  } else if (rung === 'l2' || rung === 'l3') {
-    // At l2 and l3, digits allowed only if in givens or hintText
+  } else if (rung === 'l2' || rung === 'l3' || rung === 'l4') {
+    // At l2, l3, and l4, digits allowed only if in givens or hintText
     const hintText = context.hintText || '';
     for (const num of extracted) {
       if (/\d/.test(num.raw)) {
@@ -389,7 +437,7 @@ export function checkUtterance(text, context = {}, options = {}) {
   // STAGE 8: Banned operations at l0/l1
   // -------------------------------------------------------------------------
   if (rung === 'l0' || rung === 'l1') {
-    const opMatch = trimmed.match(BANNED_OPS_L0_L1);
+    const opMatch = cleanForScreening.match(BANNED_OPS_L0_L1) || trimmed.match(BANNED_OPS_L0_L1);
     if (opMatch) {
       return {
         allowed: false,

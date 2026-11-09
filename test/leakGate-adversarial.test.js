@@ -279,8 +279,8 @@ test('8. Scripted Probes Exhaustive Audit (All 78 probes pass gate)', () => {
           }
         } else {
           for (const [rung, probeList] of Object.entries(stateContent)) {
-            const hintDef = partDef.hints?.[rung];
-            const hintText = hintDef?.text || '';
+            const hintDef = partDef.ladder?.[rung] || partDef.hints?.[rung];
+            const hintText = (typeof hintDef === 'object' ? (hintDef.text || hintDef.statement || hintDef.l3 || '') : (hintDef || ''));
             for (const probe of probeList) {
               count++;
               verifyProbe(probe, { rung, forbidden, givens, inscription, hintText, answer, encId, partId, state });

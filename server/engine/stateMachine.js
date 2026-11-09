@@ -381,7 +381,16 @@ export function transition(session, action, encounter) {
       return { session: next, events };
     }
 
-    if (action.type === 'stuck' || action.type === 'idle' || action.type === 'say' || action.type === 'probe') {
+    if (action.type === 'say') {
+      // Child conversation in Plan (e.g. discussing card choice or trailing understand burst)
+      const text = action.text || '';
+      appendHistory('child', 'say', { text });
+      recordEvent('child.say', { utterance: text });
+      syncAliases();
+      return { session: next, events };
+    }
+
+    if (action.type === 'stuck' || action.type === 'idle' || action.type === 'probe') {
       // T09: Plan -> Plan (Ladder escalates)
       next.hintRungIndex = Math.min(4, next.hintRungIndex + 1);
       next.hintRung = LADDER_RUNGS[next.hintRungIndex];

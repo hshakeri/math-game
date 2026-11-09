@@ -870,3 +870,12 @@ html, body {
   font-size: 0.85rem;
   margin-left: 4px;
 }
+
+/* Dyslexia-friendly Font Mode */
+body.dyslexia-font {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+  line-height: 1.8;
+}
+

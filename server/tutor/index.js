@@ -230,12 +230,32 @@ export async function generateTurn(ctx, options = {}) {
   };
 
   // Leak gate context for screening candidate output
+  const givensList = encounter?.givens || [];
+  const lookBackChecks = (encounter?.lookBack || [])
+    .map(lb => lb.check?.value)
+    .filter(v => typeof v === 'number' && !givensList.includes(v));
+
+  const simplerProblemAnswers = (encounter?.parts || [])
+    .map(p => p?.ladder?.l4?.answer?.value)
+    .filter(v => typeof v === 'number' && !givensList.includes(v));
+
+  const expandedForbidden = Array.from(new Set([
+    ...(part?.forbidden || []),
+    ...simplerProblemAnswers,
+    ...lookBackChecks
+  ]));
+
+  const combinedHintText = [
+    allowedContent.hintText,
+    (state === 'simpler_problem' || rung === 'l4') ? part?.ladder?.l4?.statement : ''
+  ].filter(Boolean).join(' ');
+
   const leakGateContext = options.leakContext || {
     rung,
-    forbidden: part?.forbidden || [],
-    givens: encounter?.givens || [],
+    forbidden: expandedForbidden,
+    givens: givensList,
     inscription: ctx.inscription || encounter?.inscription || '',
-    hintText: allowedContent.hintText || '',
+    hintText: combinedHintText,
     targetAnswer: part?.answer?.value !== undefined ? part.answer.value : undefined
   };
 

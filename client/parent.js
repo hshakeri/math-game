@@ -103,34 +103,42 @@ function handleSSEEvent(ev) {
   item.className = 'log-item';
   const time = new Date().toLocaleTimeString();
 
+  const strong = document.createElement('strong');
+  let bodyText = '';
+
   switch (ev.type) {
     case 'connected':
-      item.innerHTML = `<strong>[${time}] System:</strong> Connected to real-time session monitor`;
+      strong.textContent = `[${time}] System:`;
+      bodyText = ' Connected to real-time session monitor';
       if (ev.sessionId) {
         setSessionId(ev.sessionId);
       }
       break;
     case 'session.start':
       item.classList.add('log-state');
-      item.innerHTML = `<strong>[${time}] System:</strong> Active session started: ${ev.sessionId} (${ev.encounterId || ''})`;
+      strong.textContent = `[${time}] System:`;
+      bodyText = ` Active session started: ${ev.sessionId || ''} (${ev.encounterId || ''})`;
       if (ev.sessionId) {
         setSessionId(ev.sessionId);
       }
       break;
     case 'tutor.say':
       item.classList.add('log-tutor');
-      item.innerHTML = `<strong>[${time}] Archimedes:</strong> ${ev.speech || ev.text || ''}`;
+      strong.textContent = `[${time}] Archimedes:`;
+      bodyText = ` ${ev.speech || ev.text || ''}`;
       break;
     case 'child.action':
     case 'child.say':
       item.classList.add('log-child');
-      item.innerHTML = `<strong>[${time}] Child (${ev.action || ev.type || 'say'}):</strong> ${ev.text || ev.chip || ev.value || JSON.stringify(ev.payload || '')}`;
+      strong.textContent = `[${time}] Child (${ev.action || ev.type || 'say'}):`;
+      bodyText = ` ${ev.text || ev.chip || ev.value || (typeof ev.payload === 'object' ? JSON.stringify(ev.payload) : ev.payload || '')}`;
       break;
     case 'state.transition':
     case 'engine.transition':
     case 'update':
       item.classList.add('log-state');
-      item.innerHTML = `<strong>[${time}] State:</strong> ${ev.from || ''} → <strong>${ev.to || ev.state || ''}</strong> (Rung: ${ev.rungAfter || ev.hintRung || 'l0'})`;
+      strong.textContent = `[${time}] State:`;
+      bodyText = ` ${ev.from || ''} → ${ev.to || ev.state || ''} (Rung: ${ev.rungAfter || ev.hintRung || 'l0'})`;
       const stateEl = document.getElementById('stat-state');
       const rungEl = document.getElementById('stat-rung');
       if (stateEl) stateEl.textContent = ev.to || ev.state || '--';
@@ -139,15 +147,21 @@ function handleSSEEvent(ev) {
     case 'parent.override':
     case 'hint.override':
       item.classList.add('log-tutor');
-      item.innerHTML = `<strong>[${time}] Parent Override:</strong> ${ev.kind || 'rung'} = ${ev.value || ev.rung || ev.text}`;
+      strong.textContent = `[${time}] Parent Override:`;
+      bodyText = ` ${ev.kind || 'rung'} = ${ev.value || ev.rung || ev.text || ''}`;
       break;
     case 'node.sealed':
       item.classList.add('log-state');
-      item.innerHTML = `<strong>[${time}] Milestone:</strong> Node sealed! (Waived: ${Boolean(ev.waived)})`;
+      strong.textContent = `[${time}] Milestone:`;
+      bodyText = ` Node sealed! (Waived: ${Boolean(ev.waived)})`;
       break;
     default:
-      item.innerHTML = `<strong>[${time}] ${ev.type || 'event'}:</strong> ${typeof ev === 'object' ? JSON.stringify(ev) : ev}`;
+      strong.textContent = `[${time}] ${ev.type || 'event'}:`;
+      bodyText = ` ${typeof ev === 'object' ? JSON.stringify(ev) : ev}`;
   }
+
+  item.appendChild(strong);
+  item.appendChild(document.createTextNode(bodyText));
 
   if (ev.sessionId && !currentSessionId) {
     setSessionId(ev.sessionId);
@@ -244,6 +258,28 @@ if (applyWaiverBtn) {
     } catch (err) {
       alert('Failed to grant waiver: ' + err.message);
     }
+  });
+}
+
+const dyslexiaBtn = document.getElementById('btn-toggle-dyslexia');
+if (dyslexiaBtn) {
+  const updateDyslexiaUI = (active) => {
+    if (active) {
+      document.body.classList.add('dyslexia-font');
+    } else {
+      document.body.classList.remove('dyslexia-font');
+    }
+    const status = document.getElementById('dyslexia-status');
+    if (status) status.textContent = active ? 'Dyslexia font active' : 'Standard font active';
+  };
+
+  const isDyslexia = localStorage.getItem('cot_dyslexia') === 'true';
+  updateDyslexiaUI(isDyslexia);
+
+  dyslexiaBtn.addEventListener('click', () => {
+    const nextState = !document.body.classList.contains('dyslexia-font');
+    localStorage.setItem('cot_dyslexia', String(nextState));
+    updateDyslexiaUI(nextState);
   });
 }
 

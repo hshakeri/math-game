@@ -22,7 +22,7 @@
     .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
     .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
     label { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: #95a5a6; display: block; margin-bottom: 6px; }
-    input, select, button { width: 100%; min-height: 48px; border-radius: 8px; border: 1px solid var(--border); padding: 10px; font-size: 1rem; background: #161b22; color: #fff; }
+    input, select, button { width: 100%; min-height: 56px; border-radius: 8px; border: 1px solid var(--border); padding: 10px; font-size: 1rem; background: #161b22; color: #fff; }
     button { cursor: pointer; font-weight: bold; background: var(--accent); border: none; }
     button:hover { filter: brightness(1.1); }
     .btn-warn { background: var(--warn); }
@@ -32,6 +32,12 @@
     .log-child { border-color: var(--success); background: rgba(39, 174, 96, 0.05); }
     .log-state { border-color: #9b59b6; background: rgba(155, 89, 182, 0.05); }
     .hidden { display: none !important; }
+    body.dyslexia-font {
+      font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+      letter-spacing: 0.05em;
+      word-spacing: 0.1em;
+      line-height: 1.8;
+    }
     /* PIN Modal */
     .pin-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; }
     .pin-box { background: var(--card-bg); padding: 30px; border-radius: 16px; text-align: center; max-width: 340px; width: 100%; }
@@ -98,6 +104,12 @@
           <label>Chapter Look Back Waiver</label>
           <button id="btn-apply-waiver" class="btn-warn">Waive Look Back (1x per Chapter)</button>
           <p id="waiver-status" style="font-size:0.8rem; margin-top:6px; color:#bdc3c7;">Available</p>
+        </div>
+
+        <div>
+          <label>Accessibility</label>
+          <button id="btn-toggle-dyslexia">Toggle Dyslexia Font</button>
+          <p id="dyslexia-status" style="font-size:0.8rem; margin-top:6px; color:#bdc3c7;">Standard font active</p>
         </div>
       </div>
 
