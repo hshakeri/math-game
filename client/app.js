@@ -132,11 +132,11 @@ export class CastleGame {
     if (typeof window !== 'undefined') {
       this.initDOM();
       this.initRouter();
-      this.loadCatalog();
     }
   }
 
   initDOM() {
+    document.getElementById('map-load-retry')?.addEventListener('click', () => this.loadCatalog());
     // Check dyslexia-friendly font setting
     try {
       if (localStorage.getItem('cot_dyslexia') === 'true') document.body.classList.add('dyslexia-font');
@@ -269,14 +269,22 @@ export class CastleGame {
 
   // API Methods
   async loadCatalog() {
+    const status = document.getElementById('map-load-status');
+    const retry = document.getElementById('map-load-retry');
+    if (status) { status.textContent = 'Opening the road…'; status.classList.remove('hidden'); }
+    retry?.classList.add('hidden');
     try {
       const res = await fetch('/api/encounters');
-      if (res.ok) {
-        const data = await res.json();
-        this.allEncounters = data.encounters || [];
-        this.renderMap();
-      }
-    } catch (_) {}
+      if (!res.ok) throw new Error('The road could not be loaded');
+      const data = await res.json();
+      if (!Array.isArray(data.encounters) || !data.encounters.length) throw new Error('No gates were loaded');
+      this.allEncounters = data.encounters;
+      this.renderMap();
+      status?.classList.add('hidden');
+    } catch (_) {
+      if (status) status.textContent = 'The road couldn’t load. Try again.';
+      retry?.classList.remove('hidden');
+    }
   }
 
   async startEncounter(encounterId) {

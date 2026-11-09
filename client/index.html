@@ -5,18 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#18262b">
   <meta name="description" content="Keybreakers: The Goblin’s Gate. Explore the map, meet its keepers, and find a way through.">
-  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="manifest" href="/manifest.webmanifest?v=20261109-map2">
   <title>Keybreakers · The Goblin’s Gate</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="world-map.css">
-  <link rel="stylesheet" href="calculation-tools.css">
-  <link rel="stylesheet" href="adventure.css">
+  <link rel="stylesheet" href="/style.css?v=20261109-map2">
+  <link rel="stylesheet" href="/world-map.css?v=20261109-map2">
+  <link rel="stylesheet" href="/calculation-tools.css?v=20261109-map2">
+  <link rel="stylesheet" href="/adventure.css?v=20261109-map2">
 </head>
 <body class="parchment-theme">
   <a class="skip-link" href="#app-root">Skip to adventure</a>
   <main id="app-root">
     <section id="screen-map" class="screen" aria-label="The road to the Castle of Theorems">
       <header class="simple-map-header"><div><span class="wordmark">KEYBREAKERS</span><h1>The Goblin’s Gate</h1></div><nav class="quiet-links" aria-label="For adults"><a href="/parent">For grown-ups</a><a href="https://github.com/hshakeri/math-game" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav></header>
+      <div id="map-load-status" class="map-load-status" role="status">Opening the road…</div>
+      <button id="map-load-retry" class="btn-touch hidden" type="button">Try again</button>
       <div id="world-map-mount"></div>
     </section>
     <section id="screen-encounter" class="screen hidden" aria-label="Your adventure">
@@ -43,6 +45,6 @@
   </main>
   <aside id="deck-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deck-heading"><div class="deck-modal"><header class="deck-modal-header"><div><span class="eyebrow">A SMALL COLLECTION OF BIG IDEAS</span><h2 id="deck-heading">Lemma’s deck.</h2></div><button id="btn-close-deck" class="btn-close" aria-label="Close Deck">×</button></header><div class="still-dialogue lemma-dialogue"><div id="lemma-portrait" class="still-art" aria-hidden="true"></div><div class="speech-bubble"><span class="speech-name">LEMMA</span><p id="lemma-speech-text" class="speech-words" aria-hidden="true"></p><p id="lemma-speech-accessible" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p><button class="speech-control" data-speech="lemma" type="button">Read now</button></div></div><div id="deck-card-grid" class="deck-card-grid"></div></div></aside>
   <aside id="golden-seal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="seal-theorem-title"><div class="seal-modal"><span class="eyebrow">A WAY TO REMEMBER</span><div id="seal-hero" aria-hidden="true"></div><div class="seal-graphic-container"><svg id="golden-seal-svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Golden Seal"><path fill="#c8963e" d="m60 3 12 9 15 0 6 14 13 7-1 16 9 11-9 12 1 15-14 6-7 13-16-1-11 9-12-9-15 1-6-14-13-7 1-16-9-11 9-12-1-15 14-6 7-13 16 1Z"/><circle cx="60" cy="60" r="36" fill="none" stroke="#62471d" stroke-width="2"/><path d="M46 46h28v28H46zM60 35v50M35 60h50" stroke="#62471d" fill="none" stroke-width="3"/></svg></div><h2 id="seal-theorem-title">The gate is open.</h2><p id="seal-theorem-name" class="seal-name"></p><p id="seal-theorem-rule" class="seal-rule"></p><button id="btn-seal-continue" class="btn-touch btn-primary">Back to the road →</button></div></aside>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="/app.js?v=20261109-map2"></script>
 </body>
 </html>

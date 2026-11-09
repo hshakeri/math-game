@@ -6,6 +6,8 @@ This guide is written so you (or any coding agent on another account or machine)
 
 ## 1. Current Project Snapshot (2026-11-09)
 
+Homepage cache fix: HTML and JavaScript previously had different cache policies, allowing a new page to run an older cached renderer and leave the map empty. Scripts, styles and manifests now revalidate; absolute, versioned entry URLs also bypass copies already cached before the fix. The homepage exposes loading and retry states for failed catalog requests. `test/client-startup.test.js` exercises the actual module bootstrap/constructor against an index-derived DOM surface; `test/server-cache.test.js` covers HTTP cache headers and nested bookmark asset resolution. The user confirmed the running local page works after the fix.
+
 The active UI direction is one cloud-edged world map with challenge navigation on its landmarks, a fixed boy Keybreaker at the start, and discreet For grown-ups/GitHub links. Name entry, avatar selection and the child-facing Codex route are removed. The Castle of Theorems remains the destination. `docs/NAME-CHECK.md` records the provisional title screen and adjacent naming conflict.
 
 Encounters now share one coherent scene. Reverse Tolls is a tappable forward story road with the public gate rules and castle count; other nodes place story captions on a single keeper picture. Small Rivet and event-driven Grubb sprites replace separate portrait panels. Rivet and Lemma retain paced/instant speech with Read now/Read again, complete-line accessibility announcements and stale callback cancellation. There is no sound button or inscription transcript wall. Golden Seals still name the learned idea, and the engine retains its historical Codex persistence.

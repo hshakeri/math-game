@@ -1,5 +1,6 @@
 /* One world, one scene, one next move. */
 #screen-map { max-width:1240px; padding:24px 28px 36px }
+.map-load-status { padding:24px 0; font-size:18px; color:var(--ink-secondary) }
 .simple-map-header { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:12px }
 .simple-map-header .wordmark { font:13px var(--font-family-mono); letter-spacing:3px; color:var(--gold-dark) }
 .simple-map-header h1 { font:normal clamp(26px,4vw,42px)/1.15 Georgia; margin:5px 0 }

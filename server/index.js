@@ -352,11 +352,14 @@ export function serveStaticFile(req, res, pathname, clientDir = CLIENT_DIR) {
 function streamFileToResponse(filePath, res, ext) {
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
   const stat = fs.statSync(filePath);
+  // HTML and its modules must update together. Reusing a fresh, hour-old app.js
+  // with a new DOM can silently leave the homepage empty after a local update.
+  const revalidate = ['.html', '.js', '.css', '.json', '.webmanifest'].includes(ext);
 
   res.writeHead(200, {
     'Content-Type': contentType,
     'Content-Length': stat.size,
-    'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600',
+    'Cache-Control': revalidate ? 'no-cache' : 'public, max-age=3600',
     'Access-Control-Allow-Origin': '*'
   });
 
