@@ -461,8 +461,13 @@ describe('Challenger M5 Security & Adversarial Exploit Suite', () => {
         });
 
         req.on('error', (err) => {
-          // Socket destruction (ECONNRESET) is expected when server enforces maxBytes
-          assert.ok(err.message.includes('ECONNRESET') || err.message.includes('socket hang up'));
+          // Socket destruction (ECONNRESET or EPIPE) is expected when server enforces maxBytes
+          const isExpected = err.message.includes('ECONNRESET') ||
+                             err.message.includes('socket hang up') ||
+                             err.message.includes('EPIPE') ||
+                             err.code === 'EPIPE' ||
+                             err.code === 'ECONNRESET';
+          assert.ok(isExpected, `Expected socket abort error, got: ${err.message}`);
           resolve();
         });
 
