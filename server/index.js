@@ -88,7 +88,37 @@ export function getEncounterById(id) {
 // In-Memory Session Store
 // Map<sessionId, SessionRecord>
 export const sessionStore = new Map();
+export const chapterWaiversUsed = new Set();
 export const globalParentSubscribers = new Set();
+
+/**
+ * Checks whether the Look Back waiver has already been used for a chapter.
+ * Inspects both chapterWaiversUsed set and all sessions in sessionStore.
+ * @param {number|string} chapter
+ * @returns {boolean}
+ */
+export function isChapterWaiverUsed(chapter) {
+  if (chapter === undefined || chapter === null) return false;
+  const ch = Number(chapter);
+  if (chapterWaiversUsed.has(chapter) || chapterWaiversUsed.has(ch)) return true;
+  for (const sRec of sessionStore.values()) {
+    const sChapter = Number(sRec.encounter?.chapter ?? 1);
+    if (sChapter === ch) {
+      if (sRec.session?.chapterWaiverUsed || sRec.session?.parentWaiver) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Resets in-memory session and waiver state for test isolation.
+ */
+export function resetServerState() {
+  sessionStore.clear();
+  chapterWaiversUsed.clear();
+}
 
 /**
  * Validates Parent PIN using constant-time comparison.
@@ -330,10 +360,14 @@ export function createServer(options = {}) {
           return sendJson(res, 404, { ok: false, error: `Encounter not found: "${encounterId}"` });
         }
 
+        const chapter = encounter.chapter ?? 1;
+        const waiverUsed = isChapterWaiverUsed(chapter);
+
         const tutorAdapter = body.tutorAdapter || process.env.TUTOR_ADAPTER || 'scripted';
         const session = createSession(encounter, {
           sessionId: body.sessionId,
-          tutorAdapter
+          tutorAdapter,
+          chapterWaiverUsed: waiverUsed
         });
 
         const sessionRecord = {
@@ -358,6 +392,7 @@ export function createServer(options = {}) {
           timestamp: new Date().toISOString()
         });
         const startMsg = `event: session.start\ndata: ${startPayload}\n\n`;
+
         for (const clientRes of globalParentSubscribers) {
           try {
             clientRes.write(startMsg);
@@ -367,16 +402,25 @@ export function createServer(options = {}) {
           }
         }
 
-        // Telemetry logging
-        await logEvent(session.sessionId, 'session.start', {
-          encounterId: encounter.id,
-          adapter: tutorAdapter
-        });
-        await logEvent(session.sessionId, 'node.enter', {
-          encounterId: encounter.id,
-          partId: session.currentPartId,
-          sceneState: 'locked'
-        });
+        // Telemetry logging (defensively wrapped)
+        try {
+          await logEvent(session.sessionId, 'session.start', {
+            encounterId: encounter.id,
+            adapter: tutorAdapter
+          });
+        } catch (telemetryErr) {
+          console.warn(`[Telemetry Warning] Failed to log "session.start" for session ${session.sessionId}:`, telemetryErr.message);
+        }
+
+        try {
+          await logEvent(session.sessionId, 'node.enter', {
+            encounterId: encounter.id,
+            partId: session.currentPartId,
+            sceneState: 'locked'
+          });
+        } catch (telemetryErr) {
+          console.warn(`[Telemetry Warning] Failed to log "node.enter" for session ${session.sessionId}:`, telemetryErr.message);
+        }
 
         const view = getClientSafeView(session, encounter);
         return sendJson(res, 200, {
@@ -422,17 +466,25 @@ export function createServer(options = {}) {
         sessionRecord.session = nextSession;
         sessionRecord.updatedAt = Date.now();
 
-        // Log child action
-        await logEvent(sessionId, 'child.action', {
-          type: action.type,
-          payload: action,
-          state: nextSession.state,
-          hintRung: nextSession.hintRung
-        });
+        // Log child action (defensively wrapped)
+        try {
+          await logEvent(sessionId, 'child.action', {
+            type: action.type,
+            payload: action,
+            state: nextSession.state,
+            hintRung: nextSession.hintRung
+          });
+        } catch (telemetryErr) {
+          console.warn(`[Telemetry Warning] Failed to log "child.action" for session ${sessionId}:`, telemetryErr.message);
+        }
 
         // Broadcast events to SSE subscribers & log telemetry
         for (const ev of events) {
-          await logEvent(sessionId, ev.type, ev);
+          try {
+            await logEvent(sessionId, ev.type, ev);
+          } catch (telemetryErr) {
+            console.warn(`[Telemetry Warning] Failed to log event "${ev.type}" for session ${sessionId}:`, telemetryErr.message);
+          }
           broadcastToSession(sessionRecord, ev.type, ev);
         }
 
@@ -742,7 +794,12 @@ export function createServer(options = {}) {
           return sendJson(res, 404, { ok: false, error: 'Session not found' });
         }
 
-        if (sessionRecord.session.chapterWaiverUsed || sessionRecord.session.parentWaiver) {
+        const chapter = sessionRecord.encounter?.chapter ?? 1;
+        if (
+          isChapterWaiverUsed(chapter) ||
+          sessionRecord.session.chapterWaiverUsed ||
+          sessionRecord.session.parentWaiver
+        ) {
           return sendJson(res, 400, { ok: false, error: 'Look Back waiver already used this chapter' });
         }
 
@@ -754,13 +811,32 @@ export function createServer(options = {}) {
         sessionRecord.session = transRes.session;
         sessionRecord.updatedAt = Date.now();
 
-        await logEvent(sessionId, 'parent.override', {
-          kind: 'waive',
-          encounterId: sessionRecord.encounter.id
-        });
+        // Mark chapter waiver globally and update all existing sessions in this chapter
+        chapterWaiversUsed.add(chapter);
+        chapterWaiversUsed.add(Number(chapter));
+        for (const sRec of sessionStore.values()) {
+          const sChapter = Number(sRec.encounter?.chapter ?? 1);
+          if (sChapter === Number(chapter) && sRec.session) {
+            sRec.session.chapterWaiverUsed = true;
+            sRec.session.parentWaiver = true;
+          }
+        }
+
+        try {
+          await logEvent(sessionId, 'parent.override', {
+            kind: 'waive',
+            encounterId: sessionRecord.encounter.id
+          });
+        } catch (telemetryErr) {
+          console.warn(`[Telemetry Warning] Failed to log waiver event for session ${sessionId}:`, telemetryErr.message);
+        }
 
         for (const ev of (transRes.events || [])) {
-          await logEvent(sessionId, ev.type, ev);
+          try {
+            await logEvent(sessionId, ev.type, ev);
+          } catch (telemetryErr) {
+            console.warn(`[Telemetry Warning] Failed to log event "${ev.type}" for session ${sessionId}:`, telemetryErr.message);
+          }
           broadcastToSession(sessionRecord, ev.type, ev);
         }
 
@@ -867,6 +943,9 @@ export async function closeServer(server) {
     }
     server._activeSockets.clear();
   }
+
+  sessionStore.clear();
+  chapterWaiversUsed.clear();
 
   return new Promise((resolve, reject) => {
     server.close(err => {

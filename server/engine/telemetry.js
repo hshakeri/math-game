@@ -42,7 +42,16 @@ export const MANDATORY_EVENT_TYPES = new Set([
   'tutor.say',
   'parent.override',
   'parent.flag',
-  'shortcut'
+  'shortcut',
+  // State machine transition event types
+  'step.success',
+  'step.failure',
+  'conjecture.skeptic_prompt',
+  'ladder.escalate',
+  'child.say',
+  'simpler_problem.wrong',
+  'lookback.retry',
+  'hint.override'
 ]);
 
 /**
